@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Node App</title>
+
+    <style>
+      :root{
+        --ultragrey: #333;
+      }
+
+      *{
+        box-sizing: border-box;
+      }
+
+      html, body{
+        background-color: lightslategray;
+      }
+
+      body{
+        margin: 25px auto;
+        max-width: 950px;
+        text-align: center;
+      }
+
+      h1,h2,h3,h4,h5,p{
+        margin: 0px;
+        padding: 0px;
+        font-family: Consolas,"courier new";
+      }
+        
+
+      code {
+        white-space: pre-line;
+        white-space: pre;
+        font-family: Consolas,"courier new";
+        color: orange;
+        background-color: transparent;
+        padding: 2px;
+        font-size: 105%;
+        text-shadow: 0px 0px 2px darkorange;
+      }
+
+      .crank_ultragrey{
+        color: var(--ultragrey);
+      }
+
+      .crank_orange_glow{
+        color: orange;
+        text-shadow: 0px 0px 2px darkorange;
+      }
+
+      .crank_codeblock {
+        background-color: var(--ultragrey);
+        border: 0px solid transparent;
+        border-radius: 25px;
+        padding: 50px;
+        text-align: left;
+        box-shadow: 0px 5px 10px dimgray;        
+      }
+    </style>
+  </head>
+  <body class="crank_ultragrey">
+    <h2>This is an response page create by an Node app in the server.</h2>
+    <h3>What follows is the script used to create this page.</h3>
+    <br>
+    <p>This Script relies heavily on the use of Async functions. Callback functions are mandatory to relly the data back once each function is finished. Due to this necessity the occurrence of nested Callback functions is an unfortunate byproduct. There are better ways to do compose the same script with the use of Promisses and Async Await methods but even this have their setback. Promisses and Async Await rely heavily on abstraction and so they create a level of obfuscation that can confuse the newcomers.</p>
+    <br>
+    <div class="crank_codeblock crank_orange_glow">
+
