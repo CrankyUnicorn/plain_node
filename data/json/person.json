@@ -1,0 +1,19 @@
+{
+  "persons":[
+    {
+      "id": 1,
+      "name": "Tony",
+      "email": "tony@gmail.com"
+    },
+    {
+      "id": 2,
+      "name": "Ann",
+      "email": "ann@gmail.com"
+    },
+    {
+      "id": 3,
+      "name": "Mary",
+      "email": "mary@gmail.com"
+    }
+  ]
+}

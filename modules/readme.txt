@@ -1,0 +1,1 @@
+Modules forlder is used to store scripts that handle database access and communication also known as CRUD.

@@ -1,53 +1,43 @@
+//const fs = require('fs');
+//const path = require('path');
 const http = require('http');
-const fs = require('fs');
+const url = require('url');
+const querystring = require('querystring');
+const file_access = require('./modules/File_Access');
+const index_controller = require('./controllers/index_controller');
+const backoffice_controller = require('./controllers/backoffice_controller');
 
-function onRequest(request, response){
+const file_access_instant = new file_access();
 
-  response.writeHead(200,{'Content-Type':'text/html'});
-  
-  fs.readFile('./html_start.html',null, function(error, data_start){
-    if(error){
- 
-      response.writeHead(404);
-      response.write('File not Found!')
-
-    }else{
-
-      fs.readFile('./html_end.html',null, function(error, data_end){
-        if(error){
-     
-          response.writeHead(404);
-          response.write('File not Found!')
-    
-        }else{
-          
-          const path_node_script = './server.js'
-
-          fs.readFile(path_node_script ,null, function(error, data_server){
-            if(error){
-         
-              response.writeHead(404);
-              response.write('File not Found!')
-        
-            }else{
-    
-    
-              response.write(`${data_start}\<h2\>${path_node_script}\</h2\>\<br\><code>${data_server}</code>${data_end}`);
-            }
-            response.end();
-          });
+const PORT = 3000;
 
 
-
-        }
-      });
+http.createServer(function (request, response) {
 
 
-    }
-  });
-  
-  //response.write('Hello!');
-  
-}
+  true_url = new URL(request.url, 'http://' + request.headers.host + '/');
+  console.log('request url: ', request.url);
+  //console.log('request full url: ', true_url);
+  //console.log('request pathname: ', true_url.pathname);
+  console.log('request query: ', true_url.searchParams.get('name'));
+  var filePath = '.' + true_url.pathname;
 
-http.createServer(onRequest).listen(3000);
+
+  //gate controller for pages
+  if (filePath == './') {
+    filePath = './index.html';
+    console.log('file access: ', file_access_instant.get_file(response, filePath));
+
+  } else if (filePath == './test') {
+    index_controller(request, response);
+
+  } else if (filePath == './backoffice') {
+    backoffice_controller(request, response);
+
+  } else {
+    console.log('file access: ', file_access_instant.get_file(response, filePath));
+  }
+
+}).listen(PORT);
+
+console.log(`Server running at localhost:${PORT}/`);
