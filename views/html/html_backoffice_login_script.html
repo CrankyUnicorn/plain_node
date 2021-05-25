@@ -1,0 +1,48 @@
+<script>
+  function create_login_page_content() {
+    const main_div = document.getElementById("main_div");
+
+    const title = document.createElement("h1");
+    title.textContent = "Backoffice Login";
+    main_div.appendChild(title);
+
+    const form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "");
+    main_div.appendChild(form);
+
+    const email_label = document.createElement("label");
+    email_label.textContent = "Email:"
+    email_label.style = "margin-right: 10px;"
+    form.appendChild(email_label);
+
+    const email_input = document.createElement("input");
+    email_input.type = "text";
+    email_input.name = "email";
+    email_input.value = "";
+    email_input.placeholder = "email";
+    email_label.appendChild(email_input);
+
+    const password_label = document.createElement("label");
+    password_label.textContent = "Password"
+    password_label.style = "margin-right: 10px;"
+    form.appendChild(password_label);
+
+    const password_input = document.createElement("input");
+    password_input.type = "password";
+    password_input.value = "password";
+    password_input.value = "";
+    password_input.placeholder = "password";
+    password_label.appendChild(password_input);
+
+    const login = document.createElement("input");
+    login.type = "button";
+    login.name = "login";
+    login.value = "Login";
+    login.addEventListener("click", () => { send_xmlhttprequest('backoffice', 'GET', ''.concat('login=login', '&email=',email_input.value, '&password=', password_input.value), () => { }) }, false);
+    form.appendChild(login);
+  }
+
+
+  create_login_page_content();
+</script>

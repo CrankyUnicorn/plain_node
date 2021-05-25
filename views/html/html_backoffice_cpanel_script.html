@@ -1,0 +1,35 @@
+<script>
+  function create_cpanel_page_content() {
+    const main_div = document.getElementById("main_div");
+
+    const title = document.createElement("h1");
+    title.textContent = "Backoffice cPanel";
+    main_div.appendChild(title);
+
+    const form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "");
+    main_div.appendChild(form);
+
+    const topic_title = document.createElement("h3");
+    topic_title.textContent = "Welcome to cPanel";
+    form.appendChild(topic_title);
+
+    const new_post = document.createElement("input");
+    new_post.type = "button";
+    new_post.name = "new_post";
+    new_post.value = "New Post";
+    new_post.addEventListener("click", () => { }, false);
+    form.appendChild(new_post);
+
+
+    const logout = document.createElement("input");
+    logout.type = "button";
+    logout.name = "logout";
+    logout.value = "Logout";
+    logout.addEventListener("click", () => { send_xmlhttprequest('backoffice', 'GET', ''.concat('logout=logout'), () => { }) }, false);
+    form.appendChild(logout);
+  }
+
+  create_cpanel_page_content();
+</script>

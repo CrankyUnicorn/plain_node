@@ -27,8 +27,8 @@ function query_database(query_string, callback) {
 
     connection_data.query(query_string, function (err, result) {
       if (err) throw err;
-      disconnect_database();
       callback(result);
+      disconnect_database();
     });
 
     console.log('Connected to MySql Database');

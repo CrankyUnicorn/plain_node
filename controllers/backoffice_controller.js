@@ -51,16 +51,18 @@ function backoffice_controller(request, response) {
       promisses_array.push(get_file('./views/html/html_header.html'));
       promisses_array.push(get_file('./views/html/html_backoffice.html'));
       promisses_array.push(get_file('./views/html/html_footer.html'));
-      promisses_array.push(get_file('./views/html/html_backoffice_script.html'));
+      promisses_array.push(get_file('./views/html/html_backoffice_login_script.html'));
+      promisses_array.push(get_file('./views/html/html_backoffice_cpanel_script.html'));
       promisses_array.push(get_file('./views/html/html_end.html'));
 
-      Promise.all(promisses_array).then(function ([start, header, content, footer, script_a, end]) {
+      Promise.all(promisses_array).then(function ([start, header, content, footer, script_login, script_cpanel, end]) {
         
         if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(start); }
         if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(header); }
         if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(content); }
         if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(footer); }
-        if (type == 'login' )                                           { results.push(script_a); }
+        if (type == 'login' )                                           { results.push(script_login); }
+        else if (type == 'welcome' || type == 'session' )               { results.push(script_cpanel); }
         if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(end); }
 
         build_page(results)
