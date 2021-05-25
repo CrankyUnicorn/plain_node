@@ -8,15 +8,6 @@ const connection_data = mysql.createConnection({
   database: 'test'
 });
 
-function connect_database() {
-  connection_data.connect(function (err) {
-    if (err) {
-      return console.error('error: ', err.message);
-    }
-
-    console.log('Connected to MySql Database');
-  });
-}
 
 function disconnect_database() {
   connection_data.end(function (err) {

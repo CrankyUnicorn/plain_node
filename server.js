@@ -5,7 +5,7 @@ const url = require('url');
 const querystring = require('querystring');
 const file_access = require('./modules/File_Access');
 const index_controller = require('./controllers/index_controller');
-const backoffice_controller = require('./controllers/backoffice_controller');
+const { backoffice_controller } = require('./controllers/backoffice_controller');
 
 const file_access_instant = new file_access();
 
@@ -19,13 +19,13 @@ http.createServer(function (request, response) {
   console.log('request url: ', request.url);
   //console.log('request full url: ', true_url);
   //console.log('request pathname: ', true_url.pathname);
-  console.log('request query: ', true_url.searchParams.get('name'));
+  //console.log('request query: ', true_url.searchParams.get('name'));
   var filePath = '.' + true_url.pathname;
 
 
   //gate controller for pages
   if (filePath == './') {
-    filePath = './index.html';
+    filePath = './views/html/index.html';
     console.log('file access: ', file_access_instant.get_file(response, filePath));
 
   } else if (filePath == './test') {
@@ -37,6 +37,7 @@ http.createServer(function (request, response) {
   } else {
     console.log('file access: ', file_access_instant.get_file(response, filePath));
   }
+
 
 }).listen(PORT);
 

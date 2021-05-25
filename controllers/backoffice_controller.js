@@ -1,9 +1,16 @@
-//const http = require('http');
 const fs = require('fs');
 const { resolve } = require('path');
-
+const { login_user, logout_user } = require('../modules/backoffice_module');
+const sm = require('../modules/Session_Manager');
 
 function backoffice_controller(request, response) {
+
+  true_url = new URL(request.url, 'http://' + request.headers.host + '/');
+  //console.log('request url: ', request.url);
+  //console.log('request full url: ', true_url);
+  //console.log('request pathname: ', true_url.pathname);
+  console.log('request query: ', true_url.searchParams);
+
 
   response.writeHead(200, { 'Content-Type': 'text/html' });
 
@@ -28,13 +35,16 @@ function backoffice_controller(request, response) {
 
     function build_page() {
       return new Promise((resolve, reject) => {
-        response.write(`${results[0]}${results[1]}${results[2]}${results[3]}${results[4]}${results[5]}`);
+        http_page = ''
+        results.forEach(element => {  http_page += element; });
+        response.write(http_page);
         response.end();
       });
     }
 
-    function get_all_files() {
-      promisses_array =  new Array();
+
+    function get_backoffice_files(type) {
+      promisses_array = new Array();
       results = new Array();
 
       promisses_array.push(get_file('./views/html/html_start.html'));
@@ -43,24 +53,43 @@ function backoffice_controller(request, response) {
       promisses_array.push(get_file('./views/html/html_footer.html'));
       promisses_array.push(get_file('./views/html/html_backoffice_script.html'));
       promisses_array.push(get_file('./views/html/html_end.html'));
-      
-      Promise.all(promisses_array).then(function([a,b,c,d,e,f]){
-        results.push(a);
-        results.push(b);
-        results.push(c);
-        results.push(d);
-        results.push(e);
-        results.push(f);
+
+      Promise.all(promisses_array).then(function ([start, header, content, footer, script_a, end]) {
+        
+        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(start); }
+        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(header); }
+        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(content); }
+        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(footer); }
+        if (type == 'login' )                                           { results.push(script_a); }
+        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(end); }
 
         build_page(results)
         //console.log(results);
 
       });
-      
+
     }
-    
-    get_all_files();
-    
+
+    if (true_url.searchParams.get('logout')) {
+      logout_user();
+      get_backoffice_files('login');
+
+    } else if (sm.getUser(0)) {
+      get_backoffice_files('session');
+      //console.log("backoffice_controller.sm.getUser_IN");
+
+    } else if (true_url.searchParams.get('login')) {
+      let email = true_url.searchParams.get('email');
+      let password = true_url.searchParams.get('password');
+      login_user(email, password);
+      get_backoffice_files('welcome');
+      //console.log("backoffice_controller.login_user");
+
+    } else {
+      get_backoffice_files('login');
+      //console.log("backoffice_controller.sm.get_login_files");
+    }
+
 
   } else {
 
@@ -71,4 +100,4 @@ function backoffice_controller(request, response) {
 
 }
 
-module.exports = backoffice_controller;
+module.exports = { backoffice_controller };
