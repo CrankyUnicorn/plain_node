@@ -14,14 +14,6 @@
   to {height: 0; padding: 0; margin: 0;}
 }
 
-@keyframes article_slide_up {
-  from {
-    flex: 0%; 
-    max-width: 0px; 
-    padding: 0px;}
-  to {flex: 60%;}
-}
-
 /* tag related */
 * {
   box-sizing: border-box;
@@ -46,6 +38,7 @@ a {
 
 /* Alert Bar */
 .cranky_alert_bar{
+  height: 70px;
   background:yellow;
   padding:5px; 
   display:block;
@@ -56,6 +49,10 @@ a {
   animation-timing-function: ease;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
+}
+
+.cranky_alert_under_bar{
+  display: none;
 }
 
 /* Header/logo Title */
@@ -160,12 +157,7 @@ a {
   flex: 60%;
   background-color: var(--light_grey);
   padding: 20px;
-  animation-name: article_slide_up;
-  animation-duration: 2s;
-  animation-delay: 0.1s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
+ 
 }
 
 .cranky_section {
