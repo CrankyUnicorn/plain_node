@@ -1,0 +1,197 @@
+<script>
+  function create_frontpage_content() {
+    const body_tag = document.getElementById("body");
+
+    //TOP MOST BAR - ALERT BAR
+    const alert_bar = document.createElement("div");
+    alert_bar.className = "cranky_alert_bar";
+    alert_bar.style = "";
+    alert_bar.id = "alert_bar";
+    body_tag.appendChild(alert_bar);
+
+    const alert_bar_message = document.createElement("h4");
+    alert_bar_message.className = "";
+    alert_bar_message.style = "text-align:center";
+    alert_bar_message.id = "alert_bar_message";
+    alert_bar_message.textContent = "Resize the browser window to see the responsive effect";
+    alert_bar.appendChild(alert_bar_message);
+
+
+    //HEADER TITLE BAR 
+    const header_bar = document.createElement("div");
+    header_bar.className = "cranky_header";
+    header_bar.style = "";
+    header_bar.id = "header_bar";
+    body_tag.appendChild(header_bar);
+
+    const header_bar_title = document.createElement("h1");
+    header_bar_title.className = "";
+    header_bar_title.style = "";
+    header_bar_title.id = "header_bar_title";
+    header_bar_title.textContent = "Portfolio 2021";
+    header_bar.appendChild(header_bar_title);
+
+    const header_bar_subtitle = document.createElement("p");
+    header_bar_subtitle.className = "";
+    header_bar_subtitle.style = "";
+    header_bar_subtitle.id = "header_bar_subtitle";
+    header_bar_subtitle.textContent = "Integração de Sistemas de Informação - Ferramentas";
+    header_bar.appendChild(header_bar_title);
+
+
+    //NAVIGATION BAR 
+    const navigation_bar = document.createElement("div");
+    navigation_bar.className = "cranky_navigation_bar";
+    navigation_bar.style = "";
+    navigation_bar.id = "navigation_bar";
+    body_tag.appendChild(navigation_bar);
+
+    const navigation_bar_container = document.createElement("div");
+    navigation_bar_container.className = "cranky_navigation_bar_container cranky_right";
+    navigation_bar_container.style = "";
+    navigation_bar_container.id = "navigation_bar_container";
+    navigation_bar.appendChild(navigation_bar_container);
+
+    const topics = ['about', 'contacts', 'work', 'more'];
+    var navigation_bar_container_button = new Array();
+    var navigation_bar_container_button_content = new Array();
+
+    for (let i = 0; i < topics.length; i++) {
+
+      navigation_bar_container_button[i] = document.createElement("div");
+      navigation_bar_container_button[i].className = "cranky_navigation_bar_container_button";
+      navigation_bar_container_button[i].style = "";
+      navigation_bar_container_button[i].id = `navigation_bar_container_button_${[i]}`;
+      navigation_bar_container.appendChild(navigation_bar_container_button[i]);
+
+      navigation_bar_container_button_content[i] = document.createElement("p");
+      navigation_bar_container_button_content[i].className = "cranky_navigation_bar_container_button_content";
+      navigation_bar_container_button_content[i].style = "";
+      navigation_bar_container_button_content[i].id = `navigation_bar_container_button_content_${[i]}`;
+      navigation_bar_container_button_content[i].textContent = topics[i];
+      navigation_bar_container_button[i].appendChild(navigation_bar_container_button_content[i]);
+    }
+
+
+    //MAIN
+    const main = document.createElement("div");
+    main.className = "cranky_main";
+    main.style = "";
+    main.id = "main";
+    body_tag.appendChild(main);
+
+    const side_bar_left = document.createElement("div");
+    side_bar_left.className = "cranky_side_bar";
+    side_bar_left.style = "";
+    side_bar_left.id = "side_bar_left"
+    main.appendChild(side_bar_left);
+
+    const article = document.createElement("div");
+    article.className = "cranky_article";
+    article.style = "";
+    article.id = "article"
+    main.appendChild(article);
+
+    /*section start*/
+    const section = document.createElement("div");
+    section.className = "cranky_section";
+    section.style = "";
+    section.id = "section"
+    article.appendChild(section);
+
+    const section_title = document.createElement("h2");
+    section_title.className = "";
+    section_title.style = "";
+    section_title.id = "section_title";
+    section_title.textContent = "Titulo de Artigo";
+    section.appendChild(section_title);
+
+    const section_subtitle = document.createElement("h5");
+    section_subtitle.className = "";
+    section_subtitle.style = "";
+    section_subtitle.id = "section_subtitle";
+    section_subtitle.textContent = "Subtitulo de Artigo";
+    section.appendChild(section_subtitle);
+
+    const section_image_container = document.createElement("div");
+    section_image_container.className = "cranky_section_image_container";
+    section_image_container.style = "";
+    section_image_container.id = "section_image_container"
+    section.appendChild(section_image_container);
+
+    const section_image = document.createElement("img");
+    section_image.className = "cranky_section_image";
+    section_image.style = "";
+    section_image.id = "section_image"
+    section_image.src = "./resources/images/logo.png"
+    section_image_container.appendChild(section_image);
+
+    const section_description = document.createElement("p");
+    section_description.className = "";
+    section_description.style = "";
+    section_description.id = "section_description";
+    section_description.textContent = "Texto descritivo";
+    section.appendChild(section_description);
+
+    const section_link = document.createElement("a");
+    section_link.className = "cranky_section_link";
+    section_link.style = "";
+    section_link.id = "section_link";
+    section_link.textContent = "link";
+    section_link.href = "./view/html/index";
+    section.appendChild(section_link);
+    /*section end*/
+
+
+    //FOOTER
+    const footer = document.createElement("div");
+    footer.className = "cranky_footer";
+    footer.style = "";
+    footer.id = "footer";
+    body_tag.appendChild(footer);
+
+    const links = ['linkedin', 'github'];
+    const links_style = ['fab fa-linkedin fa-2x', 'fab fa-github-square fa-2x'];
+    const links_href = ['https://www.linkedin.com/in/pedro-costa-298755178/', 'https://github.com/CrankyUnicorn/'];
+    var footer_links = new Array();
+    var footer_links_icons = new Array();
+
+    for (let i = 0; i < links.length; i++) {
+      footer_links[i] = document.createElement("a");
+      footer_links[i].className = "cranky_right";
+      footer_links[i].style = "";
+      footer_links[i].id = `footer_links_${[i]}`;
+      footer_links[i].textContent = "";
+      footer_links[i].href = links_href[i];
+      footer.appendChild(footer_links[i]);
+
+      footer_links_icons[i] = document.createElement("i");
+      footer_links_icons[i].className = links_style[i];
+      footer_links_icons[i].style = "";
+      footer_links_icons[i].id = `footer_links_icons_${[i]}`;
+      footer_links_icons[i].textContent = "";
+      footer_links[i].appendChild(footer_links_icons[i]);
+    }
+
+    const footer_title = document.createElement("h5");
+    footer_title.className = "";
+    footer_title.style = "";
+    footer_title.id = "footer_title";
+    footer_title.textContent = "Pedro Costa 2021";
+    footer.appendChild(footer_title);
+
+
+    //RIGHT LEFT BAR
+    const side_bar_right = document.createElement("div");
+    side_bar_right.className = "cranky_side_bar";
+    side_bar_right.style = "";
+    side_bar_right.id = "side_bar_right"
+    main.appendChild(side_bar_right);
+
+
+
+  }
+
+
+  create_frontpage_content();
+</script>

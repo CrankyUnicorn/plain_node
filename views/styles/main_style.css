@@ -44,20 +44,20 @@
       text-shadow: 0px 0px 2px darkorange;
     }
 
-    .crank_ultragrey{
+    .cranky_ultragrey{
       color: var(--ultragrey);
     }
 
-    .crank_lightyellow{
+    .cranky_lightyellow{
       color: lightgoldenrodyellow;
     }
 
-    .crank_orange_glow{
+    .cranky_orange_glow{
       color: orange;
       text-shadow: 0px 0px 2px darkorange;
     }
 
-    .crank_codeblock {
+    .cranky_codeblock {
       background-color: var(--ultragrey);
       border: 0px solid transparent;
       border-radius: 25px;

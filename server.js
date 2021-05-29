@@ -1,11 +1,10 @@
 //const fs = require('fs');
 //const path = require('path');
 const http = require('http');
-const url = require('url');
-const querystring = require('querystring');
 const file_access = require('./modules/File_Access');
 const index_controller = require('./controllers/index_controller');
 const { backoffice_controller } = require('./controllers/backoffice_controller');
+const { frontpage_controller } = require('./controllers/frontpage_controller');
 
 const file_access_instant = new file_access();
 
@@ -23,16 +22,23 @@ http.createServer(function (request, response) {
   var filePath = '.' + true_url.pathname;
 
 
-  //gate controller for pages
+  //gate for each pages
+    //INDEX
   if (filePath == './') {
     filePath = './views/html/index.html';
     console.log('file access: ', file_access_instant.get_file(response, filePath));
 
+    //SERVER EXAMPLE
   } else if (filePath == './test') {
     index_controller(request, response);
 
+    //BACKOFFICE
   } else if (filePath == './backoffice') {
     backoffice_controller(request, response);
+
+    //FRONTPAGE
+  } else if (filePath == './frontpage') {
+    frontpage_controller(request, response);
 
   } else {
     console.log('file access: ', file_access_instant.get_file(response, filePath));

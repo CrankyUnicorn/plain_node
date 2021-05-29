@@ -37,6 +37,6 @@
     http.send(null);
 
     //false prevent form from submitting
-    return true;
+    return false;
 
   }

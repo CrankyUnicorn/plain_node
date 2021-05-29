@@ -1,0 +1,408 @@
+:root {
+  --royal_blue: #383288;
+  --royal_blue_ligth: #494399;
+  --almost_white: #f8f2ff;
+  --light_grey: #d8d8d8;
+  --medium_grey: #8d8d8d;
+  --medium_grey_royal_blue: #88829d;
+  --darker_grey: #333333;
+}
+
+/* animations */
+@keyframes slide_up {
+  from {height: 50px;}
+  to {height: 0; padding: 0; margin: 0;}
+}
+
+@keyframes article_slide_up {
+  from {
+    flex: 0%; 
+    max-width: 0px; 
+    padding: 0px;}
+  to {flex: 60%;}
+}
+
+/* tag related */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Ubuntu", sans-serif;
+  ;
+  margin: 0;
+}
+
+a {
+  cursor: pointer;
+  color: var(--royal_blue);
+  text-decoration: underline;
+}
+
+/* aligment etc */
+.cranky_right {
+  margin-left: auto;
+}
+
+/* Alert Bar */
+.cranky_alert_bar{
+  background:yellow;
+  padding:5px; 
+  display:block;
+  overflow: hidden;
+  animation-name: slide_up;
+  animation-duration: 1s;
+  animation-delay: 5s;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+/* Header/logo Title */
+.cranky_header {
+  padding: 30px;
+  text-align: center;
+  background: var(--royal_blue);
+  color: white;
+}
+
+/* Style the top navigation bar */
+.cranky_navigation_bar {
+  display: flex;
+  background-color: var(--darker_grey);
+}
+
+.cranky_navigation_bar_container {
+  display: flex;
+}
+
+/* Style the navigation bar links */
+.cranky_navigation_bar_container_button {
+  height: 40px;
+  padding: 0 10px 0 10px;
+  margin: 10px 10px 0 0;
+  background-color: var(--royal_blue);
+  border-radius:  5px 5px 0 0;
+  cursor: pointer;
+  box-shadow: 1px -1px 1px 1px #222;
+}
+
+.cranky_navigation_bar_container_button:hover {
+  vertical-align: middle;
+  background-color: var(--royal_blue_ligth);
+}
+
+.cranky_navigation_bar_container_button_content{
+  color: white;
+  margin: 5px;
+  padding: 0;
+  text-align: center;
+}
+
+/* Style the navigation bar form */
+.cranky_navigation_bar_container form label {
+  color: white;
+  padding: 10px 10px;
+  margin-left: 10px;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--royal_blue);
+}
+
+.cranky_navigation_bar_container form input {
+  color: gray;
+  padding: 4px 4px;
+  margin-left: 10px;
+  width: 100px;
+  text-decoration: none;
+  text-align: left;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--almost_white);
+}
+
+.cranky_navigation_bar_container form input[type="submit"] {
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px 10px;
+  background-color: var(--royal_blue);
+}
+
+/* Change color on hover */
+.cranky_navigation_bar_container input[type="submit"]:hover {
+  text-decoration: none;
+  text-align: center;
+  background-color: var(--royal_blue_ligth);
+}
+
+/* Column container */
+.cranky_main {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+/* Sidebar/left column */
+.cranky_side_bar {
+  flex: 20%;
+  background-color: var(--medium_grey);
+  padding: 20px;
+}
+
+/* Article */
+.cranky_article {
+  overflow: hidden;
+  min-height: 70vh;
+  flex: 60%;
+  background-color: var(--light_grey);
+  padding: 20px;
+  animation-name: article_slide_up;
+  animation-duration: 2s;
+  animation-delay: 0.1s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.cranky_section {
+  overflow: hidden;
+  position: relative;
+}
+
+/* img container */
+.cranky_section_image_container {
+  background-color: var(--medium_grey_royal_blue);
+  width: 100%;
+  padding: 0px;
+  height: 200px;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+  padding: 0;
+}
+
+.cranky_section_image {
+  position: absolute;
+  width: 100%;
+}
+
+.cranky_section_link{
+  margin: 10px 0 10px 0
+}
+
+/* Inner Form*/
+.cranky_inner_form {
+  color: white;
+}
+
+/* Style the inner_form form label */
+.cranky_inner_form label {
+  display: block;
+  color: white;
+  padding: 10px 10px;
+  margin-top: 10px;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--royal_blue);
+}
+
+.cranky_inner_form input {
+  color: gray;
+  padding: 4px 4px;
+  margin-left: 10px;
+  width: 80%;
+  text-decoration: none;
+  text-align: left;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--almost_white);
+}
+
+.cranky_inner_form input[type="submit"] {
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  font-size: 15px;
+  width: 120px;
+  padding: 10px 10px;
+  margin-top: 10px;
+  background-color: var(--royal_blue);
+}
+
+/* Change color on hover */
+
+.cranky_inner_form input[type="submit"]:hover {
+  text-decoration: none;
+  text-align: center;
+  background-color: var(--royal_blue_ligth);
+}
+
+/* Footer */
+.cranky_footer {
+  color: var(--medium_grey_royal_blue);
+  padding: 20px;
+  text-align: center;
+  background: var(--darker_grey);
+  
+}
+
+.cranky_footer a {
+  color: var(--medium_grey_royal_blue);
+  padding: 6px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.cranky_footer h5 {
+  padding: 6px;
+  margin: 0;
+  text-decoration: none;
+  text-align: center;
+}
+
+/* table dedicted */
+.cranky_isv_table tr td {
+  border: none;
+}
+
+.cranky_isv_table tr td {
+  padding: 0 10px 0 10px;
+}
+
+.cranky_isv_table tr td h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.cranky_isv_table tr td h2 {
+  text-align: right;
+  margin: 0;
+  padding: 0;
+}
+
+.cranky_isv_table tr td h1 {
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+.cranky_isv_row_final td {
+  color: white;
+  border-radius: 5px;
+  margin: 10px 0 10px 0;
+  padding: 0;
+  background-color: var(--royal_blue);
+}
+
+/* queries form format */
+.cranky_query_form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: stretch;
+  align-content: space-between;
+  color: white;
+}
+
+.cranky_query_form label {
+  color: white;
+  flex: 48%;
+  padding: 10px 10px;
+  margin: 10px 0 0 0;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--royal_blue);
+}
+
+.cranky_query_form input {
+  color: gray;
+  padding: 4px 4px;
+  margin-left: 10px;
+  width: 50%;
+  text-decoration: none;
+  text-align: left;
+  border: none;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+}
+
+.cranky_query_form select {
+  color: gray;
+  padding: 4px 4px;
+  margin-left: 10px;
+  width: 50%;
+  text-decoration: none;
+  text-align: left;
+  border: none;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+}
+
+.cranky_query_form input[type="submit"] {
+  color: white;
+  flex: 48%;
+  padding: 10px 10px;
+  margin: 10px 0 0 0;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--royal_blue);
+  font-size: 15px;
+}
+
+/* Change color on hover */
+
+.cranky_query_form input[type="submit"]:hover {
+  text-decoration: none;
+  text-align: center;
+  background-color: var(--royal_blue_ligth);
+}
+
+/* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 700px) {
+  .cranky_main, .cranky_navigation_bar_container {
+    flex-direction: column;
+  }
+  .cranky_right {
+    margin-left: 0;
+  }
+
+  .cranky_navigation_bar_container{
+    width: 100%;
+    padding: 5px 10px 10px 10px;
+  }
+  .cranky_navigation_bar_container_button {
+    height: 30px;
+    padding: 0 10px 0 10px;
+    margin: 5px 0 0 0; 
+    background-color: var(--royal_blue);
+    border-radius:  5px;
+  }
+  .cranky_navigation_bar_container form label {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
+  .cranky_navigation_bar_container form input {
+    width: 80%;
+  }
+  .cranky_navigation_bar_container form input[type="submit"] {
+    width: 120px;
+    margin-left: 0px;
+    margin-top: 10px;
+    margin-left: auto;
+  }
+
+  .cranky_side_bar {
+    display: none;
+  }
+}
