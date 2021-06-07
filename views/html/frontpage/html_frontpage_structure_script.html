@@ -1,7 +1,10 @@
 <script>
-  function create_frontpage_content() {
-    const body_tag = document.getElementById("body");
+  const body_tag = document.getElementById("body");
 
+  function create_frontpage_content() {
+  }
+
+  function create_frontpage_alert_bar() {
     //TOP MOST BAR - ALERT BAR
     const alert_bar = document.createElement("div");
     alert_bar.className = "cranky_alert_bar";
@@ -9,20 +12,37 @@
     alert_bar.id = "alert_bar";
     body_tag.appendChild(alert_bar);
 
-    const alert_under_bar = document.createElement("div");
-    alert_under_bar.className = "cranky_alert_bar cranky_alert_under_bar";
-    alert_under_bar.style = "";
-    alert_under_bar.id = "alert_under_bar";
-    body_tag.appendChild(alert_under_bar);
-
     const alert_bar_message = document.createElement("h4");
     alert_bar_message.className = "";
     alert_bar_message.style = "text-align:center";
     alert_bar_message.id = "alert_bar_message";
     alert_bar_message.textContent = "Resize the browser window to see the responsive effect";
     alert_bar.appendChild(alert_bar_message);
+  }
 
+  function create_frontpage_top_fixed_nav() {
+    //TOP FIXED - NAV BAR
+    const top_fixed_nav_bar = document.createElement("div");
+    top_fixed_nav_bar.className = "cranky_top_fixed_nav_bar";
+    top_fixed_nav_bar.style = "";
+    top_fixed_nav_bar.id = "top_fixed_nav_bar";
+    body_tag.appendChild(top_fixed_nav_bar);
 
+    const top_fixed_nav_bar_under = document.createElement("div");
+    top_fixed_nav_bar_under.className = "cranky_top_fixed_nav_bar_under";
+    top_fixed_nav_bar_under.style = "";
+    top_fixed_nav_bar_under.id = "top_fixed_nav_bar_under";
+    body_tag.appendChild(top_fixed_nav_bar_under);
+
+    const top_fixed_nav_bar_message = document.createElement("h4");
+    top_fixed_nav_bar_message.className = "";
+    top_fixed_nav_bar_message.style = "text-align:center";
+    top_fixed_nav_bar_message.id = "top_fixed_nav_bar_message";
+    top_fixed_nav_bar_message.textContent = "buttons go here";
+    top_fixed_nav_bar.appendChild(top_fixed_nav_bar_message);
+  }
+
+  function create_frontpage_header() {
     //HEADER TITLE BAR 
     const header_bar = document.createElement("div");
     header_bar.className = "cranky_header";
@@ -43,8 +63,9 @@
     header_bar_subtitle.id = "header_bar_subtitle";
     header_bar_subtitle.textContent = "Integração de Sistemas de Informação - Ferramentas";
     header_bar.appendChild(header_bar_title);
+  }
 
-
+  function create_frontpage_nav_bar() {
     //NAVIGATION BAR 
     const navigation_bar = document.createElement("div");
     navigation_bar.className = "cranky_navigation_bar";
@@ -77,8 +98,9 @@
       navigation_bar_container_button_content[i].textContent = topics[i];
       navigation_bar_container_button[i].appendChild(navigation_bar_container_button_content[i]);
     }
+  }
 
-
+  function create_frontpage_main() {
     //MAIN
     const main = document.createElement("div");
     main.className = "cranky_main";
@@ -86,17 +108,14 @@
     main.id = "main";
     body_tag.appendChild(main);
 
-    const side_bar_left = document.createElement("div");
-    side_bar_left.className = "cranky_side_bar";
-    side_bar_left.style = "";
-    side_bar_left.id = "side_bar_left"
-    main.appendChild(side_bar_left);
-
+    //article
     const article = document.createElement("div");
     article.className = "cranky_article";
     article.style = "";
     article.id = "article"
     main.appendChild(article);
+
+    //sidebar if needed
 
     /*section start*/
     const section = document.createElement("div");
@@ -148,7 +167,10 @@
     section.appendChild(section_link);
     /*section end*/
 
+    //sidebar if needed
+  }
 
+  function create_frontpage_footer() {
     //FOOTER
     const footer = document.createElement("div");
     footer.className = "cranky_footer";
@@ -185,36 +207,117 @@
     footer_title.id = "footer_title";
     footer_title.textContent = "Pedro Costa 2021";
     footer.appendChild(footer_title);
+  }
 
-
+  function create_frontpage_side_bar() {
     //RIGHT LEFT BAR
     const side_bar_right = document.createElement("div");
     side_bar_right.className = "cranky_side_bar";
     side_bar_right.style = "";
     side_bar_right.id = "side_bar_right"
     main.appendChild(side_bar_right);
-
-
-
   }
 
-  
+  /*
+  function nav_bar_scroll_event(scroll_bar_id) {
+    // Show the navbar when the page is scrolled up
+    var MQL = 992;
+    var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    var mainNav = document.getElementById(scroll_bar_id);
 
-  window.addEventListener("scroll", (event) => {
-    var alert_bar = document.getElementById('alert_bar');
-    var alert_under_bar = document.getElementById('alert_under_bar');
+    //primary navigation slide-in effect
+    if (mainNav && vw > MQL) {
+      var headerHeight = mainNav.offsetHeight;
+      var previousTop = window.pageYOffset;
 
-    let scroll_pos_Y = this.scrollY;
-    console.log(scroll_pos_Y);
+      window.addEventListener('scroll', function () {
+        var currentTop = window.pageYOffset;
+        //check if user is scrolling up
+        if (currentTop < previousTop) {
+          //if scrolling up...
+          if (currentTop > 0 && mainNav.classList.contains('is-fixed')) {
+            mainNav.classList.add('is-visible');
+          } else {
+            mainNav.classList.remove('is-visible', 'is-fixed');
+          }
+        } else if (currentTop > previousTop) {
+          //if scrolling down...
+          mainNav.classList.remove('is-visible');
 
-    if (scroll_pos_Y > 0) {
-      alert_bar.style = "position: fixed; left:0; right:0";
-      alert_under_bar.style = "display:block";
-    }else{
-      alert_bar.style = "position: relative;";
-      alert_under_bar.style = "display:none";
+          if (currentTop > headerHeight && !mainNav.classList.contains('is-fixed')) {
+            mainNav.classList.add('is-fixed');
+          }
+        }
+        previousTop = currentTop;
+      });
     }
-  });
+  }
+*/
+
+  function nav_bar_scroll_event(scroll_bar_id) {
+
+    var previousTop = window.pageYOffset;
+
+    window.addEventListener("scroll", (event) => {
+
+      let element_a = document.getElementById(scroll_bar_id);
+      let element_b = document.getElementById(''.concat(scroll_bar_id,'_under'));
+
+      const MQL = 720; //window width in x pixels
+      let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      //console.log(vw);
+      let headerHeight = element_a.offsetHeight;
+
+      if (element_a && vw > MQL) {
+        let currentTop = window.pageYOffset;
+        //check if user is scrolling up
+        if (currentTop < previousTop) {
+          //if scrolling up...
+          if (currentTop > 0) {
+            element_a.classList.remove('disolve');
+            element_a.classList.add('is-fixed');
+            element_a.classList.remove('is-none');
+            element_b.classList.add('is-block');
+
+          } else {
+            element_a.classList.remove('disolve');
+            element_a.classList.remove('is-fixed');
+            element_a.classList.remove('is-none');
+            element_b.classList.remove('is-block');
+          }
+
+          //if scrolling down...
+        } else if (currentTop > previousTop) {
+          element_a.classList.add('is-fixed');
+          element_a.classList.add('disolve');
+          element_a.classList.remove('is-none');
+          element_b.classList.add('is-block');
+
+          if (currentTop > headerHeight || false) {
+            element_a.classList.add('is-none');
+            element_b.classList.add('is-block');
+          }
+
+        }
+        previousTop = currentTop;
+      }else{
+        element_a.classList.remove('is-fixed');
+        element_a.classList.remove('is-none');
+        element_b.classList.remove('is-block');
+      }
+
+    });
+  }
 
   create_frontpage_content();
+  create_frontpage_top_fixed_nav();
+  create_frontpage_header();
+  create_frontpage_main();
+  create_frontpage_main();
+  create_frontpage_main();
+  create_frontpage_main();
+  create_frontpage_footer();
+
+  nav_bar_scroll_event('top_fixed_nav_bar');
+
 </script>
