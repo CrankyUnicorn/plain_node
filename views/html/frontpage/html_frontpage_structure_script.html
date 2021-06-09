@@ -1,13 +1,17 @@
 <script>
-  const body_tag = document.getElementById("body");
 
+  /*COSTANTs AND VARIABLES--------------------------------------------------------*/
+  const body_tag = document.getElementById("body");
+  var menu_topics = new Array();
+
+  /*ELEMENT BLOCKS-----------------------------------------------------------*/
   function create_frontpage_content() {
   }
 
   function create_frontpage_alert_bar() {
     //TOP MOST BAR - ALERT BAR
     const alert_bar = document.createElement("div");
-    alert_bar.className = "cranky_alert_bar";
+    alert_bar.className = "cun_alert_bar";
     alert_bar.style = "";
     alert_bar.id = "alert_bar";
     body_tag.appendChild(alert_bar);
@@ -20,32 +24,99 @@
     alert_bar.appendChild(alert_bar_message);
   }
 
-  function create_frontpage_top_fixed_nav() {
+  function create_frontpage_top_nav() {
     //TOP FIXED - NAV BAR
-    const top_fixed_nav_bar = document.createElement("div");
-    top_fixed_nav_bar.className = "cranky_top_fixed_nav_bar";
-    top_fixed_nav_bar.style = "";
-    top_fixed_nav_bar.id = "top_fixed_nav_bar";
-    body_tag.appendChild(top_fixed_nav_bar);
+    var top_navbar;
+    
+    let element_navbar = document.getElementById('top_navbar');
 
-    const top_fixed_nav_bar_under = document.createElement("div");
-    top_fixed_nav_bar_under.className = "cranky_top_fixed_nav_bar_under";
-    top_fixed_nav_bar_under.style = "";
-    top_fixed_nav_bar_under.id = "top_fixed_nav_bar_under";
-    body_tag.appendChild(top_fixed_nav_bar_under);
+    if (element_navbar) {
+      while (element_navbar.firstChild) {
+        element_navbar.removeChild(element_navbar.firstChild);
+      }
+      top_navbar = element_navbar;
+      
+    }else{
 
-    const top_fixed_nav_bar_message = document.createElement("h4");
-    top_fixed_nav_bar_message.className = "";
-    top_fixed_nav_bar_message.style = "text-align:center";
-    top_fixed_nav_bar_message.id = "top_fixed_nav_bar_message";
-    top_fixed_nav_bar_message.textContent = "buttons go here";
-    top_fixed_nav_bar.appendChild(top_fixed_nav_bar_message);
+      top_navbar = document.createElement("div");
+      top_navbar.className = "cun_top_navbar cun_navbar";
+      top_navbar.style = "";
+      top_navbar.id = "top_navbar";
+      body_tag.appendChild(top_navbar);
+    }
+
+    const top_navbar_under = document.createElement("div");
+    top_navbar_under.className = "cun_top_navbar_under";
+    top_navbar_under.style = "";
+    top_navbar_under.id = "top_navbar_under";
+    body_tag.appendChild(top_navbar_under);
+
+    const top_navbar_container = document.createElement("div");
+    top_navbar_container.className = "cun_navbar_container";
+    top_navbar_container.style = "";
+    top_navbar_container.id = "top_navbar_container";
+    top_navbar.appendChild(top_navbar_container);
+
+    //logo div
+    const navbar_logo_container = document.createElement("div");
+    navbar_logo_container.className = "cun_navbar_logo_container cun_left";
+    navbar_logo_container.style = "";
+    navbar_logo_container.id = "navbar_logo_container";
+    top_navbar_container.appendChild(navbar_logo_container);
+
+    const top_navbar_message = document.createElement("a");
+    top_navbar_message.className = "cun_navbar_logo_text cun_left";
+    top_navbar_message.style = "text-align:left;";
+    top_navbar_message.id = "top_navbar_message";
+    top_navbar_message.textContent = "logo go here";
+    navbar_logo_container.appendChild(top_navbar_message);
+
+    //little 3 bar button to display menu items under 720px w
+    const navbar_logo_container_button = document.createElement("button");
+    navbar_logo_container_button.className = "cun_navbar_logo_container_button cun_right";
+    navbar_logo_container_button.style = "";
+    navbar_logo_container_button.id = "navbar_logo_container_button";
+    navbar_logo_container_button.addEventListener("click", () => { show_hide_menu('navbar_buttons_container') });
+    navbar_logo_container.appendChild(navbar_logo_container_button);
+
+    const navbar_logo_container_button_icon = document.createElement("i");
+    navbar_logo_container_button_icon.className = "fa fa-bars";
+    navbar_logo_container_button_icon.style = "";
+    navbar_logo_container_button_icon.id = "navbar_logo_container_button_icon";
+    navbar_logo_container_button.appendChild(navbar_logo_container_button_icon);
+
+    //nav buttons div
+    const navbar_buttons_container = document.createElement("div");
+    navbar_buttons_container.className = "cun_navbar_button_container cun_right_menu cun_hide collapse";
+    navbar_buttons_container.style = "";
+    navbar_buttons_container.id = "navbar_buttons_container";
+    top_navbar_container.appendChild(navbar_buttons_container);
+
+    //const topics = ['about', 'contacts', 'work', 'more'];
+    var navbar_container_button = new Array();
+    var navbar_container_button_content = new Array();
+
+    for (let i = 0; i < menu_topics.length; i++) {
+
+      navbar_container_button[i] = document.createElement("div");
+      navbar_container_button[i].className = "cun_cursor_pointer";
+      navbar_container_button[i].style = "display:inline-block";
+      navbar_container_button[i].id = `navbar_container_button_${[i]}`;
+      navbar_buttons_container.appendChild(navbar_container_button[i]);
+
+      navbar_container_button_content[i] = document.createElement("a");
+      navbar_container_button_content[i].className = "cun_navbar_container_button_content";
+      navbar_container_button_content[i].style = "";
+      navbar_container_button_content[i].id = `navbar_container_button_content_${[i]}`;
+      navbar_container_button_content[i].textContent = menu_topics[i];
+      navbar_container_button[i].appendChild(navbar_container_button_content[i]);
+    }
   }
 
   function create_frontpage_header() {
     //HEADER TITLE BAR 
     const header_bar = document.createElement("div");
-    header_bar.className = "cranky_header";
+    header_bar.className = "cun_header";
     header_bar.style = "";
     header_bar.id = "header_bar";
     body_tag.appendChild(header_bar);
@@ -65,52 +136,54 @@
     header_bar.appendChild(header_bar_title);
   }
 
-  function create_frontpage_nav_bar() {
+  //#region navbar
+  function create_frontpage_navbar() {
     //NAVIGATION BAR 
-    const navigation_bar = document.createElement("div");
-    navigation_bar.className = "cranky_navigation_bar";
-    navigation_bar.style = "";
-    navigation_bar.id = "navigation_bar";
-    body_tag.appendChild(navigation_bar);
+    const navbar = document.createElement("div");
+    navbar.className = "cun_navbar";
+    navbar.style = "";
+    navbar.id = "navbar";
+    body_tag.appendChild(navbar);
 
-    const navigation_bar_container = document.createElement("div");
-    navigation_bar_container.className = "cranky_navigation_bar_container cranky_right";
-    navigation_bar_container.style = "";
-    navigation_bar_container.id = "navigation_bar_container";
-    navigation_bar.appendChild(navigation_bar_container);
+    const navbar_container = document.createElement("div");
+    navbar_container.className = "cun_navbar_container cun_right";
+    navbar_container.style = "";
+    navbar_container.id = "navbar_container";
+    navbar.appendChild(navbar_container);
 
     const topics = ['about', 'contacts', 'work', 'more'];
-    var navigation_bar_container_button = new Array();
-    var navigation_bar_container_button_content = new Array();
+    var navbar_container_button = new Array();
+    var navbar_container_button_content = new Array();
 
     for (let i = 0; i < topics.length; i++) {
 
-      navigation_bar_container_button[i] = document.createElement("div");
-      navigation_bar_container_button[i].className = "cranky_navigation_bar_container_button";
-      navigation_bar_container_button[i].style = "";
-      navigation_bar_container_button[i].id = `navigation_bar_container_button_${[i]}`;
-      navigation_bar_container.appendChild(navigation_bar_container_button[i]);
+      navbar_container_button[i] = document.createElement("div");
+      navbar_container_button[i].className = "cun_navbar_container_button";
+      navbar_container_button[i].style = "";
+      navbar_container_button[i].id = `navbar_container_button_${[i]}`;
+      navbar_container.appendChild(navbar_container_button[i]);
 
-      navigation_bar_container_button_content[i] = document.createElement("p");
-      navigation_bar_container_button_content[i].className = "cranky_navigation_bar_container_button_content";
-      navigation_bar_container_button_content[i].style = "";
-      navigation_bar_container_button_content[i].id = `navigation_bar_container_button_content_${[i]}`;
-      navigation_bar_container_button_content[i].textContent = topics[i];
-      navigation_bar_container_button[i].appendChild(navigation_bar_container_button_content[i]);
+      navbar_container_button_content[i] = document.createElement("p");
+      navbar_container_button_content[i].className = "cun_navbar_container_button_content";
+      navbar_container_button_content[i].style = "";
+      navbar_container_button_content[i].id = `navbar_container_button_content_${[i]}`;
+      navbar_container_button_content[i].textContent = topics[i];
+      navbar_container_button[i].appendChild(navbar_container_button_content[i]);
     }
   }
+  //#endregion
 
   function create_frontpage_main() {
     //MAIN
     const main = document.createElement("div");
-    main.className = "cranky_main";
+    main.className = "cun_main";
     main.style = "";
     main.id = "main";
     body_tag.appendChild(main);
 
     //article
     const article = document.createElement("div");
-    article.className = "cranky_article";
+    article.className = "cun_article";
     article.style = "";
     article.id = "article"
     main.appendChild(article);
@@ -119,7 +192,7 @@
 
     /*section start*/
     const section = document.createElement("div");
-    section.className = "cranky_section";
+    section.className = "cun_section";
     section.style = "";
     section.id = "section"
     article.appendChild(section);
@@ -139,13 +212,13 @@
     section.appendChild(section_subtitle);
 
     const section_image_container = document.createElement("div");
-    section_image_container.className = "cranky_section_image_container";
+    section_image_container.className = "cun_section_image_container";
     section_image_container.style = "";
     section_image_container.id = "section_image_container"
     section.appendChild(section_image_container);
 
     const section_image = document.createElement("img");
-    section_image.className = "cranky_section_image";
+    section_image.className = "cun_section_image";
     section_image.style = "";
     section_image.id = "section_image"
     section_image.src = "./resources/images/logo.png"
@@ -159,7 +232,7 @@
     section.appendChild(section_description);
 
     const section_link = document.createElement("a");
-    section_link.className = "cranky_section_link";
+    section_link.className = "cun_section_link";
     section_link.style = "";
     section_link.id = "section_link";
     section_link.textContent = "link";
@@ -173,7 +246,7 @@
   function create_frontpage_footer() {
     //FOOTER
     const footer = document.createElement("div");
-    footer.className = "cranky_footer";
+    footer.className = "cun_footer";
     footer.style = "";
     footer.id = "footer";
     body_tag.appendChild(footer);
@@ -186,7 +259,7 @@
 
     for (let i = 0; i < links.length; i++) {
       footer_links[i] = document.createElement("a");
-      footer_links[i].className = "cranky_right";
+      footer_links[i].className = "cun_right";
       footer_links[i].style = "";
       footer_links[i].id = `footer_links_${[i]}`;
       footer_links[i].textContent = "";
@@ -212,56 +285,79 @@
   function create_frontpage_side_bar() {
     //RIGHT LEFT BAR
     const side_bar_right = document.createElement("div");
-    side_bar_right.className = "cranky_side_bar";
+    side_bar_right.className = "cun_side_bar";
     side_bar_right.style = "";
     side_bar_right.id = "side_bar_right"
     main.appendChild(side_bar_right);
   }
 
-  /*
-  function nav_bar_scroll_event(scroll_bar_id) {
-    // Show the navbar when the page is scrolled up
-    var MQL = 992;
-    var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-    var mainNav = document.getElementById(scroll_bar_id);
+  /*EVENTS---------------------------------------------------------------------*/
+ 
 
-    //primary navigation slide-in effect
-    if (mainNav && vw > MQL) {
-      var headerHeight = mainNav.offsetHeight;
-      var previousTop = window.pageYOffset;
+  window.addEventListener('load', () => {
+    send_xmlhttprequest('db_request','get','menus_topics=main_menu', (response)=>{
+      
+      menu_topics = response.split(',');
+      console.log(menu_topics);
+      create_frontpage_top_nav();
+      show_menu();
+    })
+  },false);
 
-      window.addEventListener('scroll', function () {
-        var currentTop = window.pageYOffset;
-        //check if user is scrolling up
-        if (currentTop < previousTop) {
-          //if scrolling up...
-          if (currentTop > 0 && mainNav.classList.contains('is-fixed')) {
-            mainNav.classList.add('is-visible');
-          } else {
-            mainNav.classList.remove('is-visible', 'is-fixed');
-          }
-        } else if (currentTop > previousTop) {
-          //if scrolling down...
-          mainNav.classList.remove('is-visible');
 
-          if (currentTop > headerHeight && !mainNav.classList.contains('is-fixed')) {
-            mainNav.classList.add('is-fixed');
-          }
+  window.addEventListener('load', () => {
+    
+    show_menu();
+
+  },false);
+
+
+  window.addEventListener('resize', () => {
+    
+    show_menu();
+    
+  },false);
+
+  /*FUNCTIONS----------------------------------------------------------------*/
+  //#region FUNCTIONS(){}
+
+  function show_menu(){
+
+    let element_a = document.getElementById('navbar_buttons_container');
+
+    if (element_a) {
+      if (window.innerWidth > 720) {
+        if (element_a.classList.contains('collapse')) {
+          element_a.classList.remove('cun_hide', 'collapse')
         }
-        previousTop = currentTop;
-      });
+      } else {
+        if (!element_a.classList.contains('collapse')) {
+          element_a.classList.add('cun_hide', 'collapse')
+        }
+      }
+    }
+
+  }
+
+  function show_hide_menu(menu_bar_id) {
+    let element_a = document.getElementById(menu_bar_id);
+    if (element_a) {
+      if (element_a.classList.contains('collapse')) {
+        element_a.classList.remove('cun_hide', 'collapse')
+      } else {
+        element_a.classList.add('cun_hide', 'collapse')
+      }
     }
   }
-*/
 
-  function nav_bar_scroll_event(scroll_bar_id) {
+  function navbar_scroll_event(navbar_id) {
 
     var previousTop = window.pageYOffset;
 
     window.addEventListener("scroll", (event) => {
 
-      let element_a = document.getElementById(scroll_bar_id);
-      let element_b = document.getElementById(''.concat(scroll_bar_id,'_under'));
+      let element_a = document.getElementById(navbar_id);
+      let element_b = document.getElementById(''.concat(navbar_id, '_under'));
 
       const MQL = 720; //window width in x pixels
       let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -288,9 +384,7 @@
 
           //if scrolling down...
         } else if (currentTop > previousTop) {
-          element_a.classList.add('is-fixed');
-          element_a.classList.add('disolve');
-          element_a.classList.remove('is-none');
+          element_a.classList.add('is-none');
           element_b.classList.add('is-block');
 
           if (currentTop > headerHeight || false) {
@@ -300,7 +394,7 @@
 
         }
         previousTop = currentTop;
-      }else{
+      } else {
         element_a.classList.remove('is-fixed');
         element_a.classList.remove('is-none');
         element_b.classList.remove('is-block');
@@ -308,16 +402,20 @@
 
     });
   }
+  //#endregion
 
-  create_frontpage_content();
-  create_frontpage_top_fixed_nav();
-  create_frontpage_header();
-  create_frontpage_main();
-  create_frontpage_main();
-  create_frontpage_main();
-  create_frontpage_main();
-  create_frontpage_footer();
+  /*FUNCTION CALL------------------------------------------------------------*/
+  
+    create_frontpage_content();
+    create_frontpage_top_nav();
+    create_frontpage_header();
+    create_frontpage_main();
+    create_frontpage_main();
+    create_frontpage_main();
+    create_frontpage_main();
+    create_frontpage_footer();
 
-  nav_bar_scroll_event('top_fixed_nav_bar');
+    navbar_scroll_event('top_navbar');
+  
 
 </script>

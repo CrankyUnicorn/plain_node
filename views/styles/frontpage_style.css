@@ -1,4 +1,8 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800);
+@import url(https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic);
+
 :root {
+  
   --royal_blue: #383288;
   --royal_blue_ligth: #494399;
   --almost_white: #f8f2ff;
@@ -6,6 +10,13 @@
   --medium_grey: #8d8d8d;
   --medium_grey_royal_blue: #88829d;
   --darker_grey: #333333;
+  --dark_transparent: #3339;
+  
+  --font-sans-serif: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+  --font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))
 }
 
 /* animations */
@@ -28,7 +39,7 @@
 }
 
 *, *::before, *::after {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 @media(prefers-reduced-motion: no-preference) {
@@ -38,26 +49,52 @@
 }
 
 body {
-  font-family: "Ubuntu", sans-serif;
-  ;
   margin: 0;
+  font-family: system-ui, -apple-system, Ubuntu, Segoe UI, Roboto, Cantarell, Noto Sans, sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: var(--font-sans-serif);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--almost_white);
+  background-color: #fff;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
 }
 
 a {
+  font-weight: 600;
   cursor: pointer;
-  color: var(--royal_blue);
-  text-decoration: underline;
+  color: var(--almost_white);
+  text-decoration: none;
+  transition: all .2s;
+}
+a:focus, a:hover {
+  color: var(--light_grey);
 }
 
-/* aligment etc */
+/* aligment etc--------------------------------------------------------------*/
 
-.cranky_right {
+.cun_right {
   margin-left: auto;
+}
+
+.cun_left {
+  margin-right: auto;
+}
+
+.cun_hide {
+  display: none !important;
+}
+
+/*pointers-------------------------------------------------------------------*/
+
+.cun_cursor_pointer {
+  cursor: pointer;
 }
 
 /* Alert Bar */
 
-.cranky_alert_bar {
+.cun_alert_bar {
   height: 70px;
   background: yellow;
   padding: 5px;
@@ -71,13 +108,13 @@ a {
   animation-fill-mode: forwards;
 }
 
-.cranky_alert_under_bar {
+.cun_alert_under_bar {
   display: none;
 }
 
 /*Top Fixed Nav Bar----------------------------------------------------------*/
 
-#top_fixed_nav_bar {
+#top_navbar {
   position: relative;
   height: 70px;
   padding: 5px;
@@ -86,20 +123,28 @@ a {
   transition: all .2s;
 }
 
+#top_navbar .top_navbar_under {
+  display: flex;
+}
+
+#top_navbar .top_navbar_under .top_navbar_container {
+  display: flex;
+}
+
 @media only screen and (min-width: 720px) {
-  #top_fixed_nav_bar {
+  #top_navbar {
     background-color: transparent;
     position: fixed;
     left: 0;
     right: 0;
   }
-  #top_fixed_nav_bar.is-fixed {
+  #top_navbar.is-fixed {
     color: black;
-    background-color: yellow;
-    border-bottom: 1px solid #fff;
+    background-color: var(--dark_transparent);
+    
     box-shadow: 0px 0px 5px #0008;
   }
-  #top_fixed_nav_bar.is-none {
+  #top_navbar.is-none {
     color: transparent;
     background-color: transparent;
     padding: 0;
@@ -108,16 +153,17 @@ a {
     border-bottom: 0px solid #fff;
     box-shadow: 0px 0px 5px #0000;
   }
-  #top_fixed_nav_bar_under.is-block {
+  #top_navbar_under.is-block {
     height: 0;
   }
 }
 
 @media only screen and (max-width: 720px) {
-  #top_fixed_nav_bar {
-    background-color: yellow;
+  #top_navbar {
+    height: auto;
+    background-color: grey;
   }
-  #cranky_top_fixed_nav_bar_under {
+  #cun_top_navbar_under {
     background-color: white;
     position: relative;
     height: 70px;
@@ -126,34 +172,69 @@ a {
     overflow: hidden;
     z-index: 99;
   }
-  #top_fixed_nav_bar.is-fixed {}
-  #top_fixed_nav_bar.is-none {}
-  #top_fixed_nav_bar.disolve {}
+  #top_navbar.is-fixed {}
+  #top_navbar.is-none {}
+  #top_navbar.disolve {}
 }
 
 /* Header/logo Title---------------------------------------------------------*/
 
-.cranky_header {
+.cun_header {
   padding: 30px;
   text-align: center;
   background: var(--royal_blue);
   color: white;
 }
 
-/* Style the top navigation bar */
+/* Style the top navigation bar----------------------------------------------*/
 
-.cranky_navigation_bar {
+.cun_navbar {
   display: flex;
   background-color: var(--darker_grey);
 }
 
-.cranky_navigation_bar_container {
+.cun_navbar_container {
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  flex-direction: row;
+  width: 100%;
+  margin: 20px 60px;
+}
+
+.cun_navbar_button_container {
   display: flex;
 }
 
-/* Style the navigation bar links */
+.cun_right_menu {
+  margin-left: auto;
+}
 
-.cranky_navigation_bar_container_button {
+.cun_navbar_logo_container{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.cun_navbar_logo_text {
+  color: var(--almost_white);
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-decoration: none;
+  white-space: nowrap
+}
+
+/* logo and 3 striped menu button */
+
+.cun_navbar_logo_container_button {
+  display: none;
+}
+
+.navbar_logo_container_icon {}
+
+/* Style the navigation bar links--------------------------------------------*/
+
+.cun_navbar_container_button {
   height: 40px;
   padding: 0 10px 0 10px;
   margin: 10px 10px 0 0;
@@ -163,21 +244,89 @@ a {
   box-shadow: 1px -1px 1px 1px #222;
 }
 
-.cranky_navigation_bar_container_button:hover {
+.cun_navbar_container_button:hover {
   vertical-align: middle;
   background-color: var(--royal_blue_ligth);
 }
 
-.cranky_navigation_bar_container_button_content {
-  color: white;
+.cun_navbar_container_button_content {
   margin: 5px;
   padding: 0;
   text-align: center;
 }
 
-/* Style the navigation bar form */
+@media screen and (max-width: 720px) {
+  .cun_main, .cun_navbar_button_container {
+    flex-direction: column;
+  }
 
-.cranky_navigation_bar_container form label {
+  .cun_navbar_container {
+    display: flex;
+    align-items: center;
+    align-content: space-between;
+    flex-direction: column;
+    width: 100%;
+    margin: 20px 60px;
+  }
+
+  .navbar_logo_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  .cun_right_menu {
+    margin-left: 0;
+    width: 100%;
+  }
+ 
+  .cun_navbar_logo_container_button {
+    display: inline-block;
+    
+    font-size: 1.25rem;
+    line-height: 1;
+    background-color: transparent;
+    border: 1px solid var(--almost_white);
+    border-radius: .25rem;
+    transition: box-shadow .2s ease-in-out
+  }
+  .cun_navbar_logo_container_button:hover {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .cun_navbar_logo_container_button>i {
+    color: var(--almost_white);
+  }
+  .cun_navbar_container_button_content {
+    text-align: left;
+    margin: 5px 5px 5px 0;
+  }
+  .cun_navbar_container_button {
+    height: 30px;
+    padding: 0 10px 0 10px;
+    margin: 5px 0 0 0;
+    background-color: var(--royal_blue);
+    border-radius: 5px;
+  }
+  .cun_navbar_container form label {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
+  .cun_navbar_container form input {
+    width: 80%;
+  }
+  .cun_navbar_container form input[type="submit"] {
+    width: 120px;
+    margin-left: 0px;
+    margin-top: 10px;
+    margin-left: auto;
+  }
+}
+
+/* Style the navigation bar form---------------------------------------------*/
+
+.cun_navbar_container form label {
   color: white;
   padding: 10px 10px;
   margin-left: 10px;
@@ -188,7 +337,7 @@ a {
   background-color: var(--royal_blue);
 }
 
-.cranky_navigation_bar_container form input {
+.cun_navbar_container form input {
   color: gray;
   padding: 4px 4px;
   margin-left: 10px;
@@ -200,7 +349,7 @@ a {
   background-color: var(--almost_white);
 }
 
-.cranky_navigation_bar_container form input[type="submit"] {
+.cun_navbar_container form input[type="submit"] {
   color: white;
   text-decoration: none;
   text-align: center;
@@ -211,30 +360,36 @@ a {
 
 /* Change color on hover */
 
-.cranky_navigation_bar_container input[type="submit"]:hover {
+.cun_navbar_container input[type="submit"]:hover {
   text-decoration: none;
   text-align: center;
   background-color: var(--royal_blue_ligth);
 }
 
-/* Column container */
+/* Column container----------------------------------------------------------*/
 
-.cranky_main {
+.cun_main {
   display: flex;
   flex-wrap: wrap;
 }
 
-/* Sidebar/left column */
+/* Sidebar/left column-------------------------------------------------------*/
 
-.cranky_side_bar {
+.cun_side_bar {
   flex: 20%;
   background-color: var(--medium_grey);
   padding: 20px;
 }
 
-/* Article */
+@media screen and (max-width: 720px) {
+  .cun_side_bar {
+    display: none;
+  }
+}
 
-.cranky_article {
+/* Article-------------------------------------------------------------------*/
+
+.cun_article {
   overflow: hidden;
   min-height: 70vh;
   flex: 60%;
@@ -242,14 +397,14 @@ a {
   padding: 20px;
 }
 
-.cranky_section {
+.cun_section {
   overflow: hidden;
   position: relative;
 }
 
 /* img container */
 
-.cranky_section_image_container {
+.cun_section_image_container {
   background-color: var(--medium_grey_royal_blue);
   width: 100%;
   padding: 0px;
@@ -260,24 +415,24 @@ a {
   padding: 0;
 }
 
-.cranky_section_image {
+.cun_section_image {
   position: absolute;
   width: 100%;
 }
 
-.cranky_section_link {
+.cun_section_link {
   margin: 10px 0 10px 0
 }
 
 /* Inner Form*/
 
-.cranky_inner_form {
+.cun_inner_form {
   color: white;
 }
 
 /* Style the inner_form form label */
 
-.cranky_inner_form label {
+.cun_inner_form label {
   display: block;
   color: white;
   padding: 10px 10px;
@@ -289,7 +444,7 @@ a {
   background-color: var(--royal_blue);
 }
 
-.cranky_inner_form input {
+.cun_inner_form input {
   color: gray;
   padding: 4px 4px;
   margin-left: 10px;
@@ -301,7 +456,7 @@ a {
   background-color: var(--almost_white);
 }
 
-.cranky_inner_form input[type="submit"] {
+.cun_inner_form input[type="submit"] {
   color: white;
   text-decoration: none;
   text-align: center;
@@ -312,31 +467,31 @@ a {
   background-color: var(--royal_blue);
 }
 
-/* Change color on hover */
+/* Change color on hover-----------------------------------------------------*/
 
-.cranky_inner_form input[type="submit"]:hover {
+.cun_inner_form input[type="submit"]:hover {
   text-decoration: none;
   text-align: center;
   background-color: var(--royal_blue_ligth);
 }
 
-/* Footer */
+/* Footer--------------------------------------------------------------------*/
 
-.cranky_footer {
+.cun_footer {
   color: var(--medium_grey_royal_blue);
   padding: 20px;
   text-align: center;
   background: var(--darker_grey);
 }
 
-.cranky_footer a {
+.cun_footer a {
   color: var(--medium_grey_royal_blue);
   padding: 6px;
   text-decoration: none;
   text-align: center;
 }
 
-.cranky_footer h5 {
+.cun_footer h5 {
   padding: 6px;
   margin: 0;
   text-decoration: none;
@@ -345,32 +500,32 @@ a {
 
 /* table dedicted */
 
-.cranky_isv_table tr td {
+.cun_isv_table tr td {
   border: none;
 }
 
-.cranky_isv_table tr td {
+.cun_isv_table tr td {
   padding: 0 10px 0 10px;
 }
 
-.cranky_isv_table tr td h3 {
+.cun_isv_table tr td h3 {
   margin: 0;
   padding: 0;
 }
 
-.cranky_isv_table tr td h2 {
+.cun_isv_table tr td h2 {
   text-align: right;
   margin: 0;
   padding: 0;
 }
 
-.cranky_isv_table tr td h1 {
+.cun_isv_table tr td h1 {
   text-align: left;
   margin: 0;
   padding: 0;
 }
 
-.cranky_isv_row_final td {
+.cun_isv_row_final td {
   color: white;
   border-radius: 5px;
   margin: 10px 0 10px 0;
@@ -380,7 +535,7 @@ a {
 
 /* queries form format */
 
-.cranky_query_form {
+.cun_query_form {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -390,7 +545,7 @@ a {
   color: white;
 }
 
-.cranky_query_form label {
+.cun_query_form label {
   color: white;
   flex: 48%;
   padding: 10px 10px;
@@ -402,7 +557,7 @@ a {
   background-color: var(--royal_blue);
 }
 
-.cranky_query_form input {
+.cun_query_form input {
   color: gray;
   padding: 4px 4px;
   margin-left: 10px;
@@ -414,7 +569,7 @@ a {
   background-color: #f1f1f1;
 }
 
-.cranky_query_form select {
+.cun_query_form select {
   color: gray;
   padding: 4px 4px;
   margin-left: 10px;
@@ -426,7 +581,7 @@ a {
   background-color: #f1f1f1;
 }
 
-.cranky_query_form input[type="submit"] {
+.cun_query_form input[type="submit"] {
   color: white;
   flex: 48%;
   padding: 10px 10px;
@@ -441,46 +596,10 @@ a {
 
 /* Change color on hover */
 
-.cranky_query_form input[type="submit"]:hover {
+.cun_query_form input[type="submit"]:hover {
   text-decoration: none;
   text-align: center;
   background-color: var(--royal_blue_ligth);
 }
 
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
-
-@media screen and (max-width: 700px) {
-  .cranky_main, .cranky_navigation_bar_container {
-    flex-direction: column;
-  }
-  .cranky_right {
-    margin-left: 0;
-  }
-  .cranky_navigation_bar_container {
-    width: 100%;
-    padding: 5px 10px 10px 10px;
-  }
-  .cranky_navigation_bar_container_button {
-    height: 30px;
-    padding: 0 10px 0 10px;
-    margin: 5px 0 0 0;
-    background-color: var(--royal_blue);
-    border-radius: 5px;
-  }
-  .cranky_navigation_bar_container form label {
-    margin-left: 0px;
-    margin-top: 10px;
-  }
-  .cranky_navigation_bar_container form input {
-    width: 80%;
-  }
-  .cranky_navigation_bar_container form input[type="submit"] {
-    width: 120px;
-    margin-left: 0px;
-    margin-top: 10px;
-    margin-left: auto;
-  }
-  .cranky_side_bar {
-    display: none;
-  }
-}
