@@ -1,9 +1,3 @@
-<script>
-
-  /*COSTANTs AND VARIABLES--------------------------------------------------------*/
-  const body_tag = document.getElementById("body");
-  var navbar_anchors = new Array();
-  var header_contents = new Array();
 
   /*ELEMENT BLOCKS-----------------------------------------------------------*/
   function create_frontpage_content() {
@@ -69,7 +63,7 @@
     top_navbar_message.className = "cun_navbar_logo_text cun_left";
     top_navbar_message.style = "text-align:left;";
     top_navbar_message.id = "top_navbar_message";
-    top_navbar_message.textContent = "logo go here";
+    top_navbar_message.textContent = "CrankyUnicorn";
     navbar_logo_container.appendChild(top_navbar_message);
 
     //little 3 bar button to display menu items under 720px w
@@ -97,6 +91,8 @@
     var navbar_container_button = new Array();
     var navbar_container_button_anchor = new Array();
 
+    var count_i = 0;
+
     for (let i = 0; i < navbar_anchors.length; i++) {
 
       navbar_container_button[i] = document.createElement("div");
@@ -112,7 +108,33 @@
       navbar_container_button_anchor[i].textContent = navbar_anchors[i][0];
       navbar_container_button_anchor[i].href = navbar_anchors[i][1];
       navbar_container_button[i].appendChild(navbar_container_button_anchor[i]);
+    
+      count_i = i;
     }
+
+    //spacing
+    navbar_container_button_anchor[count_i].style = "margin-right:40px";
+
+    const navbar_languages = [['EN','#'],['PT','#']];
+    //languages
+    for (let i = count_i; i < navbar_languages.length + count_i; i++) {
+
+      navbar_container_button[i] = document.createElement("div");
+      navbar_container_button[i].className = "cun_cursor_pointer";
+      navbar_container_button[i].style = "display:inline-block";
+      navbar_container_button[i].id = `navbar_container_button_${[i]}`;
+      navbar_buttons_container.appendChild(navbar_container_button[i]);
+
+      navbar_container_button_anchor[i] = document.createElement("a");
+      navbar_container_button_anchor[i].className = "cun_navbar_container_button_anchor";
+      navbar_container_button_anchor[i].style = "";
+      navbar_container_button_anchor[i].id = `navbar_container_button_anchor${[i]}`;
+      navbar_container_button_anchor[i].textContent = navbar_languages[i-count_i][0];
+      navbar_container_button_anchor[i].href = navbar_languages[i-count_i][1];
+      navbar_container_button[i].appendChild(navbar_container_button_anchor[i]);
+    
+    }
+
   }
 
   function create_frontpage_header() {
@@ -207,63 +229,86 @@
     body_tag.appendChild(main);
 
     //article
-    const article = document.createElement("div");
-    article.className = "cun_article";
-    article.style = "";
-    article.id = "article"
-    main.appendChild(article);
+    var article;
+    
+    let element_article = document.getElementById('article');
+
+    if (element_article) {
+      while (element_article.firstChild) {
+        element_article.removeChild(element_article.firstChild);
+      }
+      article = element_article;
+      
+    }else{
+
+      article = document.createElement("div");
+      article.className = "cun_article";
+      article.style = "";
+      article.id = "article"
+      main.appendChild(article);
+    }
 
     //sidebar if needed
 
+    var section = new Array();
+    var section_title = new Array();
+    var section_subtitle = new Array();
+    var section_image_container = new Array();
+    var section_image = new Array();
+    var section_description = new Array();
+    var section_link = new Array();
+
+    for (let i = 0; i < article_sections.length; i++) {
     /*section start*/
-    const section = document.createElement("div");
-    section.className = "cun_section";
-    section.style = "";
-    section.id = "section"
-    article.appendChild(section);
+    section[i] = document.createElement("div");
+    section[i].className = "cun_section"; 
+    section[i].style = "";
+    section[i].id = `section${[i]}`
+    article.appendChild(section[i]);
 
-    const section_title = document.createElement("h2");
-    section_title.className = "";
-    section_title.style = "";
-    section_title.id = "section_title";
-    section_title.textContent = "Titulo de Artigo";
-    section.appendChild(section_title);
+    section_title[i] = document.createElement("h2");
+    section_title[i].className = "";
+    section_title[i].style = "";
+    section_title[i].id = `section_title${[i]}`;
+    section_title[i].textContent = article_sections[i][0];
+    section[i].appendChild(section_title[i]);
 
-    const section_subtitle = document.createElement("h5");
-    section_subtitle.className = "";
-    section_subtitle.style = "";
-    section_subtitle.id = "section_subtitle";
-    section_subtitle.textContent = "Subtitulo de Artigo";
-    section.appendChild(section_subtitle);
+    section_subtitle[i] = document.createElement("h5");
+    section_subtitle[i].className = "";
+    section_subtitle[i].style = "";
+    section_subtitle[i].id = `section_subtitle${[i]}`;
+    section_subtitle[i].textContent = article_sections[i][1];
+    section[i].appendChild(section_subtitle[i]);
 
-    const section_image_container = document.createElement("div");
-    section_image_container.className = "cun_section_image_container";
-    section_image_container.style = "";
-    section_image_container.id = "section_image_container"
-    section.appendChild(section_image_container);
+    section_image_container[i] = document.createElement("div");
+    section_image_container[i].className = "cun_section_image_container";
+    section_image_container[i].style = "";
+    section_image_container[i].id = `section_image_container${[i]}`;
+    section[i].appendChild(section_image_container[i]);
 
-    const section_image = document.createElement("img");
-    section_image.className = "cun_section_image";
-    section_image.style = "";
-    section_image.id = "section_image"
-    section_image.src = "./resources/images/logo.png"
-    section_image_container.appendChild(section_image);
+    section_image[i] = document.createElement("img");
+    section_image[i].className = "cun_section_image";
+    section_image[i].style = "";
+    section_image[i].id = `section_image${[i]}`;
+    section_image[i].src = "./resources/images/post_bg_id_7.jpg";
+    section_image_container[i].appendChild(section_image[i]);
 
-    const section_description = document.createElement("p");
-    section_description.className = "";
-    section_description.style = "";
-    section_description.id = "section_description";
-    section_description.textContent = "Texto descritivo";
-    section.appendChild(section_description);
+    section_description[i] = document.createElement("p");
+    section_description[i].className = "";
+    section_description[i].style = "";
+    section_description[i].id = `section_description${[i]}`;
+    section_description[i].textContent = article_sections[i][2];
+    section[i].appendChild(section_description[i]);
 
-    const section_link = document.createElement("a");
-    section_link.className = "cun_section_link";
-    section_link.style = "";
-    section_link.id = "section_link";
-    section_link.textContent = "link";
-    section_link.href = "./view/html/index";
-    section.appendChild(section_link);
+    section_link[i] = document.createElement("a");
+    section_link[i].className = "cun_section_link";
+    section_link[i].style = "";
+    section_link[i].id = `section_link${[i]}`;
+    section_link[i].textContent = "link";
+    section_link[i].href = "./view/html/index";
+    section[i].appendChild(section_link[i]);
     /*section end*/
+    }
 
     //sidebar if needed
   }
@@ -333,18 +378,28 @@
       //console.log(JSON.parse(response));
       header_contents = JSON.parse(response);
       create_frontpage_header();
-      show_menu();
+      //show_menu();
     })
+
+    //LOAD SECTIONS
+    send_xmlhttprequest('db_request','get','article_sections=top_three', (response)=>{
+      //console.log(JSON.parse(response));
+      article_sections = JSON.parse(response);
+      create_frontpage_main();
+      //show_menu();
+    })
+
   },false);
 
 
+  //make navbar visible on load
   window.addEventListener('load', () => {
     
     show_menu();
 
   },false);
 
-
+  //make navbar visible on resize
   window.addEventListener('resize', () => {
     
     show_menu();
@@ -436,19 +491,3 @@
     });
   }
   //#endregion
-
-  /*FUNCTION CALL------------------------------------------------------------*/
-  
-    create_frontpage_content();
-    create_frontpage_top_nav();
-    create_frontpage_header();
-    create_frontpage_main();
-    create_frontpage_main();
-    create_frontpage_main();
-    create_frontpage_main();
-    create_frontpage_footer();
-
-    navbar_scroll_event('top_navbar');
-  
-
-</script>

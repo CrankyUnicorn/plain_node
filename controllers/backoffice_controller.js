@@ -21,10 +21,12 @@ function backoffice_controller(request, response) {
 
         fs.readFile(file_path, null, function (error, file_data) {
           if (error) {
-            response.writeHead(404);
-            response.write('File not Found!')
-            response.end();
-            reject('404');
+            if (!response.writableEnded) {
+              response.writeHead(404);
+              response.write('File not Found!')
+              response.end();
+              reject('404');
+            }
           } else {
             resolve(file_data);
           }
@@ -44,7 +46,6 @@ function backoffice_controller(request, response) {
 
 
     function get_backoffice_files(type) {
-      
 
       promisses_array = new Array();
       results = new Array();

@@ -161,7 +161,7 @@ a:focus, a:hover {
 @media only screen and (max-width: 720px) {
   #top_navbar {
     height: auto;
-    background-color: grey;
+    background-color: var(--royal_blue_ligth);
   }
   #cun_top_navbar_under {
     background-color: white;
@@ -285,7 +285,7 @@ a:focus, a:hover {
     margin: 20px 60px;
   }
 
-  .navbar_logo_container {
+  .cun_navbar_logo_container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -512,6 +512,10 @@ a:focus, a:hover {
   margin: 0;
   text-decoration: none;
   text-align: center;
+}
+
+.cun_footer i {
+ font-weight: 100;
 }
 
 /* table dedicted */
