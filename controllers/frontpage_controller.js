@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
-//const { login_user, logout_user } = require('../modules/backoffice_module');
+//const { navbar_anchors } = require('../modules/frontpage_module');
 //const sm = require('../modules/Session_Manager');
 
 function frontpage_controller(request, response) {

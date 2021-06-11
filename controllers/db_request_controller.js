@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
-//const { login_user, logout_user } = require('../modules/backoffice_module');
+const { navbar_anchors, header_contents } = require('../modules/frontpage_module');
 //const sm = require('../modules/Session_Manager');
 
 function db_request_controller(request, response) {
@@ -61,20 +61,35 @@ function db_request_controller(request, response) {
         //console.log(results);
 
       });
-
     }
-
    
     
-    if (true_url.searchParams.get('menus_topics')) {
-      let target = true_url.searchParams.get('menus_topics');
-      console.log(target);
+    if (true_url.searchParams.get('navbar_anchor')) {
+      let target = true_url.searchParams.get('all');
+      //console.log(target);
 
-      //then comunicate with the server via a module;
-      //get_backoffice_files for a information sheet for debugging
-      let dev_debug_array = ['a','b','c','d'];
-      response.write(dev_debug_array.toString());
-      response.end();
+      //then comunicate with the server via a module method
+      navbar_anchors((anchor_array)=>{
+        //console.log(anchor_array);
+        response.write(JSON.stringify(anchor_array));
+        response.end();
+        
+        //get_frontoffice_as_page for a information sheet for debugging
+      });
+    } 
+
+    if (true_url.searchParams.get('header_content')) {
+      let target = true_url.searchParams.get('all');
+      //console.log(target);
+
+      //then comunicate with the server via a module method
+      header_contents((content_array)=>{
+        //console.log(anchor_array);
+        response.write(JSON.stringify(content_array));
+        response.end();
+        
+        //get_frontoffice_as_page for a information sheet for debugging
+      });
     } 
 
   } else {

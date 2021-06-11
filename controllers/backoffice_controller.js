@@ -44,6 +44,8 @@ function backoffice_controller(request, response) {
 
 
     function get_backoffice_files(type) {
+      
+
       promisses_array = new Array();
       results = new Array();
 
@@ -67,7 +69,7 @@ function backoffice_controller(request, response) {
 
         build_page(results)
         //console.log(results);
-
+        
       });
 
     }
@@ -83,8 +85,10 @@ function backoffice_controller(request, response) {
     } else if (true_url.searchParams.get('login')) {
       let email = true_url.searchParams.get('email');
       let password = true_url.searchParams.get('password');
-      login_user(email, password);
-      get_backoffice_files('welcome');
+      login_user(email, password,()=>{
+        get_backoffice_files('welcome');
+      });
+      
       //console.log("backoffice_controller.login_user");
 
     } else {

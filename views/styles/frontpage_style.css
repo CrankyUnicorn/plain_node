@@ -36,6 +36,7 @@
 
 * {
   box-sizing: border-box;
+  transition: all 0.2s;
 }
 
 *, *::before, *::after {
@@ -139,9 +140,8 @@ a:focus, a:hover {
     right: 0;
   }
   #top_navbar.is-fixed {
-    color: black;
-    background-color: var(--dark_transparent);
     
+    background-color: var(--dark_transparent);
     box-shadow: 0px 0px 5px #0008;
   }
   #top_navbar.is-none {
@@ -180,10 +180,25 @@ a:focus, a:hover {
 /* Header/logo Title---------------------------------------------------------*/
 
 .cun_header {
-  padding: 30px;
+  position: relative;
+  padding: 120px 60px;
   text-align: center;
   background: var(--royal_blue);
   color: white;
+  overflow:hidden;
+}
+
+.cun_header h1, h2, h3, h4, h5, h6, p, a{
+  position: relative;
+}
+
+.cun_header_bar_image{
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 0;
+  margin: auto;
+  opacity: 80%;
 }
 
 /* Style the top navigation bar----------------------------------------------*/
@@ -230,7 +245,7 @@ a:focus, a:hover {
   display: none;
 }
 
-.navbar_logo_container_icon {}
+.cun_navbar_logo_container_icon {}
 
 /* Style the navigation bar links--------------------------------------------*/
 
@@ -249,7 +264,8 @@ a:focus, a:hover {
   background-color: var(--royal_blue_ligth);
 }
 
-.cun_navbar_container_button_content {
+.cun_navbar_container_button_anchor {
+  font-weight: 900;
   margin: 5px;
   padding: 0;
   text-align: center;
@@ -298,7 +314,7 @@ a:focus, a:hover {
   .cun_navbar_logo_container_button>i {
     color: var(--almost_white);
   }
-  .cun_navbar_container_button_content {
+  .cun_navbar_container_button_anchor {
     text-align: left;
     margin: 5px 5px 5px 0;
   }
@@ -394,7 +410,7 @@ a:focus, a:hover {
   min-height: 70vh;
   flex: 60%;
   background-color: var(--light_grey);
-  padding: 20px;
+  padding: 40px 80px;
 }
 
 .cun_section {

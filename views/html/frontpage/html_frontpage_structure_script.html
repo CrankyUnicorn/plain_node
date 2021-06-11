@@ -2,7 +2,8 @@
 
   /*COSTANTs AND VARIABLES--------------------------------------------------------*/
   const body_tag = document.getElementById("body");
-  var menu_topics = new Array();
+  var navbar_anchors = new Array();
+  var header_contents = new Array();
 
   /*ELEMENT BLOCKS-----------------------------------------------------------*/
   function create_frontpage_content() {
@@ -94,9 +95,9 @@
 
     //const topics = ['about', 'contacts', 'work', 'more'];
     var navbar_container_button = new Array();
-    var navbar_container_button_content = new Array();
+    var navbar_container_button_anchor = new Array();
 
-    for (let i = 0; i < menu_topics.length; i++) {
+    for (let i = 0; i < navbar_anchors.length; i++) {
 
       navbar_container_button[i] = document.createElement("div");
       navbar_container_button[i].className = "cun_cursor_pointer";
@@ -104,36 +105,60 @@
       navbar_container_button[i].id = `navbar_container_button_${[i]}`;
       navbar_buttons_container.appendChild(navbar_container_button[i]);
 
-      navbar_container_button_content[i] = document.createElement("a");
-      navbar_container_button_content[i].className = "cun_navbar_container_button_content";
-      navbar_container_button_content[i].style = "";
-      navbar_container_button_content[i].id = `navbar_container_button_content_${[i]}`;
-      navbar_container_button_content[i].textContent = menu_topics[i];
-      navbar_container_button[i].appendChild(navbar_container_button_content[i]);
+      navbar_container_button_anchor[i] = document.createElement("a");
+      navbar_container_button_anchor[i].className = "cun_navbar_container_button_anchor";
+      navbar_container_button_anchor[i].style = "";
+      navbar_container_button_anchor[i].id = `navbar_container_button_anchor${[i]}`;
+      navbar_container_button_anchor[i].textContent = navbar_anchors[i][0];
+      navbar_container_button_anchor[i].href = navbar_anchors[i][1];
+      navbar_container_button[i].appendChild(navbar_container_button_anchor[i]);
     }
   }
 
   function create_frontpage_header() {
     //HEADER TITLE BAR 
-    const header_bar = document.createElement("div");
-    header_bar.className = "cun_header";
-    header_bar.style = "";
-    header_bar.id = "header_bar";
-    body_tag.appendChild(header_bar);
+    var header_bar;
+    
+    let element_header = document.getElementById('header_bar');
 
-    const header_bar_title = document.createElement("h1");
-    header_bar_title.className = "";
-    header_bar_title.style = "";
-    header_bar_title.id = "header_bar_title";
-    header_bar_title.textContent = "Portfolio 2021";
-    header_bar.appendChild(header_bar_title);
+    if (element_header) {
+      while (element_header.firstChild) {
+        element_header.removeChild(element_header.firstChild);
+      }
+      header_bar = element_header;
+      
+    }else{
+      header_bar =  document.createElement("div");
+      header_bar.className = "cun_header";
+      header_bar.style = "";
+      header_bar.id = "header_bar";
+      body_tag.appendChild(header_bar);
+    }
+    
+    const header_bar_image = document.createElement("img");
+    header_bar_image.className = "cun_header_bar_image";
+    header_bar_image.style = "";
+    header_bar_image.id = "header_bar_image";
+    header_bar_image.src = "./resources/images/home_bg.jpg";
+    header_bar.appendChild(header_bar_image);
 
-    const header_bar_subtitle = document.createElement("p");
-    header_bar_subtitle.className = "";
-    header_bar_subtitle.style = "";
-    header_bar_subtitle.id = "header_bar_subtitle";
-    header_bar_subtitle.textContent = "Integração de Sistemas de Informação - Ferramentas";
-    header_bar.appendChild(header_bar_title);
+    if (header_contents.length > 0) {
+      
+      const header_bar_title = document.createElement("h1");
+      header_bar_title.className = "";
+      header_bar_title.style = "";
+      header_bar_title.id = "header_bar_title";
+      header_bar_title.textContent = header_contents[0][1];
+      header_bar.appendChild(header_bar_title);
+      
+      const header_bar_subtitle = document.createElement("p");
+      header_bar_subtitle.className = "";
+      header_bar_subtitle.style = "";
+      header_bar_subtitle.id = "header_bar_subtitle";
+      header_bar_subtitle.textContent = header_contents[0][2];
+      header_bar.appendChild(header_bar_subtitle);
+    }
+    
   }
 
   //#region navbar
@@ -295,11 +320,19 @@
  
 
   window.addEventListener('load', () => {
-    send_xmlhttprequest('db_request','get','menus_topics=main_menu', (response)=>{
-      
-      menu_topics = response.split(',');
-      console.log(menu_topics);
+    //NAVBAR ANCHOR
+    send_xmlhttprequest('db_request','get','navbar_anchor=all', (response)=>{
+      //console.log(JSON.parse(response));
+      navbar_anchors = JSON.parse(response);
       create_frontpage_top_nav();
+      show_menu();
+    })
+    
+    //HEADER CONTENT
+    send_xmlhttprequest('db_request','get','header_content=all', (response)=>{
+      //console.log(JSON.parse(response));
+      header_contents = JSON.parse(response);
+      create_frontpage_header();
       show_menu();
     })
   },false);
