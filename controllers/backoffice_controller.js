@@ -50,20 +50,20 @@ function backoffice_controller(request, response) {
       promisses_array = new Array();
       results = new Array();
 
-      promisses_array.push(get_file('./views/html/html_start.html'));
-      promisses_array.push(get_file('./views/html/html_header.html'));
-      promisses_array.push(get_file('./views/html/html_backoffice.html'));
-      promisses_array.push(get_file('./views/html/html_footer.html'));
-      promisses_array.push(get_file('./views/html/html_backoffice_login_script.html'));
-      promisses_array.push(get_file('./views/html/html_backoffice_cpanel_script.html'));
-      promisses_array.push(get_file('./views/html/html_end.html'));
-
-      Promise.all(promisses_array).then(function ([start, header, content, footer, script_login, script_cpanel, end]) {
+      promisses_array.push(get_file('./views/html/backoffice/html_start.html'));
+      //promisses_array.push(get_file('./views/html/backoffice/html_header.html'));
+      //promisses_array.push(get_file('./views/html/backoffice/html_backoffice.html'));
+      //promisses_array.push(get_file('./views/html/backoffice/html_footer.html'));
+      promisses_array.push(get_file('./views/html/backoffice/html_login_layout.html'));
+      promisses_array.push(get_file('./views/html/backoffice/html_cpanel_layout.html'));
+      promisses_array.push(get_file('./views/html/backoffice/html_end.html'));
+//header, content, footer,
+      Promise.all(promisses_array).then(function ([start,  script_login, script_cpanel, end]) {
         
         if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(start); }
-        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(header); }
-        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(content); }
-        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(footer); }
+        //if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(header); }
+        //if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(content); }
+        //if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(footer); }
         if (type == 'login' )                                           { results.push(script_login); }
         else if (type == 'welcome' || type == 'session' )               { results.push(script_cpanel); }
         if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(end); }

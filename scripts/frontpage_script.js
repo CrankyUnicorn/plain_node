@@ -91,7 +91,7 @@
     var navbar_container_button = new Array();
     var navbar_container_button_anchor = new Array();
 
-    var count_i = 0;
+    var count_i = -1;
 
     for (let i = 0; i < navbar_anchors.length; i++) {
 
@@ -113,7 +113,9 @@
     }
 
     //spacing
-    navbar_container_button_anchor[count_i].style = "margin-right:40px";
+    if (count_i != -1) {
+      navbar_container_button_anchor[count_i].style = "margin-right:40px";
+    }
 
     const navbar_languages = [['EN','#'],['PT','#']];
     //languages
@@ -437,9 +439,8 @@
       }
     }
   }
-
+  
   function navbar_scroll_event(navbar_id) {
-
     var previousTop = window.pageYOffset;
 
     window.addEventListener("scroll", (event) => {
