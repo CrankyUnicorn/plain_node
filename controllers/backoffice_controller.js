@@ -14,76 +14,94 @@ function backoffice_controller(request, response) {
 
   response.writeHead(200, { 'Content-Type': 'text/html' });
 
-  if (request.method === 'GET') {
+  function get_file(file_path) {
+    return new Promise((resolve, reject) => {
 
-    function get_file(file_path) {
-      return new Promise((resolve, reject) => {
-
-        fs.readFile(file_path, null, function (error, file_data) {
-          if (error) {
-            if (!response.writableEnded) {
-              response.writeHead(404);
-              response.write('File not Found!')
-              response.end();
-              reject('404');
-            }
-          } else {
-            resolve(file_data);
+      fs.readFile(file_path, null, function (error, file_data) {
+        if (error) {
+          if (!response.writableEnded) {
+            response.writeHead(404);
+            response.write('File not Found!')
+            response.end();
+            reject('404');
           }
+        } else {
+          resolve(file_data);
+        }
 
-        });
       });
+    });
+  }
+
+  function build_page() {
+    return new Promise((resolve, reject) => {
+      http_page = ''
+      results.forEach(element => {  http_page += element; });
+      response.write(http_page);
+      response.end();
+    });
+  }
+
+
+  function get_backoffice_files(type) {
+
+    promisses_array = new Array();
+    results = new Array();
+
+    promisses_array.push(get_file('./views/html/backoffice/html_start.html'));
+    promisses_array.push(get_file('./views/html/backoffice/html_login_layout.html'));
+    promisses_array.push(get_file('./views/html/backoffice/html_cpanel_layout.html'));
+    promisses_array.push(get_file('./views/html/backoffice/html_end.html'));
+
+    Promise.all(promisses_array).then(function ([start,  script_login, script_cpanel, end]) {
+      
+      if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(start); }
+      if (type == 'login' )                                           { results.push(script_login); }
+      else if (type == 'welcome' || type == 'session' )               { results.push(script_cpanel); }
+      if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(end); }
+
+      build_page(results)
+      //console.log(results);
+      
+    });
+
+  }
+
+  if(request.method === 'POST'){
+
+    //POST - ACTIONS
+
+    if (true_url.searchParams.get('operation')) {
+      const operation_name = true_url.searchParams.get('operation');
+      if (operation_name === 'new_post') {
+        const post_title = true_url.searchParams.get('title_input');
+        const post_subtitle = true_url.searchParams.get('subtitle_input');
+        const post_content = true_url.searchParams.get('content_input');
+        console.log("".concat(post_title,post_subtitle,post_content));
+        //insert new blog post in the database 
+      }
     }
+    
+  
+  } else if (request.method === 'GET') {
 
-    function build_page() {
-      return new Promise((resolve, reject) => {
-        http_page = ''
-        results.forEach(element => {  http_page += element; });
-        response.write(http_page);
-        response.end();
-      });
-    }
+    //GET - ACTIONS
 
+    if (true_url.searchParams.get('operation')) {
+      const operation_name = true_url.searchParams.get('operation');
+      if (operation_name === 'operation_name') { //template
+        //insert new blog post in the database 
+      }
 
-    function get_backoffice_files(type) {
-
-      promisses_array = new Array();
-      results = new Array();
-
-      promisses_array.push(get_file('./views/html/backoffice/html_start.html'));
-      //promisses_array.push(get_file('./views/html/backoffice/html_header.html'));
-      //promisses_array.push(get_file('./views/html/backoffice/html_backoffice.html'));
-      //promisses_array.push(get_file('./views/html/backoffice/html_footer.html'));
-      promisses_array.push(get_file('./views/html/backoffice/html_login_layout.html'));
-      promisses_array.push(get_file('./views/html/backoffice/html_cpanel_layout.html'));
-      promisses_array.push(get_file('./views/html/backoffice/html_end.html'));
-//header, content, footer,
-      Promise.all(promisses_array).then(function ([start,  script_login, script_cpanel, end]) {
-        
-        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(start); }
-        //if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(header); }
-        //if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(content); }
-        //if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(footer); }
-        if (type == 'login' )                                           { results.push(script_login); }
-        else if (type == 'welcome' || type == 'session' )               { results.push(script_cpanel); }
-        if (type == 'login' || type == 'welcome' || type == 'session' ) { results.push(end); }
-
-        build_page(results)
-        //console.log(results);
-        
-      });
-
-    }
-
-    if (true_url.searchParams.get('logout')) {
+    } else if (true_url.searchParams.get('logout')) { //if user wants to logout 
       logout_user();
       get_backoffice_files('login');
 
-    } else if (sm.getUser(0)) {
+    } else if (sm.getUser(0)) { //if session already open
       get_backoffice_files('session');
       //console.log("backoffice_controller.sm.getUser_IN");
 
-    } else if (true_url.searchParams.get('login')) {
+    } else if (true_url.searchParams.get('login')) { //if user wants to login
       let email = true_url.searchParams.get('email');
       let password = true_url.searchParams.get('password');
       login_user(email, password,()=>{
@@ -92,7 +110,7 @@ function backoffice_controller(request, response) {
       
       //console.log("backoffice_controller.login_user");
 
-    } else {
+    } else { // if none of the abouve show the login page
       get_backoffice_files('login');
       //console.log("backoffice_controller.sm.get_login_files");
     }

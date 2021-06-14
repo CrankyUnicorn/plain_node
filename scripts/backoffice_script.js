@@ -1,3 +1,11 @@
+/*MAIN DIV-------------------------------------------------------------------*/
+function create_main_div(target){
+  const main_div  = document.createElement("div");
+  main_div.classList= "cun_codeblock cun_orange_glow";
+  main_div.style= "";
+  main_div.id= "main_div";
+  target.appendChild(main_div);
+}
 
 
 /*LOGIN---------------------------------------------------------------------*/
@@ -9,7 +17,7 @@ function create_login_page_content() {
   main_div.appendChild(title);
 
   const form = document.createElement("form");
-  form.setAttribute("method", "post");
+  form.setAttribute("method", "");
   form.setAttribute("action", "");
   main_div.appendChild(form);
 
@@ -45,6 +53,7 @@ function create_login_page_content() {
   form.appendChild(login);
 }
 
+
 /*CPANEL---------------------------------------------------------------------*/
 function create_cpanel_page_content() {
   const main_div = document.getElementById("main_div");
@@ -54,7 +63,7 @@ function create_cpanel_page_content() {
   main_div.appendChild(title);
 
   const form = document.createElement("form");
-  form.setAttribute("method", "post");
+  form.setAttribute("method", "");
   form.setAttribute("action", "");
   main_div.appendChild(form);
 
@@ -79,24 +88,110 @@ function create_cpanel_page_content() {
 }
 
 
+/*POST CREATING--------------------------------------------------------------*/
+function create_new_post(target){
+  const main_div_element = document.getElementById(target);
 
-/*HEADER---------------------------------------------------------------------*/
-function create_main_div(target){
-  const main_div  = document.createElement("div");
-  main_div.classList= "cranky_codeblock cranky_orange_glow";
-  main_div.style= "";
-  main_div.id= "main_div";
-  target.appendChild(main_div);
+  const post_div = document.createElement("div");
+  post_div.classList = "";
+  post_div.style = "margin-top:20px";
+  post_div.id = "post_div";
+  main_div_element.appendChild(post_div);
+  
+  //div title
+  const title = document.createElement("h4");
+  title.textContent = "Create New Post";
+  post_div.appendChild(title);
+  
+  //table
+  const table = document.createElement("table");
+  post_div.appendChild(table);
+  
+  //title
+  const table_row_1 = document.createElement("tr");
+  table.appendChild(table_row_1);
+
+  const table_cell_1 = document.createElement("td");
+  table_row_1.appendChild(table_cell_1);
+
+  const title_label = document.createElement("label");
+  title_label.innerHTML = "Title &nbsp;"
+  title_label.style = "display:block; margin: 0 10px;"
+  table_cell_1.appendChild(title_label);
+
+  const title_input = document.createElement("input");
+  title_input.style = "display:block;";
+  title_input.type = "text";
+  title_input.name = "title_input";
+  title_input.value = "";
+  title_input.placeholder = "title";
+  title_label.appendChild(title_input);
+  
+  //subtitle
+  const table_row_2 = document.createElement("tr");
+  table.appendChild(table_row_2);
+
+  const table_cell_2 = document.createElement("td");
+  table_row_2.appendChild(table_cell_2);
+  
+  const subtitle_label = document.createElement("label");
+  subtitle_label.innerHTML = "Subtitle &nbsp;"
+  subtitle_label.style = "display:block; margin: 0 10px;"
+  table_cell_2.appendChild(subtitle_label);
+
+  const subtitle_input = document.createElement("input");
+  subtitle_input.style = "display:block;";
+  subtitle_input.type = "text";
+  subtitle_input.name = "subtitle_input";
+  subtitle_input.value = "";
+  subtitle_input.placeholder = "subtitle";
+  subtitle_label.appendChild(subtitle_input);
+
+  //content
+  const table_row_3 = document.createElement("tr");
+  table.appendChild(table_row_3);
+
+  const table_cell_3 = document.createElement("td");
+  table_row_3.appendChild(table_cell_3);
+
+  const content_label = document.createElement("label");
+  content_label.innerHTML = "Content &nbsp;"
+  content_label.style = "display:block; margin: 0 10px;"
+  table_cell_3.appendChild(content_label);
+
+  const content_input = document.createElement("input");
+  content_input.style = "display:block;";
+  content_input.type = "text";
+  content_input.name = "content_input";
+  content_input.value = "";
+  content_input.placeholder = "content";
+  content_label.appendChild(content_input);
+
+  const insert_post = document.createElement("input");
+  insert_post.type = "button";
+  insert_post.name = "insert_post";
+  insert_post.value = "Post";
+  insert_post.addEventListener("click", () => { send_xmlhttprequest('backoffice', 'POST', ''.concat('operation=new_post','&title_input=',title_input.value,'&subtitle_input=',subtitle_input.value,'&content_input=',content_input.value), () => { window.location.reload();}) }, false);
+  table.appendChild(insert_post);
+  
 }
 
+
 /*HEADER SERVER--------------------------------------------------------------*/
-const header_server = `<h2>This is an response page create by an Node app in the server.</h2>
+function create_server_header(target){
+  const server_header_content = `<h2>This is an response page create by an Node app in the server.</h2>
     <h3>What follows is the script used to create this page.</h3>
     <br>
-    <p>This Script relies heavily on the use of Async functions. Callback functions are mandatory to relly the data back once each function is finished. Due to this necessity the occurrence of nested Callback functions is an unfortunate byproduct. There are better ways to do compose the same script with the use of Promisses and Async Await methods but even this have their setback. Promisses and Async Await rely heavily on abstraction and so they create a level of obfuscation that can confuse the newcomers.</p>
+    <p>This Script relies heavily on the use of Async functions. Callback functions are mandatory to relay the data back once each function is finished. Due to this necessity the occurrence of nested Callback functions is an unfortunate byproduct. There are better ways to compose the same script with the use of Promisses and Async Await methods but even this have their setback. Promisses and Async Await rely heavily on abstraction and so they create a level of obfuscation that can confuse the newcomers.</p>
     <br>
     <p>GitHub project page: <a href="https://github.com/CrankyUnicorn/plain_node">https://github.com/CrankyUnicorn/plain_node</a></p>
-    <br>`
+    <br>`;
+    const server_header_element  = document.createElement("div");
+
+    server_header_element.innerHTML += server_header_content;
+    target.appendChild(server_header_element);
+}
+
 
 /*FOOTER---------------------------------------------------------------------*/
 function create_footer(target){
