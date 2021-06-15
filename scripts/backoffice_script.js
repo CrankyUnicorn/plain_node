@@ -1,3 +1,6 @@
+/*VARIABLES------------------------------------------------------------------*/
+var view_post_parent_target = '';
+
 /*MAIN DIV-------------------------------------------------------------------*/
 function create_main_div(target){
   const main_div  = document.createElement("div");
@@ -87,6 +90,73 @@ function create_cpanel_page_content() {
   form.appendChild(logout);
 }
 
+
+/*VIEW POSTS-----------------------------------------------------------------*/
+function create_view_posts(target){
+  view_post_parent_target = target;
+  let main_div_element = document.getElementById(view_post_parent_target);
+  
+  var post_view_div;
+  let post_view_element = document.getElementById('post_view_div');
+
+  if (post_view_element) {
+    while (post_view_element.firstChild) {
+      post_view_element.removeChild(post_view_element.firstChild);
+    }
+    post_view_div = post_view_element;
+  }else{
+    
+    post_view_div = document.createElement("div");
+    post_view_div.classList = "";
+    post_view_div.style = "margin-top:20px";
+    post_view_div.id = "post_view_div";
+    main_div_element.appendChild(post_view_div);
+  }
+
+  //div title
+  const title = document.createElement("h4");
+  title.textContent = "Post View List";
+  post_view_div.appendChild(title);
+  
+  const post_view_table = document.createElement("table");
+  post_view_table.classList = "";
+  post_view_table.style = "";
+  post_view_table.id = "";
+  post_view_div.appendChild(post_view_table);
+
+  const post_view_header = document.createElement("tr");
+  post_view_table.appendChild(post_view_header);
+  
+  const titles = ['Title','Subtitle','Content'];
+  var post_view_header_title = new Array();
+  
+  for (let i = 0; i < 3; i++) {
+    post_view_header_title[i] = document.createElement("td");
+    post_view_header_title[i].textContent = titles[i];
+    post_view_header.appendChild(post_view_header_title[i]);
+  }
+
+  var post_view_row = new Array();
+  var post_view_cell = new Array();
+
+  for (let i = 0; i < view_post_contents.length; i++) {
+    post_view_row = document.createElement("tr");
+    post_view_table.appendChild(post_view_row);
+
+    post_view_cell[i*3+i] = document.createElement("td");
+    post_view_cell[i*3+i].textContent = view_post_contents[i][0];
+    post_view_row.appendChild(post_view_cell[i*3+i]);
+
+    post_view_cell[i*3+i] = document.createElement("td");
+    post_view_cell[i*3+i].textContent = view_post_contents[i][1];
+    post_view_row.appendChild(post_view_cell[i*3+i]);
+
+    post_view_cell[i*3+i] = document.createElement("td");
+    post_view_cell[i*3+i].textContent = view_post_contents[i][2];
+    post_view_row.appendChild(post_view_cell[i*3+i]);
+  }
+
+}
 
 /*POST CREATING--------------------------------------------------------------*/
 function create_new_post(target){
@@ -210,4 +280,29 @@ function create_footer(target){
   footer_title.textContent = "CrankyUnicorn 2021";
   footer_title.id = "footer_title";
   footer.appendChild(footer_title);
+}
+
+
+
+/*EVENTS-----------------------------------------------------------------------*/
+
+
+
+/*FUNCTIONS--------------------------------------------------------------------*/
+function add_event_view_posts() {
+  
+  window.addEventListener('load',()=>{
+
+    //HEADER CONTENT
+    send_xmlhttprequest('backoffice','GET','operation=view_posts', (response)=>{
+      console.log(JSON.parse(response));
+      view_post_contents = JSON.parse(response);
+      
+      create_view_posts(view_post_parent_target);
+      //create_view_posts('main_div');
+      
+    })
+    
+  },false);
+ 
 }

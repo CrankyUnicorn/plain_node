@@ -1,11 +1,14 @@
 <script>
   //CONSTs
   const body_element = document.getElementById("body");
-  
+  var view_post_contents = new Array();
   
   //ELEMENT FUNCTIONS
   create_main_div(body_element); //id = "main_div"
   create_cpanel_page_content();
+  create_view_posts("main_div");
   create_new_post("main_div");
   create_footer(body_element);
+
+  add_event_view_posts();
 </script>

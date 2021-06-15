@@ -36,10 +36,10 @@ function frontpage_controller(request, response) {
       });
     }
 
-    function build_page() {
+    function build_page(result_data) {
       return new Promise((resolve, reject) => {
         http_page = ''
-        results.forEach(element => {  http_page += element; });
+        result_data.forEach(element => {  http_page += element; });
         response.write(http_page);
         response.end();
       });
