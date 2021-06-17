@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
-const { insert_post, view_post, login_user, logout_user } = require('../modules/backoffice_module');
+const { insert_post, update_post, delete_post, view_post, login_user, logout_user } = require('../modules/backoffice_module');
 const sm = require('../modules/Session_Manager');
 
 function backoffice_controller(request, response) {
@@ -45,6 +45,7 @@ function backoffice_controller(request, response) {
     });
   }
 
+
   function build_json(results_data) {
     return new Promise((resolve, reject) => {
       response.write(JSON.stringify(results_data));
@@ -79,16 +80,18 @@ function backoffice_controller(request, response) {
 
 
   /*CONDITIONS---------------------------------------------------------------*/
+  //POST
   if(request.method === 'POST'){
 
-    //POST - ACTIONS
+    //post - actions
 
+    //NEW 
     if (true_url.searchParams.get('operation')) {
       const operation_name = true_url.searchParams.get('operation');
       if (operation_name === 'new_post') {
-        const post_title = true_url.searchParams.get('title_input');
-        const post_subtitle = true_url.searchParams.get('subtitle_input');
-        const post_content = true_url.searchParams.get('content_input');
+        const post_title = true_url.searchParams.get('title');
+        const post_subtitle = true_url.searchParams.get('subtitle');
+        const post_content = true_url.searchParams.get('content');
         //console.log("".concat(post_title,post_subtitle,post_content));
         //insert new blog post in the database 
 
@@ -97,8 +100,36 @@ function backoffice_controller(request, response) {
         });
       }
     }
+
+    //EDIT
+    if (true_url.searchParams.get('operation')) {
+      const operation_name = true_url.searchParams.get('operation');
+      if (operation_name === 'edit_post') {
+        const post_id = true_url.searchParams.get('id');
+        const post_title = true_url.searchParams.get('title');
+        const post_subtitle = true_url.searchParams.get('subtitle');
+        const post_content = true_url.searchParams.get('content');
+
+        update_post(post_id, post_title, post_subtitle, post_content, ()=>{
+          get_backoffice_files('session');
+        });
+      }
+    }
+
+    //DELETE
+    if (true_url.searchParams.get('operation')) {
+      const operation_name = true_url.searchParams.get('operation');
+      if (operation_name === 'delete_post') {
+        const post_id = true_url.searchParams.get('id');
+        
+        delete_post(post_id, ()=>{
+          get_backoffice_files('session');
+        });
+      }
+    }
     
-  
+
+  //GET
   } else if (request.method === 'GET') {
 
     //GET - ACTIONS
