@@ -1,3 +1,5 @@
+  /*VARIABLES----------------------------------------------------------------*/
+  var main;
 
   /*ELEMENT BLOCKS-----------------------------------------------------------*/
   function create_frontpage_content() {
@@ -185,51 +187,18 @@
     
   }
 
-  //#region navbar
-  function create_frontpage_navbar() {
-    //NAVIGATION BAR 
-    const navbar = document.createElement("div");
-    navbar.className = "cun_navbar";
-    navbar.style = "";
-    navbar.id = "navbar";
-    body_tag.appendChild(navbar);
-
-    const navbar_container = document.createElement("div");
-    navbar_container.className = "cun_navbar_container cun_right";
-    navbar_container.style = "";
-    navbar_container.id = "navbar_container";
-    navbar.appendChild(navbar_container);
-
-    const topics = ['about', 'contacts', 'work', 'more'];
-    var navbar_container_button = new Array();
-    var navbar_container_button_content = new Array();
-
-    for (let i = 0; i < topics.length; i++) {
-
-      navbar_container_button[i] = document.createElement("div");
-      navbar_container_button[i].className = "cun_navbar_container_button";
-      navbar_container_button[i].style = "";
-      navbar_container_button[i].id = `navbar_container_button_${[i]}`;
-      navbar_container.appendChild(navbar_container_button[i]);
-
-      navbar_container_button_content[i] = document.createElement("p");
-      navbar_container_button_content[i].className = "cun_navbar_container_button_content";
-      navbar_container_button_content[i].style = "";
-      navbar_container_button_content[i].id = `navbar_container_button_content_${[i]}`;
-      navbar_container_button_content[i].textContent = topics[i];
-      navbar_container_button[i].appendChild(navbar_container_button_content[i]);
+  function create_frontpage_main() {
+     //MAIN
+     if(!main){
+      main = document.createElement("div");
+      main.className = "cun_main";
+      main.style = "";
+      main.id = "main";
+      body_tag.appendChild(main);
     }
   }
-  //#endregion
 
-  function create_frontpage_main() {
-    //MAIN
-    const main = document.createElement("div");
-    main.className = "cun_main";
-    main.style = "";
-    main.id = "main";
-    body_tag.appendChild(main);
-
+  function create_frontpage_home() {
     //article
     var article;
     
@@ -315,6 +284,90 @@
     //sidebar if needed
   }
 
+  function create_frontpage_about(){
+    const element_about = document.getElementById("about_div");
+
+    var about_div;
+
+    if (!element_about) {
+      
+       about_div = document.createElement("div");
+       about_div.className = "cun_about_div"; 
+       about_div.style = "";
+       about_div.id = `about_div`;
+       main.appendChild(about_div);
+
+    }else{
+      while (element_about.firstChild) {
+        element_about.removeChild(element_about.firstChild);
+      }
+      about_div = element_about;
+    }
+
+    const about_text = document.createElement("p");
+    about_text.className = "cun_about_text"; 
+    about_text.style = "";
+    about_text.id = `about_title`;
+    about_text.textContent = `Hi there!`;
+    about_div.appendChild(about_text);
+  }
+
+  function create_frontpage_contact(){
+    const element_contact = document.getElementById("contact_div");
+
+    var contact_div;
+
+    if (!element_contact) {
+      
+      contact_div = document.createElement("div");
+      contact_div.className = "cun_contact_div"; 
+      contact_div.style = "";
+      contact_div.id = `contact_div`;
+      main.appendChild(contact_div);
+
+    }else{
+      while (element_contact.firstChild) {
+        element_contact.removeChild(element_contact.firstChild);
+      }
+      contact_div = element_contact;
+    }
+
+    const contact_text = document.createElement("p");
+    contact_text.className = "cun_about_text"; 
+    contact_text.style = "";
+    contact_text.id = `contact_text`;
+    contact_text.textContent = `Hello!`;
+    contact_div.appendChild(contact_text);
+  }
+  
+  function create_frontpage_blog(post_id){
+    const element_blog = document.getElementById("blog_div");
+
+    var blog_div;
+
+    if (!element_blog) {
+      
+      blog_div = document.createElement("div");
+      blog_div.className = "cun_blog_div"; 
+      blog_div.style = "";
+      blog_div.id = `blog_div`;
+      main.appendChild(blog_div);
+
+    }else{
+      while (element_blog.firstChild) {
+        element_blog.removeChild(element_blog.firstChild);
+      }
+      blog_div = element_blog;
+    }
+
+    const blog_text = document.createElement("p");
+    blog_text.className = "cun_about_text"; 
+    blog_text.style = "";
+    blog_text.id = `connect_title`;
+    blog_text.textContent = `Blog post!`;
+    blog_div.appendChild(blog_text);
+  }
+
   function create_frontpage_footer() {
     //FOOTER
     const footer = document.createElement("div");
@@ -368,15 +421,15 @@
 
   window.addEventListener('load', () => {
     //NAVBAR ANCHOR
-    send_xmlhttprequest('db_request','get','navbar_anchor=all', (response)=>{
-      //console.log(JSON.parse(response));
+    send_xmlhttprequest('frontpage','get','navbar_anchor=all', (response)=>{
+      console.log(JSON.parse(response));
       navbar_anchors = JSON.parse(response);
       create_frontpage_top_nav();
       show_menu();
     })
     
     //HEADER CONTENT
-    send_xmlhttprequest('db_request','get','header_content=all', (response)=>{
+    send_xmlhttprequest('frontpage','get','header_content=all', (response)=>{
       //console.log(JSON.parse(response));
       header_contents = JSON.parse(response);
       create_frontpage_header();
@@ -384,15 +437,14 @@
     })
 
     //LOAD SECTIONS
-    send_xmlhttprequest('db_request','get','article_sections=top_three', (response)=>{
+    send_xmlhttprequest('frontpage','get','article_sections=top_three', (response)=>{
       //console.log(JSON.parse(response));
       article_sections = JSON.parse(response);
-      create_frontpage_main();
+      call_frontpage_main();
       //show_menu();
     })
 
   },false);
-
 
   //make navbar visible on load
   window.addEventListener('load', () => {
@@ -409,7 +461,30 @@
   },false);
 
   /*FUNCTIONS----------------------------------------------------------------*/
-  //#region FUNCTIONS(){}
+
+  function call_frontpage_main(){
+    const query_string = window.location.search;
+    //console.log(query_string);
+    const url_params = new URLSearchParams(query_string);
+    const page_name = url_params.get('page')
+
+    create_frontpage_main();
+
+    if (page_name === 'home') {
+      create_frontpage_home();
+
+    }else if (page_name === 'about') {
+      
+      create_frontpage_about();
+      
+    }else if (page_name === 'contact') {
+      create_frontpage_contact();
+      
+    }else if (page_name === 'blog') {
+      create_frontpage_blog();
+      
+    }
+  }
 
   function show_menu(){
 
@@ -491,4 +566,4 @@
 
     });
   }
-  //#endregion
+ 

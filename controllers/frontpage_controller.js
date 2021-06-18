@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
-//const { navbar_anchors } = require('../modules/frontpage_module');
+const { navbar_anchors, header_contents, articles_sections } = require('../modules/frontpage_module');
 //const sm = require('../modules/Session_Manager');
 
 function frontpage_controller(request, response) {
@@ -14,8 +14,9 @@ function frontpage_controller(request, response) {
 
   response.writeHead(200, { 'Content-Type': 'text/html' });
 
-  if (request.method === 'GET') {
+  
 
+    //FUNCTIONS
     function get_file(file_path) {
       return new Promise((resolve, reject) => {
 
@@ -41,6 +42,13 @@ function frontpage_controller(request, response) {
         http_page = ''
         result_data.forEach(element => {  http_page += element; });
         response.write(http_page);
+        response.end();
+      });
+    }
+
+    function build_json(results_data) {
+      return new Promise((resolve, reject) => {
+        response.write(JSON.stringify(results_data));
         response.end();
       });
     }
@@ -76,12 +84,53 @@ function frontpage_controller(request, response) {
 
     }
 
-    const target = true_url.searchParams.get('page'); 
-    console.log("target:",target);
-    if ( target ) {
-      get_frontoffice_files(target);
-    }else{
-      get_frontoffice_files('index');
+
+  //CONDITIONS
+  //GET
+  if (request.method === 'GET') {
+   
+    
+
+    if (true_url.searchParams.get('navbar_anchor')) {
+      //then comunicate with the server via a module method
+      navbar_anchors((content_array)=>{
+        console.log(content_array);
+        response.write(JSON.stringify(content_array));
+        response.end();
+        
+        //get_frontoffice_as_page for a information sheet for debugging
+      });
+    } 
+
+    //header_content
+    else if (true_url.searchParams.get('header_content')) {
+      header_contents((content_array)=>{
+        //console.log(content_array);
+        response.write(JSON.stringify(content_array));
+        response.end();
+      });
+    } 
+
+    //body_selctions
+    else if (true_url.searchParams.get('article_sections')) {
+      let target = true_url.searchParams.get('article_sections');
+     if (target === 'top_three' || target === 'all') {
+        articles_sections((content_array)=>{
+        //console.log(content_array);
+        response.write(JSON.stringify(content_array));
+        response.end();
+      }, target);
+     }
+    }
+
+    else {
+      let target = true_url.searchParams.get('page'); 
+      console.log("target:",target);
+      if ( target ) {
+        get_frontoffice_files(target);
+      }else{
+        get_frontoffice_files('index');
+      }
     }
 
   } else {

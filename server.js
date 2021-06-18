@@ -5,7 +5,7 @@ const file_access = require('./modules/File_Access');
 const index_controller = require('./controllers/index_controller');
 const { backoffice_controller } = require('./controllers/backoffice_controller');
 const { frontpage_controller } = require('./controllers/frontpage_controller');
-const { db_request_controller } = require('./controllers/db_request_controller');
+//const { db_request_controller } = require('./controllers/db_request_controller');
 
 const file_access_instant = new file_access();
 
@@ -40,10 +40,6 @@ http.createServer(function (request, response) {
     //FRONTPAGE
   } else if (filePath == './frontpage') {
     frontpage_controller(request, response);
-
-    //DB REQUESTS
-  } else if (filePath == './db_request') {
-    db_request_controller(request, response);
 
   } else {
     console.log('file access: ', file_access_instant.get_file(response, filePath));

@@ -623,3 +623,32 @@ a:focus, a:hover {
 }
 
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+
+
+/*ABOUT PAGE-----------------------------------------------------------------*/
+.cun_about_div{
+  padding: 20px;
+  margin:auto;
+  width: 80vw;
+  min-height: 50vh;
+}
+
+.cun_about_text{
+  color: var(--royal_blue);
+}
+
+/*CONTACT PAGE-----------------------------------------------------------------*/
+.cun_contact_div{
+  padding: 20px;
+  margin:auto;
+  width: 80vw;
+  min-height: 50vh;
+}
+
+/*BLOG PAGE-----------------------------------------------------------------*/
+.cun_blog_div{
+  padding: 20px;
+  margin:auto;
+  width: 80vw;
+  min-height: 50vh;
+}
