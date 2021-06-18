@@ -160,6 +160,7 @@ function create_view_posts(target){
       
       //EDIT
       post_view_cell[i*3+i] = document.createElement("td");
+      post_view_cell[i*3+i].classList = "cun_td_button";
       post_view_cell[i*3+i].style = "cursor: pointer;";
       post_view_cell[i*3+i].textContent = view_post_contents_opertation[0];
       post_view_cell[i*3+i].addEventListener("click", () => { create_edit_post_panel(view_post_contents[i][0]) }, false);
@@ -167,6 +168,7 @@ function create_view_posts(target){
       
       //DELETE
       post_view_cell[i*3+i] = document.createElement("td");
+      post_view_cell[i*3+i].classList = "cun_td_button";
       post_view_cell[i*3+i].style = "cursor: pointer;";
       post_view_cell[i*3+i].textContent = view_post_contents_opertation[1];
       post_view_cell[i*3+i].addEventListener("click", () => { delete_post(view_post_contents[i][0]) }, false);
@@ -286,7 +288,7 @@ function create_new_post(target){
   insert_post_button.name = "insert_post";
   insert_post_button.value = "Post";
   insert_post_button.addEventListener("click", () => { insert_post(title_input.value, subtitle_input.value, content_input.value); }, false);
-  table.appendChild(insert_post_button);
+  main_div_element.appendChild(insert_post_button);
   
 }
 
@@ -299,10 +301,21 @@ function create_new_post_panel(){
     new_post_form_element.remove();
   }
 
+  const back_div = document.createElement("div");
+  back_div.style = "position:fixed; left:0; right:0; top:0; bottom:0; background: #3336;";
+  back_div.id = "back_div";
+  back_div.addEventListener("click", () => {
+    back_div.remove();
+  }, false);
+  main_div.appendChild(back_div);
+
   const new_post_form_contianer = document.createElement("div");
   new_post_form_contianer.style = "position:fixed; top:50%; left:50%;";
   new_post_form_contianer.id = "edit_form_container";
-  main_div.appendChild(new_post_form_contianer);
+  new_post_form_contianer.addEventListener("click", (event) => {
+    event.stopPropagation();
+  }, false);
+  back_div.appendChild(new_post_form_contianer);
 
   const new_post_form = document.createElement("div");
   new_post_form.style = "position:absolute; left:-25vw; top:-25vh; width:50vw; height:50vh; background: grey; border: 5px solid #000; padding: 20px;";
@@ -317,13 +330,21 @@ function create_new_post_panel(){
   cancel.name = "cancel";
   cancel.value = "Cancel";
   cancel.addEventListener("click", () => {
-    new_post_form.remove();
+    back_div.remove();
   }, false);
   new_post_form.appendChild(cancel);
 }
 
 /*POST EDITING---------------------------------------------------------------*/
 function create_edit_post(target, id){
+  var selected_index = -1;
+  for (let i = 0; i < view_post_contents.length; i++) {
+    if(i != 0 && view_post_contents[i][0] == id){
+      selected_index = i;
+      break;
+    }
+  }
+  
   const main_div_element = document.getElementById(target);
 
   const post_div = document.createElement("div");
@@ -357,7 +378,7 @@ function create_edit_post(target, id){
   title_input.style = "display:block;";
   title_input.type = "text";
   title_input.name = "title_input";
-  title_input.value = view_post_contents[id][1];
+  title_input.value = view_post_contents[selected_index][1];
   title_input.placeholder = "title";
   title_label.appendChild(title_input);
   
@@ -377,7 +398,7 @@ function create_edit_post(target, id){
   subtitle_input.style = "display:block;";
   subtitle_input.type = "text";
   subtitle_input.name = "subtitle_input";
-  subtitle_input.value = view_post_contents[id][2];
+  subtitle_input.value = view_post_contents[selected_index][2];
   subtitle_input.placeholder = "subtitle";
   subtitle_label.appendChild(subtitle_input);
 
@@ -397,7 +418,7 @@ function create_edit_post(target, id){
   content_input.style = "display:block;";
   content_input.type = "text";
   content_input.name = "content_input";
-  content_input.value = view_post_contents[id][3];
+  content_input.value = view_post_contents[selected_index][3];
   content_input.placeholder = "content";
   content_label.appendChild(content_input);
 
@@ -419,10 +440,21 @@ function create_edit_post_panel(id){
     edit_form_element.remove();
   }
 
+  const back_div = document.createElement("div");
+  back_div.style = "position:fixed; left:0; right:0; top:0; bottom:0; background: #3336;";
+  back_div.id = "back_div";
+  back_div.addEventListener("click", () => {
+    back_div.remove();
+  }, false);
+  main_div.appendChild(back_div);
+
   const edit_form_contianer = document.createElement("div");
   edit_form_contianer.style = "position:fixed; top:50%; left:50%;";
   edit_form_contianer.id = "edit_form_container";
-  main_div.appendChild(edit_form_contianer);
+  edit_form_contianer.addEventListener("click", (event) => {
+    event.stopPropagation();
+  }, false);
+  back_div.appendChild(edit_form_contianer);
 
   const edit_form = document.createElement("div");
   edit_form.style = "position:absolute; left:-25vw; top:-25vh; width:50vw; height:50vh; background: grey; border: 5px solid #000; padding: 20px;";
