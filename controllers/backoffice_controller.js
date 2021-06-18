@@ -136,8 +136,10 @@ function backoffice_controller(request, response) {
     if (true_url.searchParams.get('operation')) {
       const operation_name = true_url.searchParams.get('operation');
       if (operation_name === 'view_posts') { 
+        const page_value = true_url.searchParams.get('page');
+        const multiple_value = true_url.searchParams.get('multiple');
         //insert new blog post in the database 
-        view_post((results_data)=>{
+        view_post(page_value, multiple_value, (results_data)=>{
           build_json(results_data);
         });
       }

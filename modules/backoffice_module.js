@@ -51,21 +51,35 @@ function delete_post(id, callback) {
 
 
 //VIEW POST
-function view_post(callback) {
-  const sql = `SELECT * FROM article_section`;
-  query_database(sql, function (results) {
-    if (Object.keys(results).length != 0) {
-      var results_data = new Array();
-      for (let i = 0; i < results.length; i++) {
-        results_data.push([results[i].id, results[i].title, results[i].subtitle, results[i].content]);
+function view_post(page,multiple,callback) {
+  //const current = 0;
+  //const multiple = 10;
+  const start_position = (page-1)*multiple;
+  const end_position = (page)*multiple;
+  
+  var sql = `SELECT count(*) as total FROM article_section`;
+  query_database(sql, function (total_results) {
+
+    const total_pages = Math.ceil(parseFloat(total_results[0].total / multiple));
+
+    sql = `SELECT * FROM article_section ORDER BY id DESC LIMIT ${start_position},${end_position}`;
+    query_database(sql, function (results) {
+      if (Object.keys(results).length != 0) {
+        var results_data = new Array();
         
+        results_data.push([`page ${page} from ${total_pages}`, page, multiple, total_pages]);
+        
+        for (let i = 0; i < results.length; i++) {
+          results_data.push([results[i].id, results[i].title, results[i].subtitle, results[i].content]);
+          
+        }
+        //console.log("success: view_post");
+        callback(results_data);
+        
+      } else {
+        console.log('err: backoffice_module_view');
       }
-      //console.log("success: view_post");
-      callback(results_data);
-      
-    } else {
-      console.log('err: backoffice_module_view');
-    }
+    });
   });
 }
 

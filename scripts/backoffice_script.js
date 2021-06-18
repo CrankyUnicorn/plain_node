@@ -77,8 +77,8 @@ function create_cpanel_page_content() {
   const posts_section = document.createElement("input");
   posts_section.type = "button";
   posts_section.name = "post_section";
-  posts_section.value = "Posts";
-  posts_section.addEventListener("click", () => { }, false);
+  posts_section.value = "New Posts";
+  posts_section.addEventListener("click", () => { create_new_post_panel() }, false);
   form.appendChild(posts_section);
 
 
@@ -142,7 +142,7 @@ function create_view_posts(target){
 
   if (view_post_contents.length != 0) {
     
-    for (let i = 0; i < view_post_contents.length; i++) {
+    for (let i = 1; i < view_post_contents.length; i++) {
       post_view_row = document.createElement("tr");
       post_view_table.appendChild(post_view_row);
 
@@ -174,6 +174,32 @@ function create_view_posts(target){
     }
   }
   
+  const previous_posts_button = document.createElement("input");
+  previous_posts_button.style = "display:inline";
+  previous_posts_button.type = "button";
+  previous_posts_button.name = "previous_posts";
+  previous_posts_button.value = "Previous";
+  previous_posts_button.addEventListener("click", () => { view_post('backward') }, false);
+  post_view_div.appendChild(previous_posts_button);
+
+  
+  const position_posts_button = document.createElement("p");
+  position_posts_button.classList = "";
+  position_posts_button.style = "display:inline; margin: 0 10px;";
+  position_posts_button.id = "";
+  if(view_post_contents.length != 0){
+    position_posts_button.textContent = view_post_contents[0][0];
+  }
+  post_view_div.appendChild(position_posts_button);
+
+  const next_posts_button = document.createElement("input");
+  next_posts_button.style = "display:inline";
+  next_posts_button.type = "button";
+  next_posts_button.name = "next_posts";
+  next_posts_button.value = "Next";
+  next_posts_button.addEventListener("click", () => { view_post('forward') }, false);
+  post_view_div.appendChild(next_posts_button);
+
 }
 
 /*POST CREATING--------------------------------------------------------------*/
@@ -264,7 +290,39 @@ function create_new_post(target){
   
 }
 
-/*POST EDITING--------------------------------------------------------------*/
+/*POST CREATING PANEL--------------------------------------------------------*/
+function create_new_post_panel(){
+  const main_div = document.getElementById("main_div");
+  const new_post_form_element = document.getElementById("new_post_form");
+
+  if (new_post_form_element) {
+    new_post_form_element.remove();
+  }
+
+  const new_post_form_contianer = document.createElement("div");
+  new_post_form_contianer.style = "position:fixed; top:50%; left:50%;";
+  new_post_form_contianer.id = "edit_form_container";
+  main_div.appendChild(new_post_form_contianer);
+
+  const new_post_form = document.createElement("div");
+  new_post_form.style = "position:absolute; left:-25vw; top:-25vh; width:50vw; height:50vh; background: grey; border: 5px solid #000; padding: 20px;";
+  new_post_form.id = "new_post_form";
+  new_post_form_contianer.appendChild(new_post_form);
+
+  create_new_post('new_post_form');
+  
+  const cancel = document.createElement("input");
+  cancel.style = "display:inline";
+  cancel.type = "button";
+  cancel.name = "cancel";
+  cancel.value = "Cancel";
+  cancel.addEventListener("click", () => {
+    new_post_form.remove();
+  }, false);
+  new_post_form.appendChild(cancel);
+}
+
+/*POST EDITING---------------------------------------------------------------*/
 function create_edit_post(target, id){
   const main_div_element = document.getElementById(target);
 
@@ -352,7 +410,7 @@ function create_edit_post(target, id){
   
 }
 
-/*POST EDITING---------------------------------------------------------------*/
+/*POST EDITING PANEL_--------------------------------------------------------*/
 function create_edit_post_panel(id){
   const main_div = document.getElementById("main_div");
   const edit_form_element = document.getElementById("edit_form");
@@ -430,16 +488,32 @@ function add_event_view_posts() {
   
   window.addEventListener('load',()=>{
 
-    view_post();
+    view_post('none');
     
   },false);
  
 }
 
 //VIEW POSTS
-function view_post(){
-  
-  send_xmlhttprequest('backoffice','GET','operation=view_posts', (response)=>{
+function view_post(action){
+  var page = 1;
+  var multiple = 10;
+  var total = 1;
+
+  if (view_post_contents.length != 0) {
+    page = parseInt(view_post_contents[0][1]);
+    multiple = parseInt(view_post_contents[0][2]);
+    total = view_post_contents[0][3];
+  }
+
+  if (action === 'backward' && page>1) {
+    page -= 1;
+  }else if (action === 'forward' && page<total) {
+    page += 1;
+  }
+
+  const op = ''.concat('operation=view_posts','&','page=',page,'&','multiple=',multiple);
+  send_xmlhttprequest('backoffice','GET',op, (response)=>{
     console.log(JSON.parse(response));
     view_post_contents = JSON.parse(response);
     
@@ -455,7 +529,7 @@ function insert_post( title, subtitle, content){
     send_xmlhttprequest('backoffice','POST', op, (response)=>{
       console.log(''.concat("inserted: ",response));
       window.location.reload();
-      //view_post();
+      //view_post('none');
     });
   
 }
@@ -471,7 +545,7 @@ function edit_post(id, title, subtitle, content){
       send_xmlhttprequest('backoffice','POST', op, (response)=>{
         console.log(''.concat("edited: ",response));
         window.location.reload();
-        //view_post();
+        //view_post('none');
       });
     }
 }
