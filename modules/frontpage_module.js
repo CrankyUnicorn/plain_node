@@ -41,7 +41,7 @@ function header_contents(callback) {
 
       for (var i = 0; i < results.length; i++) {
           
-        results_array.push([results[i].image_src, results[i].title, results[i].subtitle]);
+        results_array.push([results[i].id, results[i].title, results[i].subtitle,results[i].image_src]);
           
       }
         //console.log(results_array);
@@ -58,9 +58,10 @@ function header_contents(callback) {
     var sql;
     if (limit === 'top_three') {
       sql = `SELECT * FROM article_section ORDER BY id ASC LIMIT 3`;
-      
     }else if (limit === 'all') {
       sql = `SELECT * FROM article_section ORDER BY id ASC`;
+    }else{
+      sql = `SELECT * FROM article_section WHERE id=${limit} ORDER BY id ASC LIMIT 1`;
     }
 
     //could also have several parametersfunction(err, rows, fields)
@@ -71,7 +72,7 @@ function header_contents(callback) {
   
         for (var i = 0; i < results.length; i++) {
             
-          results_array.push([results[i].title, results[i].subtitle, results[i].content, results[i].date_reg]);
+          results_array.push([results[i].id,results[i].title, results[i].subtitle, results[i].content,results[i].image, results[i].date_reg]);
         }
           //console.log(results_array);
           callback(results_array);

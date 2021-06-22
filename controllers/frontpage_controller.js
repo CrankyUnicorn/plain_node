@@ -115,11 +115,21 @@ function frontpage_controller(request, response) {
     else if (true_url.searchParams.get('article_sections')) {
       let target = true_url.searchParams.get('article_sections');
      if (target === 'top_three' || target === 'all') {
-        articles_sections((content_array)=>{
+        
+      articles_sections((content_array)=>{
         //console.log(content_array);
         response.write(JSON.stringify(content_array));
         response.end();
       }, target);
+
+     }else if(target === 'id'){
+      let id = true_url.searchParams.get('id');
+
+      articles_sections((content_array)=>{
+        //console.log(content_array);
+        response.write(JSON.stringify(content_array));
+        response.end();
+      }, id);
      }
     }
 

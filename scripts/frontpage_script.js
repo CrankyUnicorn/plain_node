@@ -22,6 +22,24 @@
   }
 
   function create_frontpage_top_nav() {
+    this.addEventListener('load', () => {
+    
+      send_xmlhttprequest('frontpage','get','navbar_anchor=all', (response)=>{
+        //console.log(JSON.parse(response));
+        navbar_anchors = JSON.parse(response);
+        create_frontpage_top_nav();
+        show_menu();
+      })
+
+      show_menu();
+    },false);
+
+    window.addEventListener('resize', () => {
+    
+      show_menu();
+      
+    },false);
+
     //TOP FIXED - NAV BAR
     var top_navbar;
     
@@ -142,9 +160,53 @@
   }
 
   function create_frontpage_header() {
+    const query_string = window.location.search;
+    //console.log(query_string);
+    const url_params = new URLSearchParams(query_string);
+    const page_name = url_params.get('page');
+    const blog_id = url_params.get('id');
+
+    if(!blog_id){
+
+      //get the required information about the selected blog by its id
+      this.addEventListener('load', ()=>{
+        //HEADER CONTENT
+        send_xmlhttprequest('frontpage','get','header_content=all', (response)=>{
+          //console.log(JSON.parse(response));
+          header_contents = JSON.parse(response);
+          create_frontpage_header();
+          //show_menu();
+        })
+      }, false);
+
+    }
+
     //HEADER TITLE BAR 
-    var header_bar;
+    var header_bar; //element
+    var header_content_array = new Array();
+
+
+    //populates array with currets selection of content
+    if (blog_id) {
+      for (let i = 0; i < article_sections.length; i++) {
+        //console.log(page_name ,"|", header_contents[i][1].toLowerCase());
+        header_content_array = article_sections[0];
+        header_content_array[3] = article_sections[0][4];
+        break;
+      }
+    }else{
+      for (let i = 0; i < header_contents.length; i++) {
+        if (page_name === header_contents[i][1].toLowerCase()) {
+          header_content_array = header_contents[i];
+          break;
+        }
+      }
+    }
+    console.log("header_a: ",article_sections);
+    console.log("header_b: ",header_content_array);
+    console.log("header_c: ",header_contents);
     
+
     let element_header = document.getElementById('header_bar');
 
     if (element_header) {
@@ -161,27 +223,26 @@
       body_tag.appendChild(header_bar);
     }
     
-    const header_bar_image = document.createElement("img");
-    header_bar_image.className = "cun_header_bar_image";
-    header_bar_image.style = "";
-    header_bar_image.id = "header_bar_image";
-    header_bar_image.src = "./resources/images/home_bg.jpg";
-    header_bar.appendChild(header_bar_image);
+    if (header_content_array.length > 0) {
+      const header_bar_image = document.createElement("img");
+      header_bar_image.className = "cun_header_bar_image";
+      header_bar_image.style = "";
+      header_bar_image.id = "header_bar_image";
+      header_bar_image.src = ''.concat("./resources/images/",header_content_array[3]);
+      header_bar.appendChild(header_bar_image);
 
-    if (header_contents.length > 0) {
-      
       const header_bar_title = document.createElement("h1");
       header_bar_title.className = "";
       header_bar_title.style = "";
       header_bar_title.id = "header_bar_title";
-      header_bar_title.textContent = header_contents[0][1];
+      header_bar_title.textContent = header_content_array[1];
       header_bar.appendChild(header_bar_title);
       
       const header_bar_subtitle = document.createElement("p");
       header_bar_subtitle.className = "";
       header_bar_subtitle.style = "";
       header_bar_subtitle.id = "header_bar_subtitle";
-      header_bar_subtitle.textContent = header_contents[0][2];
+      header_bar_subtitle.textContent = header_content_array[2];
       header_bar.appendChild(header_bar_subtitle);
     }
     
@@ -199,6 +260,16 @@
   }
 
   function create_frontpage_home() {
+    this.addEventListener('load', ()=>{
+      //LOAD SECTIONS
+      send_xmlhttprequest('frontpage','get','article_sections=top_three', (response)=>{
+        console.log(JSON.parse(response));
+        article_sections = JSON.parse(response);
+        call_frontpage_main();
+        //show_menu();
+      });
+    }, false);
+
     //article
     var article;
     
@@ -222,6 +293,7 @@
     //sidebar if needed
 
     var section = new Array();
+    var section_anchor = new Array();
     var section_title = new Array();
     var section_subtitle = new Array();
     var section_image_container = new Array();
@@ -230,55 +302,69 @@
     var section_link = new Array();
 
     for (let i = 0; i < article_sections.length; i++) {
-    /*section start*/
-    section[i] = document.createElement("div");
-    section[i].className = "cun_section"; 
-    section[i].style = "";
-    section[i].id = `section${[i]}`
-    article.appendChild(section[i]);
+      /*section start*/
+      section[i] = document.createElement("div");
+      section[i].className = "cun_section"; 
+      section[i].style = "";
+      section[i].id = `section${[i]}`
+      article.appendChild(section[i]);
 
-    section_title[i] = document.createElement("h2");
-    section_title[i].className = "";
-    section_title[i].style = "";
-    section_title[i].id = `section_title${[i]}`;
-    section_title[i].textContent = article_sections[i][0];
-    section[i].appendChild(section_title[i]);
+      section_anchor[i] = document.createElement("a");
+      section_anchor[i].className = "";
+      section_anchor[i].style = "";
+      section_anchor[i].id = `section_anchor${[i]}`;
+      section_anchor[i].addEventListener('click', () => {
+        window.location.href = ''.concat("frontpage?page=blog",'&id=', article_sections[i][0]);
+       }, false)
+      section[i].appendChild(section_anchor[i]);
 
-    section_subtitle[i] = document.createElement("h5");
-    section_subtitle[i].className = "";
-    section_subtitle[i].style = "";
-    section_subtitle[i].id = `section_subtitle${[i]}`;
-    section_subtitle[i].textContent = article_sections[i][1];
-    section[i].appendChild(section_subtitle[i]);
+      section_title[i] = document.createElement("h2");
+      section_title[i].className = "";
+      section_title[i].style = "";
+      section_title[i].id = `section_title${[i]}`;
+      section_title[i].textContent = article_sections[i][1];
+      section_anchor[i].appendChild(section_title[i]);
 
-    section_image_container[i] = document.createElement("div");
-    section_image_container[i].className = "cun_section_image_container";
-    section_image_container[i].style = "";
-    section_image_container[i].id = `section_image_container${[i]}`;
-    section[i].appendChild(section_image_container[i]);
+      section_subtitle[i] = document.createElement("h5");
+      section_subtitle[i].className = "";
+      section_subtitle[i].style = "";
+      section_subtitle[i].id = `section_subtitle${[i]}`;
+      section_subtitle[i].textContent = article_sections[i][2];
+      section_anchor[i].appendChild(section_subtitle[i]);
 
-    section_image[i] = document.createElement("img");
-    section_image[i].className = "cun_section_image";
-    section_image[i].style = "";
-    section_image[i].id = `section_image${[i]}`;
-    section_image[i].src = "./resources/images/post_bg_id_7.jpg";
-    section_image_container[i].appendChild(section_image[i]);
+      var break_line = document.createElement("hr");
+      section[i].appendChild(break_line);
+      
+      /*
+      section_image_container[i] = document.createElement("div");
+      section_image_container[i].className = "cun_section_image_container";
+      section_image_container[i].style = "";
+      section_image_container[i].id = `section_image_container${[i]}`;
+      section[i].appendChild(section_image_container[i]);
+      
+      section_image[i] = document.createElement("img");
+      section_image[i].className = "cun_section_image";
+      section_image[i].style = "";
+      section_image[i].id = `section_image${[i]}`;
+      section_image[i].src = ''.concat("./resources/images/",article_sections[i][4]);
+      section_image_container[i].appendChild(section_image[i]);
+      
+      section_description[i] = document.createElement("p");
+      section_description[i].className = "";
+      section_description[i].style = "";
+      section_description[i].id = `section_description${[i]}`;
+      section_description[i].textContent = article_sections[i][3];
+      section[i].appendChild(section_description[i]);
 
-    section_description[i] = document.createElement("p");
-    section_description[i].className = "";
-    section_description[i].style = "";
-    section_description[i].id = `section_description${[i]}`;
-    section_description[i].textContent = article_sections[i][2];
-    section[i].appendChild(section_description[i]);
-
-    section_link[i] = document.createElement("a");
-    section_link[i].className = "cun_section_link";
-    section_link[i].style = "";
-    section_link[i].id = `section_link${[i]}`;
-    section_link[i].textContent = "link";
-    section_link[i].href = "./view/html/index";
-    section[i].appendChild(section_link[i]);
-    /*section end*/
+      section_link[i] = document.createElement("a");
+      section_link[i].className = "cun_section_link";
+      section_link[i].style = "";
+      section_link[i].id = `section_link${[i]}`;
+      section_link[i].textContent = "link";
+      section_link[i].href = "./view/html/index";
+      section[i].appendChild(section_link[i]);
+      */
+      /*section end*/
     }
 
     //sidebar if needed
@@ -340,7 +426,48 @@
     contact_div.appendChild(contact_text);
   }
   
-  function create_frontpage_blog(post_id){
+  function create_frontpage_blog(){
+    const query_string = window.location.search;
+    //console.log(query_string);
+    const url_params = new URLSearchParams(query_string);
+    const blog_id = url_params.get('id');
+
+    //get the required information about the selected blog by its id
+    function get_article_selection(blog_id) {
+      if(blog_id){
+        send_xmlhttprequest('frontpage','get',`article_sections=id&id=${blog_id}`, (response)=>{
+          console.log(JSON.parse(response));
+          article_sections = JSON.parse(response);
+          create_frontpage_blog();
+          console.log("blog: ",article_sections);
+          
+        });
+      }else{
+        send_xmlhttprequest('frontpage','get',`article_sections=top_three`, (response)=>{
+          console.log(JSON.parse(response));
+          article_sections = JSON.parse(response);
+          create_frontpage_blog();
+        });
+      }
+    }
+
+    //console.log(parseInt(blog_id) ,'|', article_sections[0][0]);
+
+    //check if the blog actricle sections is already stored or not if not get it
+    if (article_sections.length>0) {
+      if(blog_id){
+        if (parseInt(blog_id) !== article_sections[0][0]) {
+          get_article_selection(blog_id);
+          return;
+        }
+        //console.log("recreate header");
+        create_frontpage_header();
+      }
+    }else{
+      get_article_selection(blog_id);
+      return;
+    }
+
     const element_blog = document.getElementById("blog_div");
 
     var blog_div;
@@ -360,12 +487,57 @@
       blog_div = element_blog;
     }
 
-    const blog_text = document.createElement("p");
-    blog_text.className = "cun_about_text"; 
-    blog_text.style = "";
-    blog_text.id = `connect_title`;
-    blog_text.textContent = `Blog post!`;
-    blog_div.appendChild(blog_text);
+    
+    //HTML ELEMENTS  
+      const section = document.createElement("div");
+      section.className = "cun_section"; 
+      section.style = "";
+      section.id = `section`
+      blog_div.appendChild(section);
+
+      section_title = document.createElement("h2");
+      section_title.className = "";
+      section_title.style = "";
+      section_title.id = `section_title`;
+      section_title.textContent = article_sections[0][1];
+      section.appendChild(section_title);
+
+      section_subtitle = document.createElement("h5");
+      section_subtitle.className = "";
+      section_subtitle.style = "";
+      section_subtitle.id = `section_subtitle`;
+      section_subtitle.textContent = article_sections[0][2];
+      section.appendChild(section_subtitle);
+
+      section_image_container = document.createElement("div");
+      section_image_container.className = "cun_section_image_container";
+      section_image_container.style = "";
+      section_image_container.id = `section_image_container`;
+      section.appendChild(section_image_container);
+      
+      section_image = document.createElement("img");
+      section_image.className = "cun_section_image";
+      section_image.style = "";
+      section_image.id = `section_image`;
+      section_image.src = ''.concat("./resources/images/",article_sections[0][4]);
+      section_image_container.appendChild(section_image);
+      
+      section_description = document.createElement("p");
+      section_description.className = "";
+      section_description.style = "";
+      section_description.id = `section_description`;
+      section_description.textContent = article_sections[0][3];
+      section.appendChild(section_description);
+
+      section_link = document.createElement("a");
+      section_link.className = "cun_section_link";
+      section_link.style = "";
+      section_link.id = `section_link`;
+      section_link.textContent = "Back";
+      section_link.href = "./";
+      section.appendChild(section_link);
+      
+    
   }
 
   function create_frontpage_footer() {
@@ -416,51 +588,8 @@
     main.appendChild(side_bar_right);
   }
 
-  /*EVENTS---------------------------------------------------------------------*/
- 
 
-  window.addEventListener('load', () => {
-    //NAVBAR ANCHOR
-    send_xmlhttprequest('frontpage','get','navbar_anchor=all', (response)=>{
-      console.log(JSON.parse(response));
-      navbar_anchors = JSON.parse(response);
-      create_frontpage_top_nav();
-      show_menu();
-    })
-    
-    //HEADER CONTENT
-    send_xmlhttprequest('frontpage','get','header_content=all', (response)=>{
-      //console.log(JSON.parse(response));
-      header_contents = JSON.parse(response);
-      create_frontpage_header();
-      //show_menu();
-    })
-
-    //LOAD SECTIONS
-    send_xmlhttprequest('frontpage','get','article_sections=top_three', (response)=>{
-      //console.log(JSON.parse(response));
-      article_sections = JSON.parse(response);
-      call_frontpage_main();
-      //show_menu();
-    })
-
-  },false);
-
-  //make navbar visible on load
-  window.addEventListener('load', () => {
-    
-    show_menu();
-
-  },false);
-
-  //make navbar visible on resize
-  window.addEventListener('resize', () => {
-    
-    show_menu();
-    
-  },false);
-
-  /*FUNCTIONS----------------------------------------------------------------*/
+  /*UTILITARIAN FUNCTIONS----------------------------------------------------*/
 
   function call_frontpage_main(){
     const query_string = window.location.search;
@@ -483,9 +612,11 @@
     }else if (page_name === 'blog') {
       create_frontpage_blog();
       
+    }else{
+      create_frontpage_home();
     }
   }
-
+  
   function show_menu(){
 
     let element_a = document.getElementById('navbar_buttons_container');

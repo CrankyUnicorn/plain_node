@@ -416,6 +416,7 @@ a:focus, a:hover {
 .cun_section {
   overflow: hidden;
   position: relative;
+  color: var(--royal_blue);
 }
 
 /* img container */
