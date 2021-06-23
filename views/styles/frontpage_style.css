@@ -15,6 +15,10 @@
   --font-sans-serif: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   
   --font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --font-open-sans: "Open Sans";
+
+  --font-lora: "Lora";
   
   --gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))
 }
@@ -70,7 +74,14 @@ a {
   transition: all .2s;
 }
 a:focus, a:hover {
-  color: var(--light_grey);
+  color: var(--royal_blue_ligth);
+}
+
+hr {
+  border:none;
+  height: 1px;
+ 	width: 100%;
+	border-bottom: 1px solid var(--royal_blue);
 }
 
 /* aligment etc--------------------------------------------------------------*/
@@ -387,6 +398,11 @@ a:focus, a:hover {
 .cun_main {
   display: flex;
   flex-wrap: wrap;
+  background-color: var(--almost_white);
+}
+.cun_main * {
+  font-family: var(--font-lora);
+
 }
 
 /* Sidebar/left column-------------------------------------------------------*/
@@ -409,7 +425,6 @@ a:focus, a:hover {
   overflow: hidden;
   min-height: 70vh;
   flex: 60%;
-  background-color: var(--light_grey);
   padding: 40px 80px;
 }
 
@@ -419,6 +434,19 @@ a:focus, a:hover {
   color: var(--royal_blue);
 }
 
+.cun_section_anchor{
+  color:inherit;
+}
+.cun_section_anchor:hover{
+  color: var(--medium_grey_royal_blue);
+}
+.cun_section_anchor > *{
+  font-family: var(--font-lora);
+  font-weight: 400;
+  font-style: oblique;
+  margin: 0;
+  padding: 0;
+}
 /* img container */
 
 .cun_section_image_container {
@@ -495,14 +523,15 @@ a:focus, a:hover {
 /* Footer--------------------------------------------------------------------*/
 
 .cun_footer {
-  color: var(--medium_grey_royal_blue);
+  font-family: var(--font-lora);
+  color: var(--light_grey);
   padding: 20px;
   text-align: center;
   background: var(--darker_grey);
 }
 
 .cun_footer a {
-  color: var(--medium_grey_royal_blue);
+  color: var(--light_grey);
   padding: 6px;
   text-decoration: none;
   text-align: center;
@@ -511,6 +540,7 @@ a:focus, a:hover {
 .cun_footer h5 {
   padding: 6px;
   margin: 0;
+  font-weight: 100;
   text-decoration: none;
   text-align: center;
 }

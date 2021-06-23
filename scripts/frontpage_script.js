@@ -310,7 +310,7 @@
       article.appendChild(section[i]);
 
       section_anchor[i] = document.createElement("a");
-      section_anchor[i].className = "";
+      section_anchor[i].className = "cun_section_anchor";
       section_anchor[i].style = "";
       section_anchor[i].id = `section_anchor${[i]}`;
       section_anchor[i].addEventListener('click', () => {
@@ -318,14 +318,14 @@
        }, false)
       section[i].appendChild(section_anchor[i]);
 
-      section_title[i] = document.createElement("h2");
+      section_title[i] = document.createElement("h1");
       section_title[i].className = "";
       section_title[i].style = "";
       section_title[i].id = `section_title${[i]}`;
       section_title[i].textContent = article_sections[i][1];
       section_anchor[i].appendChild(section_title[i]);
 
-      section_subtitle[i] = document.createElement("h5");
+      section_subtitle[i] = document.createElement("h3");
       section_subtitle[i].className = "";
       section_subtitle[i].style = "";
       section_subtitle[i].id = `section_subtitle${[i]}`;
@@ -587,7 +587,7 @@
       section_description.className = "";
       section_description.style = "";
       section_description.id = `section_description`;
-      section_description.textContent = article_sections[0][3];
+      section_description.innerHTML = article_sections[0][3];
       section.appendChild(section_description);
 
       section_link = document.createElement("a");
