@@ -41,7 +41,7 @@ function header_contents(callback) {
 
       for (var i = 0; i < results.length; i++) {
           
-        results_array.push([results[i].id, results[i].title, results[i].subtitle,results[i].image_src]);
+        results_array.push([results[i].id, results[i].title, results[i].subtitle, results[i].content, results[i].image_src]);
           
       }
         //console.log(results_array);

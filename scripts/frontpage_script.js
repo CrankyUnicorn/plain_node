@@ -187,11 +187,10 @@
 
 
     //populates array with currets selection of content
-    if (blog_id) {
+    if (blog_id || page_name === 'blog') {
       for (let i = 0; i < article_sections.length; i++) {
         //console.log(page_name ,"|", header_contents[i][1].toLowerCase());
         header_content_array = article_sections[0];
-        header_content_array[3] = article_sections[0][4];
         break;
       }
     }else{
@@ -202,9 +201,9 @@
         }
       }
     }
-    console.log("header_a: ",article_sections);
-    console.log("header_b: ",header_content_array);
-    console.log("header_c: ",header_contents);
+    //console.log("header_a: ",article_sections);
+    //console.log("header_b: ",header_content_array);
+    //console.log("header_c: ",header_contents);
     
 
     let element_header = document.getElementById('header_bar');
@@ -224,11 +223,12 @@
     }
     
     if (header_content_array.length > 0) {
+      
       const header_bar_image = document.createElement("img");
       header_bar_image.className = "cun_header_bar_image";
       header_bar_image.style = "";
       header_bar_image.id = "header_bar_image";
-      header_bar_image.src = ''.concat("./resources/images/",header_content_array[3]);
+      header_bar_image.src = ''.concat("./resources/images/",header_content_array[4]);
       header_bar.appendChild(header_bar_image);
 
       const header_bar_title = document.createElement("h1");
@@ -371,8 +371,37 @@
   }
 
   function create_frontpage_about(){
+    const query_string = window.location.search;
+    //console.log(query_string);
+    const url_params = new URLSearchParams(query_string);
+    const page_name = url_params.get('page');
+
+    if(header_contents.length==0){
+
+      //get the required information about the selected blog by its id
+      this.addEventListener('load', ()=>{
+        //HEADER CONTENT
+        send_xmlhttprequest('frontpage','get','header_content=all', (response)=>{
+          //console.log(JSON.parse(response));
+          header_contents = JSON.parse(response);
+          create_frontpage_about();
+          //show_menu();
+        })
+      }, false);
+      return;
+    }
+
+    var index = -1;
+    for (let i = 0; i < header_contents.length; i++) {
+      if (page_name === header_contents[i][1].toLowerCase()) {
+        index = i;
+        break;
+      }
+    }
+
     const element_about = document.getElementById("about_div");
 
+    
     var about_div;
 
     if (!element_about) {
@@ -390,15 +419,44 @@
       about_div = element_about;
     }
 
-    const about_text = document.createElement("p");
+    //console.log(header_contents);
+    const about_text = document.createElement("div");
     about_text.className = "cun_about_text"; 
     about_text.style = "";
     about_text.id = `about_title`;
-    about_text.textContent = `Hi there!`;
+    about_text.innerHTML = header_contents[index][3];
     about_div.appendChild(about_text);
   }
 
   function create_frontpage_contact(){
+    const query_string = window.location.search;
+    //console.log(query_string);
+    const url_params = new URLSearchParams(query_string);
+    const page_name = url_params.get('page');
+
+    if(header_contents.length==0){
+
+      //get the required information about the selected blog by its id
+      this.addEventListener('load', ()=>{
+        //HEADER CONTENT
+        send_xmlhttprequest('frontpage','get','header_content=all', (response)=>{
+          //console.log(JSON.parse(response));
+          header_contents = JSON.parse(response);
+          create_frontpage_about();
+          //show_menu();
+        })
+      }, false);
+      return;
+    }
+
+    var index = -1;
+    for (let i = 0; i < header_contents.length; i++) {
+      if (page_name === header_contents[i][1].toLowerCase()) {
+        index = i;
+        break;
+      }
+    }
+
     const element_contact = document.getElementById("contact_div");
 
     var contact_div;
@@ -418,11 +476,12 @@
       contact_div = element_contact;
     }
 
-    const contact_text = document.createElement("p");
+    const contact_text = document.createElement("div");
     contact_text.className = "cun_about_text"; 
     contact_text.style = "";
     contact_text.id = `contact_text`;
-    contact_text.textContent = `Hello!`;
+    //console.log(header_contents);
+    contact_text.innerHTML = header_contents[index][3];
     contact_div.appendChild(contact_text);
   }
   
@@ -495,6 +554,7 @@
       section.id = `section`
       blog_div.appendChild(section);
 
+      /*
       section_title = document.createElement("h2");
       section_title.className = "";
       section_title.style = "";
@@ -521,7 +581,8 @@
       section_image.id = `section_image`;
       section_image.src = ''.concat("./resources/images/",article_sections[0][4]);
       section_image_container.appendChild(section_image);
-      
+      */
+
       section_description = document.createElement("p");
       section_description.className = "";
       section_description.style = "";
