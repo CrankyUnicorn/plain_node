@@ -83,7 +83,7 @@
     top_navbar_message.className = "cun_navbar_logo_text cun_left";
     top_navbar_message.style = "text-align:left;";
     top_navbar_message.id = "top_navbar_message";
-    top_navbar_message.textContent = "CrankyUnicorn";
+    top_navbar_message.textContent = "DevLog";
     navbar_logo_container.appendChild(top_navbar_message);
 
     //little 3 bar button to display menu items under 720px w
@@ -260,6 +260,17 @@
   }
 
   function create_frontpage_home() {
+    
+
+    function get_all_posts(){
+      send_xmlhttprequest('frontpage','get','article_sections=all', (response)=>{
+        console.log(JSON.parse(response));
+        article_sections = JSON.parse(response);
+        call_frontpage_main();
+        //show_menu();
+      });
+    }
+
     this.addEventListener('load', ()=>{
       //LOAD SECTIONS
       send_xmlhttprequest('frontpage','get','article_sections=top_three', (response)=>{
@@ -296,6 +307,7 @@
     var section_anchor = new Array();
     var section_title = new Array();
     var section_subtitle = new Array();
+    var section_date_reg = new Array();
     var section_image_container = new Array();
     var section_image = new Array();
     var section_description = new Array();
@@ -319,20 +331,28 @@
       section[i].appendChild(section_anchor[i]);
 
       section_title[i] = document.createElement("h1");
-      section_title[i].className = "";
+      section_title[i].className = "cun_section_title";
       section_title[i].style = "";
       section_title[i].id = `section_title${[i]}`;
       section_title[i].textContent = article_sections[i][1];
       section_anchor[i].appendChild(section_title[i]);
 
       section_subtitle[i] = document.createElement("h3");
-      section_subtitle[i].className = "";
+      section_subtitle[i].className = "cun_section_subtitle";
       section_subtitle[i].style = "";
       section_subtitle[i].id = `section_subtitle${[i]}`;
       section_subtitle[i].textContent = article_sections[i][2];
       section_anchor[i].appendChild(section_subtitle[i]);
 
+      section_date_reg[i] = document.createElement("h4");
+      section_date_reg[i].className = "cun_section_date_reg";
+      section_date_reg[i].style = "";
+      section_date_reg[i].id = `section_date_reg${[i]}`;
+      section_date_reg[i].textContent = article_sections[i][5];
+      section_anchor[i].appendChild(section_date_reg[i]);
+
       var break_line = document.createElement("hr");
+      break_line.classList = 'cun_section_hr';
       section[i].appendChild(break_line);
       
       /*
@@ -365,6 +385,23 @@
       section[i].appendChild(section_link[i]);
       */
       /*section end*/
+    }
+
+    
+    //see all posts button
+    const section_show_all = document.createElement("div");
+    section_show_all.className = "cun_section_show_all"; 
+    section_show_all.id = `section_show_all`
+    article.appendChild(section_show_all);    
+    
+    if (article_sections.length<4) {
+      const section_show_all_button = document.createElement("button");
+      section_show_all_button.className = "cun_section_show_all_button"; 
+      section_show_all_button.id = `section_show_all_button`;
+      section_show_all_button.type = 'button';
+      section_show_all_button.innerText = 'All Posts';
+      section_show_all_button.addEventListener('click',()=>{ get_all_posts();},false); 
+      section_show_all.appendChild(section_show_all_button);  
     }
 
     //sidebar if needed
@@ -442,7 +479,7 @@
         send_xmlhttprequest('frontpage','get','header_content=all', (response)=>{
           //console.log(JSON.parse(response));
           header_contents = JSON.parse(response);
-          create_frontpage_about();
+          create_frontpage_contact();
           //show_menu();
         })
       }, false);
@@ -480,39 +517,106 @@
     contact_text.className = "cun_about_text"; 
     contact_text.style = "";
     contact_text.id = `contact_text`;
-    //console.log(header_contents);
     contact_text.innerHTML = header_contents[index][3];
     contact_div.appendChild(contact_text);
+    
+    const contact_div_form = document.createElement("div");
+    contact_div_form.className = "cun_contact_div_form"; 
+    contact_div_form.style = "";
+    contact_div_form.id = `contact_div_form`;
+    contact_div.appendChild(contact_div_form);
+
+    const contact_form = document.createElement("form");
+    contact_form.className = "cun_contact_form"; 
+    contact_form.method = "";
+    contact_form.action = "";
+    contact_form.id = `contact_form`;
+    contact_div_form.appendChild(contact_form);
+
+    const contact_array = ["name","email","message"];
+    const contact_array_names = ["Name","E-mail","Message"];
+    const contact_array_element = ["input","input","textarea"];
+    var contact_label = new Array();
+    var contact_input = new Array();
+
+    for (let i = 0; i < contact_array.length; i++) {
+      contact_label[i] = document.createElement("label");
+      contact_label[i].className = "cun_contact_label"; 
+      contact_label[i].id = `contact_input_label${[i]}`;
+      contact_label[i].innerText = contact_array_names[i];
+      contact_form.appendChild(contact_label[i]);
+      
+      contact_input[i] = document.createElement(contact_array_element[i]);
+      contact_input[i].className = "cun_contact_input"; 
+      contact_input[i].type = "text";
+      contact_input[i].name = contact_array;
+      contact_input[i].value = "";
+      contact_input[i].placeholder = contact_array_names[i].toLowerCase();
+      contact_input[i].id = `contact_input_name${[i]}`;
+      contact_label[i].appendChild(contact_input[i]);
+    }
+
+    //see all posts button
+    const submit_button_div = document.createElement("div");
+    submit_button_div.className = "cun_submit_button_div"; 
+    submit_button_div.id = `submit_button_div`;
+    contact_div_form.appendChild(submit_button_div);    
+    
+    const submit_button_div_button = document.createElement("button");
+    submit_button_div_button.className = "cun_section_show_all_button"; 
+    submit_button_div_button.id = `submit_button_div_button`;
+    submit_button_div_button.type = 'button';
+    submit_button_div_button.innerText = 'Send';
+    submit_button_div_button.addEventListener('click',()=>{ post_contact_message();},false); 
+    submit_button_div.appendChild(submit_button_div_button);  
+  
   }
   
-  function create_frontpage_blog(){
-    const query_string = window.location.search;
-    //console.log(query_string);
-    const url_params = new URLSearchParams(query_string);
-    const blog_id = url_params.get('id');
+  function create_frontpage_blog(id){
+    
+    var blog_id;
+    
+    if(id){
+      blog_id = id;
+    }else{
+      const query_string = window.location.search;
+      //console.log(query_string);
+      const url_params = new URLSearchParams(query_string);
+      blog_id = url_params.get('id');
+    }
+
+    function get_previous_post(){
+      blog_id -= 1;
+      get_article_selection(blog_id)
+    }
+    function get_next_post(){
+      blog_id += 1;
+      get_article_selection(blog_id)
+    }
 
     //get the required information about the selected blog by its id
-    function get_article_selection(blog_id) {
-      if(blog_id){
-        send_xmlhttprequest('frontpage','get',`article_sections=id&id=${blog_id}`, (response)=>{
-          console.log(JSON.parse(response));
+    function get_article_selection(inner_blog_id) {
+      if(inner_blog_id){
+        send_xmlhttprequest('frontpage','get',`article_sections=id&id=${inner_blog_id}`, (response)=>{
+          //console.log(JSON.parse(response));
           article_sections = JSON.parse(response);
-          create_frontpage_blog();
-          console.log("blog: ",article_sections);
+          create_frontpage_blog(inner_blog_id);
+          //console.log("blog: ",article_sections);
           
         });
       }else{
+        inner_blog_id = 1;
         send_xmlhttprequest('frontpage','get',`article_sections=top_three`, (response)=>{
-          console.log(JSON.parse(response));
+          //console.log(JSON.parse(response));
           article_sections = JSON.parse(response);
-          create_frontpage_blog();
+          create_frontpage_blog(inner_blog_id);
         });
       }
     }
 
     //console.log(parseInt(blog_id) ,'|', article_sections[0][0]);
 
-    //check if the blog actricle sections is already stored or not if not get it
+    //check if the blog article sections is already stored or not if not get it
     if (article_sections.length>0) {
       if(blog_id){
         if (parseInt(blog_id) !== article_sections[0][0]) {
@@ -523,7 +627,7 @@
         create_frontpage_header();
       }
     }else{
-      get_article_selection(blog_id);
+      get_article_selection();
       return;
     }
 
@@ -598,6 +702,29 @@
       section_link.href = "./";
       section.appendChild(section_link);
       
+    
+    //see previous and next post button
+    const blog_browser = document.createElement("div");
+    blog_browser.className = "cun_blogs_browser"; 
+    blog_browser.id = `section_show_all`
+    section.appendChild(blog_browser);    
+
+    const next_post_button = document.createElement("button");
+    next_post_button.className = "cun_section_show_all_button"; 
+    next_post_button.id = `next_post_button`;
+    next_post_button.type = 'button';
+    next_post_button.innerText = 'Next';
+    next_post_button.addEventListener('click',()=>{ get_next_post();},false); 
+    blog_browser.appendChild(next_post_button);  
+
+    const previous_post_button = document.createElement("button");
+    previous_post_button.className = "cun_section_show_all_button"; 
+    previous_post_button.style = "margin: 0; margin-left: 5px;"; 
+    previous_post_button.id = `previous_post_button`;
+    previous_post_button.type = 'button';
+    previous_post_button.innerText = 'Previous';
+    previous_post_button.addEventListener('click',()=>{ get_previous_post();},false); 
+    blog_browser.appendChild(previous_post_button); 
     
   }
 

@@ -74,7 +74,8 @@ a {
   transition: all .2s;
 }
 a:focus, a:hover {
-  color: var(--royal_blue_ligth);
+  color: var(--almost_white);
+  opacity: 50%;
 }
 
 hr {
@@ -82,6 +83,22 @@ hr {
   height: 1px;
  	width: 100%;
 	border-bottom: 1px solid var(--royal_blue);
+}
+
+button{
+  appearance: auto;
+  color: black;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  margin: 0em;
+  padding: 1px 6px;
+  border: none;
 }
 
 /* aligment etc--------------------------------------------------------------*/
@@ -422,6 +439,7 @@ hr {
 /* Article-------------------------------------------------------------------*/
 
 .cun_article {
+  margin-top: 40px;
   overflow: hidden;
   min-height: 70vh;
   flex: 60%;
@@ -440,10 +458,8 @@ hr {
 .cun_section_anchor:hover{
   color: var(--medium_grey_royal_blue);
 }
-.cun_section_anchor > *{
-  font-family: var(--font-lora);
-  font-weight: 400;
-  font-style: oblique;
+.cun_section_anchor{
+  
   margin: 0;
   padding: 0;
 }
@@ -655,6 +671,54 @@ hr {
 
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
 
+/*HOME PAGE------------------------------------------------------------------*/
+.cun_section_show_all{
+  margin-top: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.cun_section_show_all_button{
+  color: var(--almost_white);
+  background-color: var(--medium_grey_royal_blue);
+  border-color: var(--medium_grey_royal_blue);
+  font-size: 14px;
+  font-weight: 800;
+  display: block;
+  
+  padding: 10px 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 0;
+  font-family: var(--font-open-sans);
+}
+.cun_section_show_all_button:hover{
+  background-color: var(--royal_blue_ligth);
+}
+
+.cun_section_title{
+  font-family: var(--font-open-sans);
+  font-weight: 800;
+  margin: 0;
+  padding: 0;
+}
+.cun_section_subtitle{
+  font-family: var(--font-open-sans);
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+.cun_section_date_reg{
+  font-family: var(--font-lora);
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+.cun_section_hr{
+  margin: 20px 0;
+  border-color: var(--medium_grey_royal_blue);
+}
 
 /*ABOUT PAGE-----------------------------------------------------------------*/
 .cun_about_div{
@@ -676,10 +740,54 @@ hr {
   min-height: 50vh;
 }
 
+.cun_contact_div_form{
+  margin: auto;
+  margin-top:40px;
+  width:60%; 
+}
+.cun_contact_form textarea{
+  height: 200px;
+  resize: none;
+  
+}
+.cun_contact_label{
+  display: block;
+  color: var(--royal_blue);
+}
+.cun_contact_input{
+  display: block;
+  border: none;
+  width: 100%;
+  padding: 5px 10px;
+  background-color:var(--medium_grey_royal_blue);
+  color: var(--almost_white);
+}
+
+.cun_contact_input::placeholder{
+  color: var(--royal_blue);
+}
+.cun_contact_input:focus{
+  border: none;
+  outline: none;
+}
+.cun_submit_button_div{
+  margin: 20px 0 40px 0;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
 /*BLOG PAGE-----------------------------------------------------------------*/
 .cun_blog_div{
   padding: 20px;
   margin:auto;
   width: 80vw;
   min-height: 50vh;
+}
+.cun_blogs_browser{
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }

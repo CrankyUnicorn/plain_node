@@ -1,4 +1,5 @@
 const { query_database } = require('./connect_mysql_db');
+const dateFormat = require('dateformat');
 
 //gets navbar anchor data from db
 function navbar_anchors(callback) {
@@ -57,22 +58,26 @@ function header_contents(callback) {
   function articles_sections(callback, limit) {
     var sql;
     if (limit === 'top_three') {
-      sql = `SELECT * FROM article_section ORDER BY id ASC LIMIT 3`;
+      sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id ORDER BY id DESC LIMIT 3`;
     }else if (limit === 'all') {
-      sql = `SELECT * FROM article_section ORDER BY id ASC`;
+      sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id ORDER BY id DESC`;
     }else{
-      sql = `SELECT * FROM article_section WHERE id=${limit} ORDER BY id ASC LIMIT 1`;
+      sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id  WHERE id=${limit} ORDER BY id DESC LIMIT 1`;
     }
 
     //could also have several parametersfunction(err, rows, fields)
     query_database(sql, function (results) {
       if (Object.keys(results)) {
-        
         var results_array = new Array();
-  
+        var registry = '';
+        var date = new Date();
+
         for (var i = 0; i < results.length; i++) {
-            
-          results_array.push([results[i].id,results[i].title, results[i].subtitle, results[i].content,results[i].image, results[i].date_reg]);
+          date = results[i].date_reg;
+          registry = '';
+          registry += 'Posted by'.concat(' ', results[i].user_name,', ');
+          registry += dateFormat(date, "GMT:mmmm dd yyyy");
+          results_array.push([results[i].id,results[i].title, results[i].subtitle, results[i].content,results[i].image, registry]);
         }
           //console.log(results_array);
           callback(results_array);
