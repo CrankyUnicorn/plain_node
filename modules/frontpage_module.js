@@ -96,6 +96,32 @@ function header_contents(callback) {
 
 }
 
+//SEARCH FOR THE MATCHING SECTION
+function search_sections(callback, search_target){
+  const sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id WHERE title LIKE '%${search_target}%' OR subtitle LIKE '%${search_target}%' OR content LIKE '%${search_target}%' GROUP BY id ORDER BY id DESC`;
+  //console.log("query: ", sql);
+  query_database(sql, function (results) {
+    if (Object.keys(results)) {
+      var results_array = new Array();
+        var registry = '';
+        var date = new Date();
+
+        for (var i = 0; i < results.length; i++) {
+          
+          date = results[i].date_reg;
+          registry = '';
+          registry += 'Posted by'.concat(' ', results[i].user_name,', ');
+          registry += dateFormat(date, "GMT:mmmm dd yyyy");
+          results_array.push([results[i].id,results[i].title, results[i].subtitle, results[i].content,results[i].image, registry]);
+         
+        }
+      callback(results_array);
+    } else {
+      console.log('err: frontpage_module_home_search');
+    }
+  })
+}
+
 //INSERT CONTACT
 function insert_contact(callback, name, email, message){
   const sql = `INSERT INTO contact_message (name, email, message) VALUES ('${name}','${email}','${message}')`;
@@ -106,10 +132,10 @@ function insert_contact(callback, name, email, message){
       callback('success');
 
     } else {
-      console.log('err: frontpage_module_header');
+      console.log('err: frontpage_module_contact');
     }
   });
 }
 
 
-module.exports = { navbar_anchors, header_contents, articles_sections, insert_contact }
+module.exports = { navbar_anchors, header_contents, articles_sections, insert_contact, search_sections }

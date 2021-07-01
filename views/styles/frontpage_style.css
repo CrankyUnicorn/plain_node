@@ -237,7 +237,7 @@ button{
   .cun_header_bar_image{
     position: absolute;
     min-width: 720px;
-    height: 100% !important;
+    /*height: 100% !important;*/
     top: 0;
     left: 50%;
     
@@ -503,7 +503,12 @@ button{
 }
 
 .cun_section_link {
-  margin: 10px 0 10px 0
+  margin: 10px 0 10px 0;
+  font-weight: 400;
+  color: var(--medium_grey);
+}
+.cun_section_link:hover {
+  color: var(--medium_grey_royal_blue);
 }
 
 /* Inner Form*/
@@ -713,6 +718,7 @@ button{
   text-transform: uppercase;
   border-radius: 0;
   font-family: var(--font-open-sans);
+  height: fit-content;
 }
 .cun_section_show_all_button:hover{
   background-color: var(--royal_blue_ligth);
@@ -805,7 +811,14 @@ button{
   padding: 20px;
   margin:auto;
   width: 80vw;
-  min-height: 50vh;
+}
+.cun_blog_section{
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  color: var(--royal_blue);
+  min-height: 60vh;
 }
 .cun_blogs_browser{
   margin: 0;
@@ -813,6 +826,11 @@ button{
   flex-direction: row;
   justify-content: flex-end;
 }
+.cun_section_return{
+  display: flex;
+  flex-grow: 2;
+}
+
 .cun_article_search_div{
   margin-bottom: 40px;
   display: flex;
@@ -857,4 +875,11 @@ button{
 }
 .cun_article_search_button:hover{
   color: var(--medium_grey_royal_blue);
+}
+
+.cun_blog_button_bottom{
+  height: fit-content;
+  width: fit-content;
+  margin-top: auto;
+  margin-bottom: 20px;
 }

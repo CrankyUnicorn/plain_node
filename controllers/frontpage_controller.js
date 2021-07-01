@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
-const { navbar_anchors, header_contents, articles_sections, insert_contact } = require('../modules/frontpage_module');
+const { navbar_anchors, header_contents, articles_sections, insert_contact, search_sections } = require('../modules/frontpage_module');
 //const sm = require('../modules/Session_Manager');
 
 function frontpage_controller(request, response) {
@@ -139,6 +139,16 @@ function frontpage_controller(request, response) {
           response.end();
         }, "return_ids");
       }
+
+    //search form sections
+    }else if (true_url.searchParams.get('article_sections_search')) {
+      let search_target = true_url.searchParams.get('article_sections_search');
+
+      search_sections((content_array)=>{
+        response.write(JSON.stringify(content_array));
+        response.end();
+      },search_target);
+
     }
 
     else {

@@ -266,6 +266,14 @@
 
   function create_frontpage_home() {
     
+    function get_search(target){
+      send_xmlhttprequest('frontpage','get',`article_sections_search=${target}`, (response)=>{
+        console.log(JSON.parse(response));
+        article_sections = JSON.parse(response);
+        call_frontpage_main();
+        //show_menu();
+      });
+    }
 
     function get_all_posts(){
       send_xmlhttprequest('frontpage','get','article_sections=all', (response)=>{
@@ -327,8 +335,8 @@
     const article_search_input = document.createElement("input");
     article_search_input.classList = "cun_article_search_input";
     article_search_input.style = "";
-    article_search_input.value = "";
     article_search_input.name = "";
+    article_search_input.value = "";
     article_search_input.placeholder = "search";
     article_search_input.id = "article_search_input";
     article_search_div.appendChild(article_search_input);
@@ -338,6 +346,7 @@
     article_search_button.style = "";
     article_search_button.textContent = "Search";
     article_search_button.id = "article_search_button";
+    article_search_button.addEventListener('click', ()=>{ get_search(article_search_input.value); }, true);
     article_search_div.appendChild(article_search_button);
 
     //sections
@@ -570,9 +579,21 @@
       contact_text.className = "cun_about_text"; 
       contact_text.style = "";
       contact_text.id = `contact_text`;
-      contact_text.innerHTML = "<br><br><h2 style='text-align:center;'>Message send with success!</h2><br><div style='display: flex; justify-content: center;'><a href='./' style='color:var(--royal_blue);'>Back to Home</a><div>";
+      contact_text.innerHTML = `<br><br><h3>Message send with ${reply}!</h3><br><br>`;
       contact_div.appendChild(contact_text);
 
+      const go_back_button_div = document.createElement("div");
+      go_back_button_div.className = "cun_submit_button_div"; 
+      go_back_button_div.id = `go_back_button_div`;
+      contact_div.appendChild(go_back_button_div);  
+
+      const go_back_button = document.createElement("button");
+      go_back_button.className = "cun_section_show_all_button"; 
+      go_back_button.id = `go_back_button`;
+      go_back_button.type = 'button';
+      go_back_button.innerText = 'Go Back';
+      go_back_button.addEventListener('click',()=>{ window.location.href = "./frontpage" },false); 
+      go_back_button_div.appendChild(go_back_button);
       return;
     }
 
@@ -710,7 +731,7 @@
       
       //check if the blog article sections is already stored or not if not get it
       if (article_sections.length>0) {
-        console.log(parseInt(blog_id) ,'|', article_sections[0][0]);
+        //console.log(parseInt(blog_id) ,'|', article_sections[0][0]);
         /*check if the single returned value in the article_sections 
         is the one passed by the URL query*/
         if (parseInt(blog_id) !== article_sections[0][0]) {
@@ -749,7 +770,7 @@
       
       //HTML ELEMENTS  
         const section = document.createElement("div");
-        section.className = "cun_section"; 
+        section.className = "cun_blog_section"; 
         section.style = "";
         section.id = `section`
         blog_div.appendChild(section);
@@ -783,20 +804,27 @@
         section_image_container.appendChild(section_image);
         */
 
-        section_description = document.createElement("p");
+        const section_description_div = document.createElement("div");
+        section.appendChild(section_description_div);
+
+        const section_description = document.createElement("p");
         section_description.className = "";
         section_description.style = "";
         section_description.id = `section_description`;
         section_description.innerHTML = article_sections[0][3];
-        section.appendChild(section_description);
+        section_description_div.appendChild(section_description);
 
-        section_link = document.createElement("a");
-        section_link.className = "cun_section_link";
-        section_link.style = "";
+        const section_link_div = document.createElement("div");
+        section_link_div.classList = "cun_section_return";
+        section.appendChild(section_link_div);
+
+        const section_link = document.createElement("a");
+        section_link.className = "cun_section_link  cun_blog_button_bottom";
+        section_link.style = "text-decoration:underline";
         section_link.id = `section_link`;
-        section_link.textContent = "Back";
-        section_link.href = "./";
-        section.appendChild(section_link);
+        section_link.textContent = "Go back to Home";
+        section_link.href = "./frontpage";
+        section_link_div.appendChild(section_link);
         
       
       //see previous and next post button
