@@ -61,7 +61,7 @@ body {
   font-weight: 400;
   line-height: 1.5;
   color: var(--almost_white);
-  background-color: #fff;
+  background-color: var(--almost_white);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
 }
@@ -78,12 +78,15 @@ a:focus, a:hover {
   opacity: 50%;
 }
 
+
 hr {
   border:none;
   height: 1px;
  	width: 100%;
 	border-bottom: 1px solid var(--royal_blue);
 }
+
+
 
 button{
   appearance: auto;
@@ -227,8 +230,21 @@ button{
   left: 0;
   margin: auto;
   opacity: 80%;
+  transition: all 0s;
 }
 
+@media only screen and (max-width: 720px) {
+  .cun_header_bar_image{
+    position: absolute;
+    min-width: 720px;
+    height: 100% !important;
+    top: 0;
+    left: 50%;
+    
+    margin-left: -360px;
+    
+  }
+}
 /* Style the top navigation bar----------------------------------------------*/
 
 .cun_navbar {
@@ -300,7 +316,11 @@ button{
 }
 
 @media screen and (max-width: 720px) {
-  .cun_main, .cun_navbar_button_container {
+  .cun_main{
+    width: 100% !important;
+    flex-direction: column;
+  } 
+  .cun_navbar_button_container {
     flex-direction: column;
   }
 
@@ -416,6 +436,8 @@ button{
   display: flex;
   flex-wrap: wrap;
   background-color: var(--almost_white);
+  width: 80%;
+  margin: auto;
 }
 .cun_main * {
   font-family: var(--font-lora);
@@ -439,7 +461,6 @@ button{
 /* Article-------------------------------------------------------------------*/
 
 .cun_article {
-  margin-top: 40px;
   overflow: hidden;
   min-height: 70vh;
   flex: 60%;
@@ -559,6 +580,7 @@ button{
   font-weight: 100;
   text-decoration: none;
   text-align: center;
+  letter-spacing: 3px;
 }
 
 .cun_footer i {
@@ -686,7 +708,6 @@ button{
   font-size: 14px;
   font-weight: 800;
   display: block;
-  
   padding: 10px 20px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -736,14 +757,14 @@ button{
 .cun_contact_div{
   padding: 20px;
   margin:auto;
-  width: 80vw;
+  width: 50vw;
   min-height: 50vh;
 }
 
 .cun_contact_div_form{
   margin: auto;
   margin-top:40px;
-  width:60%; 
+  
 }
 .cun_contact_form textarea{
   height: 200px;
@@ -752,6 +773,7 @@ button{
 }
 .cun_contact_label{
   display: block;
+  margin-top: 20px;
   color: var(--royal_blue);
 }
 .cun_contact_input{
@@ -790,4 +812,49 @@ button{
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+.cun_article_search_div{
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.cun_article_search_icon{
+  font-family: 'Font Awesome 5 Free' !important;
+  color:var(--royal_blue_ligth);
+  font-size:x-large;
+  vertical-align: middle;
+}
+
+.cun_article_search_input{
+  display: inline-block;
+  border: var(--royal_blue) solid 1px;
+  width: 200px;
+  padding: 5px 10px;
+  margin: 0 4px 0 8px;
+  background-color:var(--almost_white);
+  color: var(--royal_blue);
+}
+.cun_article_search_input::placeholder{
+  color: var(--medium_grey_royal_blue);
+}
+.cun_article_search_input:focus{
+  outline: none;
+}
+
+.cun_article_search_button{
+  display: inline-block;
+  color: var(--royal_blue);
+  background-color: var(--almost_white);
+  border-color: var(--medium_grey_royal_blue);
+  border: var(--royal_blue) solid 1px;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 6px 12px;
+  letter-spacing: 1px;
+  border-radius: 0;
+  font-family: var(--font-lora);
+}
+.cun_article_search_button:hover{
+  color: var(--medium_grey_royal_blue);
 }

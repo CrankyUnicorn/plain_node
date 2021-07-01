@@ -55,14 +55,16 @@ function header_contents(callback) {
 }
 
   //gets body-> articles -> sections content from db
-  function articles_sections(callback, limit) {
+  function articles_sections(callback, value) {
     var sql;
-    if (limit === 'top_three') {
+    if (value === 'top_three') {
       sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id ORDER BY id DESC LIMIT 3`;
-    }else if (limit === 'all') {
+    }else if (value === 'all') {
       sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id ORDER BY id DESC`;
+    }else if (value === 'return_ids') {
+      sql = `SELECT id FROM article_section ORDER BY id DESC`;
     }else{
-      sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id  WHERE id=${limit} ORDER BY id DESC LIMIT 1`;
+      sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id WHERE id=${value} ORDER BY id DESC LIMIT 1`;
     }
 
     //could also have several parametersfunction(err, rows, fields)
@@ -73,11 +75,16 @@ function header_contents(callback) {
         var date = new Date();
 
         for (var i = 0; i < results.length; i++) {
+          if (value !== 'return_ids') {
           date = results[i].date_reg;
           registry = '';
           registry += 'Posted by'.concat(' ', results[i].user_name,', ');
           registry += dateFormat(date, "GMT:mmmm dd yyyy");
           results_array.push([results[i].id,results[i].title, results[i].subtitle, results[i].content,results[i].image, registry]);
+        
+          }else{
+            results_array.push(results[i].id);
+          }
         }
           //console.log(results_array);
           callback(results_array);
@@ -89,5 +96,20 @@ function header_contents(callback) {
 
 }
 
+//INSERT CONTACT
+function insert_contact(callback, name, email, message){
+  const sql = `INSERT INTO contact_message (name, email, message) VALUES ('${name}','${email}','${message}')`;
 
-module.exports = { navbar_anchors, header_contents, articles_sections }
+  query_database(sql, function (results) {
+    if (Object.keys(results)) {
+
+      callback('success');
+
+    } else {
+      console.log('err: frontpage_module_header');
+    }
+  });
+}
+
+
+module.exports = { navbar_anchors, header_contents, articles_sections, insert_contact }

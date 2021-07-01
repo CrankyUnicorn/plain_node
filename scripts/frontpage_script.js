@@ -176,16 +176,16 @@
           header_contents = JSON.parse(response);
           create_frontpage_header();
           //show_menu();
+          return;
         })
       }, false);
 
     }
-
     //HEADER TITLE BAR 
     var header_bar; //element
     var header_content_array = new Array();
 
-
+    
     //populates array with currets selection of content
     if (blog_id || page_name === 'blog') {
       for (let i = 0; i < article_sections.length; i++) {
@@ -193,6 +193,11 @@
         header_content_array = article_sections[0];
         break;
       }
+    }else if (window.location.pathname.replace('/','') === 'frontpage' && !page_name) {
+      if (header_contents.length>0) {
+        header_content_array = header_contents[0];
+      }
+
     }else{
       for (let i = 0; i < header_contents.length; i++) {
         if (page_name === header_contents[i][1].toLowerCase()) {
@@ -303,6 +308,39 @@
 
     //sidebar if needed
 
+    //search bar
+    const article_search_div = document.createElement("div");
+    article_search_div.classList = "cun_article_search_div";
+    article_search_div.style = "";
+    article_search_div.id = "article_search_div";
+    article.appendChild(article_search_div);
+    
+    const article_search_span = document.createElement("span");
+    article_search_span.style = "font-family: initial !important;";
+    article_search_div.appendChild(article_search_span);
+
+    const article_search_icon = document.createElement("i");
+    article_search_icon.classList = "cun_article_search_icon fas fa-search";
+    article_search_icon.id = "article_search_icon";
+    article_search_span.appendChild(article_search_icon);
+
+    const article_search_input = document.createElement("input");
+    article_search_input.classList = "cun_article_search_input";
+    article_search_input.style = "";
+    article_search_input.value = "";
+    article_search_input.name = "";
+    article_search_input.placeholder = "search";
+    article_search_input.id = "article_search_input";
+    article_search_div.appendChild(article_search_input);
+    
+    const article_search_button = document.createElement("button");
+    article_search_button.classList = "button cun_article_search_button";
+    article_search_button.style = "";
+    article_search_button.textContent = "Search";
+    article_search_button.id = "article_search_button";
+    article_search_div.appendChild(article_search_button);
+
+    //sections
     var section = new Array();
     var section_anchor = new Array();
     var section_title = new Array();
@@ -465,7 +503,18 @@
     about_div.appendChild(about_text);
   }
 
-  function create_frontpage_contact(){
+  function create_frontpage_contact(reply){
+    
+    function post_contact_message(name, email, message){
+      send_xmlhttprequest('frontpage','post',`contact=all&name=${name}&email=${email}&message=${message}`, (response)=>{
+        console.log(JSON.parse(response));
+        let new_reply = JSON.parse(response);
+        create_frontpage_contact(new_reply);
+        //show_menu();
+      })
+    }
+
+
     const query_string = window.location.search;
     //console.log(query_string);
     const url_params = new URLSearchParams(query_string);
@@ -512,6 +561,21 @@
       }
       contact_div = element_contact;
     }
+
+
+    
+    //if message is send with success
+    if(reply){
+      const contact_text = document.createElement("div");
+      contact_text.className = "cun_about_text"; 
+      contact_text.style = "";
+      contact_text.id = `contact_text`;
+      contact_text.innerHTML = "<br><br><h2 style='text-align:center;'>Message send with success!</h2><br><div style='display: flex; justify-content: center;'><a href='./' style='color:var(--royal_blue);'>Back to Home</a><div>";
+      contact_div.appendChild(contact_text);
+
+      return;
+    }
+
 
     const contact_text = document.createElement("div");
     contact_text.className = "cun_about_text"; 
@@ -567,165 +631,201 @@
     submit_button_div_button.id = `submit_button_div_button`;
     submit_button_div_button.type = 'button';
     submit_button_div_button.innerText = 'Send';
-    submit_button_div_button.addEventListener('click',()=>{ post_contact_message();},false); 
+    submit_button_div_button.addEventListener('click',()=>{ post_contact_message(contact_input[1].value, contact_input[1].value, contact_input[2].value);},false); 
     submit_button_div.appendChild(submit_button_div_button);  
   
   }
   
-  function create_frontpage_blog(id){
+  function create_frontpage_blog(index){
     
-    var blog_id;
+    var section_ids = new Array();
+
+    send_xmlhttprequest('frontpage','get',`article_sections=all_ids`, (response)=>{
+      //console.log(JSON.parse(response));
+      section_ids = JSON.parse(response);
+      console.log('section_ids: ',section_ids);
+      blog_process();
+    });
     
-    if(id){
-      blog_id = id;
-    }else{
-      const query_string = window.location.search;
-      //console.log(query_string);
-      const url_params = new URLSearchParams(query_string);
-      blog_id = url_params.get('id');
-    }
-
-    function get_previous_post(){
-      blog_id -= 1;
-      get_article_selection(blog_id)
-    }
-    function get_next_post(){
-      blog_id += 1;
-      get_article_selection(blog_id)
-    }
-
-    //get the required information about the selected blog by its id
-    function get_article_selection(inner_blog_id) {
-      if(inner_blog_id){
-        send_xmlhttprequest('frontpage','get',`article_sections=id&id=${inner_blog_id}`, (response)=>{
-          //console.log(JSON.parse(response));
-          article_sections = JSON.parse(response);
-          create_frontpage_blog(inner_blog_id);
-          //console.log("blog: ",article_sections);
-          
-        });
+    function blog_process(){
+      var blog_id;
+      
+      //check if there is a index reference passed for this function
+      //check if there is a id reference passed thought the URL query
+      if(index){
+        blog_id = section_ids[index];
       }else{
-        inner_blog_id = 1;
-        send_xmlhttprequest('frontpage','get',`article_sections=top_three`, (response)=>{
-          //console.log(JSON.parse(response));
-          article_sections = JSON.parse(response);
-          create_frontpage_blog(inner_blog_id);
-        });
+        const query_string = window.location.search;
+        //console.log(query_string);
+        const url_params = new URLSearchParams(query_string);
+        blog_id = url_params.get('id');
+        
+        if (!blog_id) {
+          blog_id = section_ids[0]
+          console.log("blog_id: ", blog_id);
+        }
       }
-    }
 
-    //console.log(parseInt(blog_id) ,'|', article_sections[0][0]);
+      //functions to send this function to load/read other post
+      //index [0] is the most recent chronologically
+      function get_previous_post(){
+        if(index < section_ids.length ){
+          blog_id = section_ids[index+1];
+        }else{
+          blog_id = section_ids[index];
+        }
+        get_article_selection(blog_id);
+      }
+      function get_next_post(){
+        
+        if(index > 0){
+          blog_id = section_ids[index-1];
+        }else{
+          blog_id = section_ids[index];
+        }
+        get_article_selection(blog_id);
+      }
 
-    //check if the blog article sections is already stored or not if not get it
-    if (article_sections.length>0) {
-      if(blog_id){
+      //get the required information about the selected blog by its id
+      function get_article_selection(inner_blog_id) {
+        if(inner_blog_id){
+          let new_index = find_index(blog_id)
+          console.log("new_index: ",new_index);
+          send_xmlhttprequest('frontpage','get',`article_sections=id&id=${inner_blog_id}`, (response)=>{
+            //console.log(JSON.parse(response));
+            article_sections = JSON.parse(response);
+            create_frontpage_blog(new_index);
+            console.log("blog: ",article_sections);
+          });
+        }
+      }
+
+      function find_index(blog_id_value){
+        for (let i = 0; i < section_ids.length; i++) {
+          if( section_ids[i] == parseInt(blog_id_value) ){
+            return i;
+          }
+        };
+      }
+      
+      //check if the blog article sections is already stored or not if not get it
+      if (article_sections.length>0) {
+        console.log(parseInt(blog_id) ,'|', article_sections[0][0]);
+        /*check if the single returned value in the article_sections 
+        is the one passed by the URL query*/
         if (parseInt(blog_id) !== article_sections[0][0]) {
-          get_article_selection(blog_id);
+          //console.log(article_sections);
+          get_article_selection( blog_id );
           return;
         }
+
         //console.log("recreate header");
-        create_frontpage_header();
+        create_frontpage_header( );
+        
+      }else{
+        get_article_selection( blog_id );
+        return;
       }
-    }else{
-      get_article_selection();
-      return;
-    }
 
-    const element_blog = document.getElementById("blog_div");
+      const element_blog = document.getElementById("blog_div");
 
-    var blog_div;
+      var blog_div;
 
-    if (!element_blog) {
-      
-      blog_div = document.createElement("div");
-      blog_div.className = "cun_blog_div"; 
-      blog_div.style = "";
-      blog_div.id = `blog_div`;
-      main.appendChild(blog_div);
+      if (!element_blog) {
+        
+        blog_div = document.createElement("div");
+        blog_div.className = "cun_blog_div"; 
+        blog_div.style = "";
+        blog_div.id = `blog_div`;
+        main.appendChild(blog_div);
 
-    }else{
-      while (element_blog.firstChild) {
-        element_blog.removeChild(element_blog.firstChild);
+      }else{
+        while (element_blog.firstChild) {
+          element_blog.removeChild(element_blog.firstChild);
+        }
+        blog_div = element_blog;
       }
-      blog_div = element_blog;
+
+      
+      //HTML ELEMENTS  
+        const section = document.createElement("div");
+        section.className = "cun_section"; 
+        section.style = "";
+        section.id = `section`
+        blog_div.appendChild(section);
+
+        /*
+        section_title = document.createElement("h2");
+        section_title.className = "";
+        section_title.style = "";
+        section_title.id = `section_title`;
+        section_title.textContent = article_sections[0][1];
+        section.appendChild(section_title);
+
+        section_subtitle = document.createElement("h5");
+        section_subtitle.className = "";
+        section_subtitle.style = "";
+        section_subtitle.id = `section_subtitle`;
+        section_subtitle.textContent = article_sections[0][2];
+        section.appendChild(section_subtitle);
+
+        section_image_container = document.createElement("div");
+        section_image_container.className = "cun_section_image_container";
+        section_image_container.style = "";
+        section_image_container.id = `section_image_container`;
+        section.appendChild(section_image_container);
+        
+        section_image = document.createElement("img");
+        section_image.className = "cun_section_image";
+        section_image.style = "";
+        section_image.id = `section_image`;
+        section_image.src = ''.concat("./resources/images/",article_sections[0][4]);
+        section_image_container.appendChild(section_image);
+        */
+
+        section_description = document.createElement("p");
+        section_description.className = "";
+        section_description.style = "";
+        section_description.id = `section_description`;
+        section_description.innerHTML = article_sections[0][3];
+        section.appendChild(section_description);
+
+        section_link = document.createElement("a");
+        section_link.className = "cun_section_link";
+        section_link.style = "";
+        section_link.id = `section_link`;
+        section_link.textContent = "Back";
+        section_link.href = "./";
+        section.appendChild(section_link);
+        
+      
+      //see previous and next post button
+      const blog_browser = document.createElement("div");
+      blog_browser.className = "cun_blogs_browser"; 
+      blog_browser.id = `section_show_all`
+      section.appendChild(blog_browser);
+
+      if( index < section_ids.length-1 ){
+        const previous_post_button = document.createElement("button");
+        previous_post_button.className = "cun_section_show_all_button"; 
+        previous_post_button.id = `previous_post_button`;
+        previous_post_button.type = 'button';
+        previous_post_button.innerText = 'Previous';
+        previous_post_button.addEventListener('click',()=>{ get_previous_post();},false); 
+        blog_browser.appendChild(previous_post_button); 
+      }
+
+      if(index > 0 ){
+        const next_post_button = document.createElement("button");
+        next_post_button.className = "cun_section_show_all_button"; 
+        next_post_button.style = "margin: 0; margin-left: 5px;"; 
+        next_post_button.id = `next_post_button`;
+        next_post_button.type = 'button';
+        next_post_button.innerText = 'Next';
+        next_post_button.addEventListener('click',()=>{ get_next_post();},false); 
+        blog_browser.appendChild(next_post_button); 
+      } 
     }
-
-    
-    //HTML ELEMENTS  
-      const section = document.createElement("div");
-      section.className = "cun_section"; 
-      section.style = "";
-      section.id = `section`
-      blog_div.appendChild(section);
-
-      /*
-      section_title = document.createElement("h2");
-      section_title.className = "";
-      section_title.style = "";
-      section_title.id = `section_title`;
-      section_title.textContent = article_sections[0][1];
-      section.appendChild(section_title);
-
-      section_subtitle = document.createElement("h5");
-      section_subtitle.className = "";
-      section_subtitle.style = "";
-      section_subtitle.id = `section_subtitle`;
-      section_subtitle.textContent = article_sections[0][2];
-      section.appendChild(section_subtitle);
-
-      section_image_container = document.createElement("div");
-      section_image_container.className = "cun_section_image_container";
-      section_image_container.style = "";
-      section_image_container.id = `section_image_container`;
-      section.appendChild(section_image_container);
-      
-      section_image = document.createElement("img");
-      section_image.className = "cun_section_image";
-      section_image.style = "";
-      section_image.id = `section_image`;
-      section_image.src = ''.concat("./resources/images/",article_sections[0][4]);
-      section_image_container.appendChild(section_image);
-      */
-
-      section_description = document.createElement("p");
-      section_description.className = "";
-      section_description.style = "";
-      section_description.id = `section_description`;
-      section_description.innerHTML = article_sections[0][3];
-      section.appendChild(section_description);
-
-      section_link = document.createElement("a");
-      section_link.className = "cun_section_link";
-      section_link.style = "";
-      section_link.id = `section_link`;
-      section_link.textContent = "Back";
-      section_link.href = "./";
-      section.appendChild(section_link);
-      
-    
-    //see previous and next post button
-    const blog_browser = document.createElement("div");
-    blog_browser.className = "cun_blogs_browser"; 
-    blog_browser.id = `section_show_all`
-    section.appendChild(blog_browser);    
-
-    const next_post_button = document.createElement("button");
-    next_post_button.className = "cun_section_show_all_button"; 
-    next_post_button.id = `next_post_button`;
-    next_post_button.type = 'button';
-    next_post_button.innerText = 'Next';
-    next_post_button.addEventListener('click',()=>{ get_next_post();},false); 
-    blog_browser.appendChild(next_post_button);  
-
-    const previous_post_button = document.createElement("button");
-    previous_post_button.className = "cun_section_show_all_button"; 
-    previous_post_button.style = "margin: 0; margin-left: 5px;"; 
-    previous_post_button.id = `previous_post_button`;
-    previous_post_button.type = 'button';
-    previous_post_button.innerText = 'Previous';
-    previous_post_button.addEventListener('click',()=>{ get_previous_post();},false); 
-    blog_browser.appendChild(previous_post_button); 
-    
   }
 
   function create_frontpage_footer() {

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
-const { navbar_anchors, header_contents, articles_sections } = require('../modules/frontpage_module');
+const { navbar_anchors, header_contents, articles_sections, insert_contact } = require('../modules/frontpage_module');
 //const sm = require('../modules/Session_Manager');
 
 function frontpage_controller(request, response) {
@@ -111,26 +111,34 @@ function frontpage_controller(request, response) {
       });
     } 
 
-    //body_selctions
+    //body_selections
     else if (true_url.searchParams.get('article_sections')) {
       let target = true_url.searchParams.get('article_sections');
-     if (target === 'top_three' || target === 'all') {
+      if (target === 'top_three' || target === 'all') {
         
-      articles_sections((content_array)=>{
-        //console.log(content_array);
-        response.write(JSON.stringify(content_array));
-        response.end();
-      }, target);
+        articles_sections((content_array)=>{
+          //console.log(content_array);
+          response.write(JSON.stringify(content_array));
+          response.end();
+        }, target);
 
-     }else if(target === 'id'){
-      let id = true_url.searchParams.get('id');
+      }else if(target === 'id'){
+        let id = true_url.searchParams.get('id');
 
-      articles_sections((content_array)=>{
-        //console.log(content_array);
-        response.write(JSON.stringify(content_array));
-        response.end();
-      }, id);
-     }
+        articles_sections((content_array)=>{
+          //console.log(content_array);
+          response.write(JSON.stringify(content_array));
+          response.end();
+        }, id);
+     
+      }else if(target === 'all_ids'){
+        
+        articles_sections((content_array)=>{
+          //console.log(content_array);
+          response.write(JSON.stringify(content_array));
+          response.end();
+        }, "return_ids");
+      }
     }
 
     else {
@@ -142,6 +150,24 @@ function frontpage_controller(request, response) {
         get_frontoffice_files('index');
       }
     }
+
+  }else if (request.method === 'POST') { //POST
+
+    if (true_url.searchParams.get('contact')) {
+      let name = true_url.searchParams.get('name');
+      let email = true_url.searchParams.get('email');
+      let message = true_url.searchParams.get('message');
+
+      //then comunicate with the server via a module method
+      insert_contact((content_array)=>{
+        console.log(content_array);
+        response.write(JSON.stringify(content_array));
+        response.end();
+        
+        //get_frontoffice_as_page for a information sheet for debugging
+      }, name, email, message);
+    } 
+
 
   } else {
 
