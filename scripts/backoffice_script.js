@@ -1,5 +1,6 @@
 /*VARIABLES------------------------------------------------------------------*/
 var view_post_parent_target = '';
+var view_contact_parent_target = '';
 
 /*MAIN DIV-------------------------------------------------------------------*/
 function create_main_div(target){
@@ -57,42 +58,125 @@ function create_login_page_content() {
 }
 
 
-/*CPANEL---------------------------------------------------------------------*/
+/*CONTENT-------------------------------------------------------------------*/
 function create_cpanel_page_content() {
+  create_navbar();
+  create_view_posts("main_div");
+  create_view_contacts("main_div");
+}
+
+/*NAV BAR--------------------------------------------------------------------*/
+function create_navbar() {
   const main_div = document.getElementById("main_div");
 
   const title = document.createElement("h1");
-  title.textContent = "Backoffice cPanel";
+  title.textContent = "DevLog Backoffice";
   main_div.appendChild(title);
 
-  const form = document.createElement("form");
-  form.setAttribute("method", "");
-  form.setAttribute("action", "");
-  main_div.appendChild(form);
+  const navbar_div = document.createElement("div");
+  navbar_div.style = "margin-top:40px";
+  main_div.appendChild(navbar_div);
 
   const topic_title = document.createElement("h3");
-  topic_title.textContent = "Welcome to cPanel";
-  form.appendChild(topic_title);
+  topic_title.style = "margin-bottom:10px";
+  topic_title.textContent = "Welcome to the backoffice";
+  navbar_div.appendChild(topic_title);
 
-  const posts_section = document.createElement("input");
-  posts_section.type = "button";
-  posts_section.name = "post_section";
-  posts_section.value = "New Posts";
-  posts_section.addEventListener("click", () => { create_new_post_panel() }, false);
-  form.appendChild(posts_section);
-
-
+  //main navbar buttons
   const logout = document.createElement("input");
+  logout.style = "margin-bottom: 10px;";
   logout.type = "button";
   logout.name = "logout";
   logout.value = "Logout";
   logout.addEventListener("click", () => { send_xmlhttprequest('backoffice', 'GET', ''.concat('logout=logout'), () => { window.location.reload();}) }, false);
-  form.appendChild(logout);
-}
+  navbar_div.appendChild(logout);
 
+  const ruler = document.createElement("hr");
+  navbar_div.appendChild(ruler);
+
+}
 
 /*VIEW POSTS-----------------------------------------------------------------*/
 function create_view_posts(target){
+
+  window.addEventListener('load',()=>{
+
+    view_post('none');
+    
+  },false);
+ 
+
+  //VIEW POSTS
+  function view_post(action){
+    var page = 1;
+    var multiple = 10;
+    var total = 1;
+
+    if (view_post_contents.length != 0) {
+      page = parseInt(view_post_contents[0][1]);
+      multiple = parseInt(view_post_contents[0][2]);
+      total = view_post_contents[0][3];
+    }
+
+    if (action === 'backward' && page>1) {
+      page -= 1;
+    }else if (action === 'forward' && page<total) {
+      page += 1;
+    }
+
+    const op = ''.concat('operation=view_posts','&','page=',page,'&','multiple=',multiple);
+    send_xmlhttprequest('backoffice','GET',op, (response)=>{
+      console.log(JSON.parse(response));
+      view_post_contents = JSON.parse(response);
+      
+      create_view_posts(view_post_parent_target);
+    });
+  }
+
+
+  //INSERT POST
+  function insert_post( title, subtitle, content){
+
+      const op = ''.concat('operation=new_post','&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
+      send_xmlhttprequest('backoffice','POST', op, (response)=>{
+        console.log(''.concat("inserted: ",response));
+        window.location.reload();
+        //view_post('none');
+      });
+    
+  }
+
+
+  //EDIT POST
+  function edit_post(id, title, subtitle, content){
+
+      //if ok is press then is true then delete
+      if(confirm("Are you sure you want to edit this post?")){
+        
+        const op = ''.concat('operation=edit_post','&','id=',id,'&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
+        send_xmlhttprequest('backoffice','POST', op, (response)=>{
+          console.log(''.concat("edited: ",response));
+          window.location.reload();
+          //view_post('none');
+        });
+      }
+  }
+
+  //DELETE POSTS
+  function delete_post(id){
+    
+    //if ok is press then is true then delete
+    if(confirm("Are you sure you want to delete this post?")){
+      const op = ''.concat('operation=delete_post','&','id=',id);
+      send_xmlhttprequest('backoffice','POST', op, (response)=>{
+        console.log(''.concat("deleted: ",response));
+        window.location.reload();
+        //view_post();
+      });
+    }
+  }
+
+
   view_post_parent_target = target;
   let main_div_element = document.getElementById(view_post_parent_target);
   
@@ -108,16 +192,26 @@ function create_view_posts(target){
     
     post_view_div = document.createElement("div");
     post_view_div.classList = "";
-    post_view_div.style = "margin-top:20px";
+    post_view_div.style = "margin-top:10px";
     post_view_div.id = "post_view_div";
     main_div_element.appendChild(post_view_div);
   }
 
   //div title
   const title = document.createElement("h4");
-  title.textContent = "Post View List";
+  title.textContent = "Blog Posts List";
   post_view_div.appendChild(title);
-  
+
+  //navbar buttons
+  const posts_section = document.createElement("input");
+  posts_section.style = "margin: 10px 0 15px 0;";
+  posts_section.type = "button";
+  posts_section.name = "post_section";
+  posts_section.value = "New Post";
+  posts_section.addEventListener("click", () => { create_new_post_panel() }, false);
+  post_view_div.appendChild(posts_section);
+ 
+  //
   const post_view_table = document.createElement("table");
   post_view_table.classList = "";
   post_view_table.style = "width: 100%";
@@ -177,7 +271,7 @@ function create_view_posts(target){
   }
   
   const previous_posts_button = document.createElement("input");
-  previous_posts_button.style = "display:inline";
+  previous_posts_button.style = "display:inline; margin:15px 0 10px 0";
   previous_posts_button.type = "button";
   previous_posts_button.name = "previous_posts";
   previous_posts_button.value = "Previous";
@@ -202,6 +296,8 @@ function create_view_posts(target){
   next_posts_button.addEventListener("click", () => { view_post('forward') }, false);
   post_view_div.appendChild(next_posts_button);
 
+  const ruler = document.createElement("hr");
+  post_view_div.appendChild(ruler);
 }
 
 /*POST CREATING--------------------------------------------------------------*/
@@ -474,6 +570,172 @@ function create_edit_post_panel(id){
   edit_form.appendChild(cancel);
 }
 
+/*CONTACT MESSAGES-----------------------------------------------------------*/
+function create_view_contacts(target) {
+
+  window.addEventListener('load',()=>{
+
+    view_contact('none');
+    
+  },false);
+
+  //VIEW MESSAGES
+  function view_contact(action){
+    var page = 1;
+    var multiple = 10;
+    var total = 1;
+
+    if (view_post_contents.length != 0) {
+      page = parseInt(view_post_contents[0][1]);
+      multiple = parseInt(view_post_contents[0][2]);
+      total = view_post_contents[0][3];
+    }
+
+    if (action === 'backward' && page>1) {
+      page -= 1;
+    }else if (action === 'forward' && page<total) {
+      page += 1;
+    }
+
+    const op = ''.concat('operation=view_contacts','&','page=',page,'&','multiple=',multiple);
+    send_xmlhttprequest('backoffice','GET',op, (response)=>{
+      console.log(JSON.parse(response));
+      view_contact_contents = JSON.parse(response);
+      
+      create_view_contacts(view_contact_parent_target);
+    });
+  }
+
+  view_contact_parent_target = target;
+  let main_div_element = document.getElementById(view_contact_parent_target);
+  
+  var contact_view_div;
+  let contact_view_element = document.getElementById('contact_view_div');
+
+  if (contact_view_element) {
+    while (contact_view_element.firstChild) {
+      contact_view_element.removeChild(contact_view_element.firstChild);
+    }
+    contact_view_div = contact_view_element;
+  }else{
+    
+    contact_view_div = document.createElement("div");
+    contact_view_div.classList = "";
+    contact_view_div.style = "margin-top:10px";
+    contact_view_div.id = "contact_view_div";
+    main_div_element.appendChild(contact_view_div);
+  }
+
+  //div title
+  const title = document.createElement("h4");
+  title.textContent = "Contact Message List";
+  contact_view_div.appendChild(title);
+
+  //navbar buttons
+  const contact_section = document.createElement("input");
+  contact_section.style = "margin: 10px 0 15px 0;";
+  contact_section.type = "button";
+  contact_section.name = "contact_section";
+  contact_section.value = "New Message";
+  contact_section.addEventListener("click", () => { create_new_contact_panel() }, false);
+  contact_view_div.appendChild(contact_section);
+ 
+  //
+  const contact_view_table = document.createElement("table");
+  contact_view_table.classList = "";
+  contact_view_table.style = "width: 100%";
+  contact_view_table.id = "";
+  contact_view_div.appendChild(contact_view_table);
+
+  const contact_view_header = document.createElement("tr");
+  contact_view_table.appendChild(contact_view_header);
+  
+  const titles = ['Name','E-mail','Content','Date','Check','Delete'];
+  var contact_view_header_title = new Array();
+
+  for (let i = 0; i < titles.length; i++) {
+    contact_view_header_title[i] = document.createElement("td");
+    contact_view_header_title[i].textContent = titles[i];
+    contact_view_header.appendChild(contact_view_header_title[i]);
+  }
+
+  var contact_view_row = new Array();
+  var contact_view_cell = new Array();
+  var view_contact_contents_opertation = ['check','delete'];
+
+  if (view_contact_contents.length != 0) {
+    
+    for (let i = 1; i < view_contact_contents.length; i++) {
+      contact_view_row = document.createElement("tr");
+      contact_view_table.appendChild(contact_view_row);
+
+      contact_view_cell[i*4+i] = document.createElement("td");
+      contact_view_cell[i*4+i].textContent = view_contact_contents[i][1];
+      contact_view_row.appendChild(contact_view_cell[i*4+i]);
+      
+      contact_view_cell[i*4+i] = document.createElement("td");
+      contact_view_cell[i*4+i].textContent = view_contact_contents[i][2];
+      contact_view_row.appendChild(contact_view_cell[i*4+i]);
+      
+      contact_view_cell[i*4+i] = document.createElement("td");
+      contact_view_cell[i*4+i].textContent = view_contact_contents[i][3];
+      contact_view_row.appendChild(contact_view_cell[i*4+i]);
+
+      contact_view_cell[i*4+i] = document.createElement("td");
+      contact_view_cell[i*4+i].textContent = view_contact_contents[i][4];
+      contact_view_row.appendChild(contact_view_cell[i*4+i]);
+      
+      //EDIT
+      contact_view_cell[i*4+i] = document.createElement("td");
+      contact_view_cell[i*4+i].classList = "cun_td_button";
+      contact_view_cell[i*4+i].style = "cursor: pointer;";
+      contact_view_cell[i*4+i].textContent = view_contact_contents_opertation[0];
+      contact_view_cell[i*4+i].addEventListener("click", () => { check_contact_panel(view_contact_contents[i][0]) }, false);
+      contact_view_row.appendChild(contact_view_cell[i*4+i]);
+      
+      //DELETE
+      contact_view_cell[i*4+i] = document.createElement("td");
+      contact_view_cell[i*4+i].classList = "cun_td_button";
+      contact_view_cell[i*4+i].style = "cursor: pointer;";
+      contact_view_cell[i*4+i].textContent = view_contact_contents_opertation[1];
+      contact_view_cell[i*4+i].addEventListener("click", () => { delete_contact(view_contact_contents[i][0]) }, false);
+      contact_view_row.appendChild(contact_view_cell[i*4+i]);
+    }
+  }
+  
+  const previous_contacts_button = document.createElement("input");
+  previous_contacts_button.style = "display:inline; margin:15px 0 10px 0";
+  previous_contacts_button.type = "button";
+  previous_contacts_button.name = "previous_contacts";
+  previous_contacts_button.value = "Previous";
+  previous_contacts_button.addEventListener("click", () => { view_contact('backward') }, false);
+  contact_view_div.appendChild(previous_contacts_button);
+
+  
+  const position_contacts_button = document.createElement("p");
+  position_contacts_button.classList = "";
+  position_contacts_button.style = "display:inline; margin: 0 10px;";
+  position_contacts_button.id = "";
+  if(view_contact_contents.length != 0){
+    position_contacts_button.textContent = view_contact_contents[0][0];
+  }
+  contact_view_div.appendChild(position_contacts_button);
+
+  const next_contacts_button = document.createElement("input");
+  next_contacts_button.style = "display:inline";
+  next_contacts_button.type = "button";
+  next_contacts_button.name = "next_contacts";
+  next_contacts_button.value = "Next";
+  next_contacts_button.addEventListener("click", () => { view_contact('forward') }, false);
+  contact_view_div.appendChild(next_contacts_button);
+
+  const ruler = document.createElement("hr");
+  contact_view_div.appendChild(ruler);
+}
+
+/*STATISTICS-----------------------------------------------------------------*/
+
+
 /*HEADER SERVER--------------------------------------------------------------*/
 function create_server_header(target){
   const server_header_content = `<h2>This is an response page create by an Node app in the server.</h2>
@@ -488,7 +750,6 @@ function create_server_header(target){
     server_header_element.innerHTML += server_header_content;
     target.appendChild(server_header_element);
 }
-
 
 /*FOOTER---------------------------------------------------------------------*/
 function create_footer(target){
@@ -518,80 +779,5 @@ function create_footer(target){
 /*FUNCTIONS--------------------------------------------------------------------*/
 function add_event_view_posts() {
   
-  window.addEventListener('load',()=>{
-
-    view_post('none');
-    
-  },false);
+}
  
-}
-
-//VIEW POSTS
-function view_post(action){
-  var page = 1;
-  var multiple = 10;
-  var total = 1;
-
-  if (view_post_contents.length != 0) {
-    page = parseInt(view_post_contents[0][1]);
-    multiple = parseInt(view_post_contents[0][2]);
-    total = view_post_contents[0][3];
-  }
-
-  if (action === 'backward' && page>1) {
-    page -= 1;
-  }else if (action === 'forward' && page<total) {
-    page += 1;
-  }
-
-  const op = ''.concat('operation=view_posts','&','page=',page,'&','multiple=',multiple);
-  send_xmlhttprequest('backoffice','GET',op, (response)=>{
-    console.log(JSON.parse(response));
-    view_post_contents = JSON.parse(response);
-    
-    create_view_posts(view_post_parent_target);
-  });
-}
-
-
-//INSERT POST
-function insert_post( title, subtitle, content){
-
-    const op = ''.concat('operation=new_post','&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
-    send_xmlhttprequest('backoffice','POST', op, (response)=>{
-      console.log(''.concat("inserted: ",response));
-      window.location.reload();
-      //view_post('none');
-    });
-  
-}
-
-
-//EDIT POST
-function edit_post(id, title, subtitle, content){
-
-    //if ok is press then is true then delete
-    if(confirm("Are you sure you want to edit this post?")){
-      
-      const op = ''.concat('operation=edit_post','&','id=',id,'&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
-      send_xmlhttprequest('backoffice','POST', op, (response)=>{
-        console.log(''.concat("edited: ",response));
-        window.location.reload();
-        //view_post('none');
-      });
-    }
-}
-
-//DELETE POSTS
-function delete_post(id){
-  
-  //if ok is press then is true then delete
-  if(confirm("Are you sure you want to delete this post?")){
-    const op = ''.concat('operation=delete_post','&','id=',id);
-    send_xmlhttprequest('backoffice','POST', op, (response)=>{
-      console.log(''.concat("deleted: ",response));
-      window.location.reload();
-      //view_post();
-    });
-  }
-}

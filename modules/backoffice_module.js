@@ -84,6 +84,40 @@ function view_post(page,multiple,callback) {
 }
 
 
+//VIEW CONTACTS
+function view_contacts(page, multiple, callback) {
+  //const current = 0;
+  //const multiple = 10;
+  const start_position = (page-1)*multiple;
+  const end_position = (page)*multiple;
+  
+  var sql = `SELECT count(*) as total FROM article_section`;
+  query_database(sql, function (total_results) {
+
+    const total_pages = Math.ceil(parseFloat(total_results[0].total / multiple));
+
+    sql = `SELECT * FROM contact_message ORDER BY id DESC LIMIT ${start_position},${end_position}`;
+    query_database(sql, function (results) {
+      if (Object.keys(results).length != 0) {
+        var results_data = new Array();
+        
+        results_data.push([`page ${page} from ${total_pages}`, page, multiple, total_pages]);
+        
+        for (let i = 0; i < results.length; i++) {
+          results_data.push([results[i].id, results[i].name, results[i].email, results[i].message, results[i].date_reg]);
+          
+        }
+        //console.log("success: view_post");
+        callback(results_data);
+        
+      } else {
+        console.log('err: backoffice_module_view');
+      }
+    });
+  });
+}
+
+
 function login_user(email, password, callback) {
   const sql = `SELECT * FROM user WHERE email = '${email}' AND password = '${password}'`
   query_database(sql, function (results) {
@@ -107,4 +141,4 @@ function logout_user() {
 
 }
 
-module.exports = { insert_post, update_post, delete_post, view_post, login_user, logout_user}
+module.exports = { insert_post, update_post, delete_post, view_post, login_user, logout_user, view_contacts}
