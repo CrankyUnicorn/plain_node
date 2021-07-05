@@ -883,3 +883,18 @@ button{
   margin-top: auto;
   margin-bottom: 20px;
 }
+
+.cun_blog_text{
+  margin-left: 20px;
+}
+.cun_blog_text_header{
+  margin-top: 50px;
+  font-size: large;
+}
+.cun_blog_text_image{
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+  max-width: fit-content;
+}

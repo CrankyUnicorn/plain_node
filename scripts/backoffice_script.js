@@ -1,6 +1,7 @@
 /*VARIABLES------------------------------------------------------------------*/
 var view_post_parent_target = '';
 var view_contact_parent_target = '';
+var view_statistic_parent_target = '';
 
 /*MAIN DIV-------------------------------------------------------------------*/
 function create_main_div(target){
@@ -63,6 +64,7 @@ function create_cpanel_page_content() {
   create_navbar();
   create_view_posts("main_div");
   create_view_contacts("main_div");
+  create_view_statistics("main_div");
 }
 
 /*NAV BAR--------------------------------------------------------------------*/
@@ -585,10 +587,10 @@ function create_view_contacts(target) {
     var multiple = 10;
     var total = 1;
 
-    if (view_post_contents.length != 0) {
-      page = parseInt(view_post_contents[0][1]);
-      multiple = parseInt(view_post_contents[0][2]);
-      total = view_post_contents[0][3];
+    if (view_contact_contents.length != 0) {
+      page = parseInt(view_contact_contents[0][1]);
+      multiple = parseInt(view_contact_contents[0][2]);
+      total = view_contact_contents[0][3];
     }
 
     if (action === 'backward' && page>1) {
@@ -734,7 +736,169 @@ function create_view_contacts(target) {
 }
 
 /*STATISTICS-----------------------------------------------------------------*/
+function create_view_statistics(target) {
 
+  window.addEventListener('load',()=>{
+
+    view_statistics('none');
+    
+  },false);
+
+  //VIEW STATISTICS
+  function view_statistics(action){
+    var page = 1;
+    var multiple = 10;
+    var total = 1;
+
+    if (view_statistics_contents.length != 0) {
+      page = parseInt(view_statistics_contents[0][1]);
+      multiple = parseInt(view_statistics_contents[0][2]);
+      total = view_statistics_contents[0][3];
+    }
+
+    if (action === 'backward' && page>1) {
+      page -= 1;
+    }else if (action === 'forward' && page<total) {
+      page += 1;
+    }
+
+    const op = ''.concat('operation=view_statistics','&','page=',page,'&','multiple=',multiple);
+    send_xmlhttprequest('backoffice','GET',op, (response)=>{
+      console.log(JSON.parse(response));
+      view_statistics_contents = JSON.parse(response);
+      
+      create_view_statistics(view_statistic_parent_target);
+    });
+  }
+
+  view_statistic_parent_target = target;
+  let main_div_element = document.getElementById(view_statistic_parent_target);
+  
+  var statistic_view_div;
+  let statistic_view_element = document.getElementById('statistic_view_div');
+
+  if (statistic_view_element) {
+    while (statistic_view_element.firstChild) {
+      statistic_view_element.removeChild(statistic_view_element.firstChild);
+    }
+    statistic_view_div = statistic_view_element;
+  }else{
+    
+    statistic_view_div = document.createElement("div");
+    statistic_view_div.classList = "";
+    statistic_view_div.style = "margin-top:10px";
+    statistic_view_div.id = "statistic_view_div";
+    main_div_element.appendChild(statistic_view_div);
+  }
+
+  //div title
+  const title = document.createElement("h4");
+  title.textContent = "Statistics List";
+  statistic_view_div.appendChild(title);
+
+  //navbar buttons
+  const statistic_section = document.createElement("input");
+  statistic_section.style = "margin: 10px 0 15px 0;";
+  statistic_section.type = "button";
+  statistic_section.name = "statistic_section";
+  statistic_section.value = "New Statisctic";
+  statistic_section.addEventListener("click", () => { create_new_statistic_panel() }, false);
+  statistic_view_div.appendChild(statistic_section);
+ 
+  //
+  const statistic_view_table = document.createElement("table");
+  statistic_view_table.classList = "";
+  statistic_view_table.style = "width: 100%";
+  statistic_view_table.id = "";
+  statistic_view_div.appendChild(statistic_view_table);
+
+  const statistic_view_header = document.createElement("tr");
+  statistic_view_table.appendChild(statistic_view_header);
+  
+  const titles = ['Post','Visits','Last Visit'];
+  var statistic_view_header_title = new Array();
+
+  for (let i = 0; i < titles.length; i++) {
+    statistic_view_header_title[i] = document.createElement("td");
+    statistic_view_header_title[i].textContent = titles[i];
+    statistic_view_header.appendChild(statistic_view_header_title[i]);
+  }
+
+  var statistic_view_row = new Array();
+  var statistic_view_cell = new Array();
+  // var view_statistic_contents_opertation = ['check','delete'];
+
+  if (view_statistics_contents.length != 0) {
+    
+    for (let i = 1; i < view_statistics_contents.length; i++) {
+      statistic_view_row = document.createElement("tr");
+      statistic_view_table.appendChild(statistic_view_row);
+
+      statistic_view_cell[i*3+i] = document.createElement("td");
+      statistic_view_cell[i*3+i].textContent = view_statistics_contents[i][0];
+      statistic_view_row.appendChild(statistic_view_cell[i*3+i]);
+      
+      statistic_view_cell[i*3+i] = document.createElement("td");
+      statistic_view_cell[i*3+i].textContent = view_statistics_contents[i][1];
+      statistic_view_row.appendChild(statistic_view_cell[i*3+i]);
+      
+      statistic_view_cell[i*3+i] = document.createElement("td");
+      statistic_view_cell[i*3+i].textContent = view_statistics_contents[i][2];
+      statistic_view_row.appendChild(statistic_view_cell[i*3+i]);
+
+      /*
+      statistic_view_cell[i*4+i] = document.createElement("td");
+      statistic_view_cell[i*4+i].textContent = view_statistics_contents[i][4];
+      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
+      
+      //EDIT
+      statistic_view_cell[i*4+i] = document.createElement("td");
+      statistic_view_cell[i*4+i].classList = "cun_td_button";
+      statistic_view_cell[i*4+i].style = "cursor: pointer;";
+      statistic_view_cell[i*4+i].textContent = view_statistic_contents_opertation[0];
+      statistic_view_cell[i*4+i].addEventListener("click", () => { check_statistic_panel(view_statistic_contents[i][0]) }, false);
+      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
+      
+      //DELETE
+      statistic_view_cell[i*4+i] = document.createElement("td");
+      statistic_view_cell[i*4+i].classList = "cun_td_button";
+      statistic_view_cell[i*4+i].style = "cursor: pointer;";
+      statistic_view_cell[i*4+i].textContent = view_statistic_contents_opertation[1];
+      statistic_view_cell[i*4+i].addEventListener("click", () => { delete_statistic(view_statistic_contents[i][0]) }, false);
+      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
+      */
+    }
+  }
+  
+  const previous_statistics_button = document.createElement("input");
+  previous_statistics_button.style = "display:inline; margin:15px 0 10px 0";
+  previous_statistics_button.type = "button";
+  previous_statistics_button.name = "previous_statistics";
+  previous_statistics_button.value = "Previous";
+  previous_statistics_button.addEventListener("click", () => { view_statistics('backward') }, false);
+  statistic_view_div.appendChild(previous_statistics_button);
+
+  
+  const position_statistics_button = document.createElement("p");
+  position_statistics_button.classList = "";
+  position_statistics_button.style = "display:inline; margin: 0 10px;";
+  position_statistics_button.id = "";
+  if(view_statistics_contents.length != 0){
+    position_statistics_button.textContent = view_statistics_contents[0][0];
+  }
+  statistic_view_div.appendChild(position_statistics_button);
+
+  const next_statistics_button = document.createElement("input");
+  next_statistics_button.style = "display:inline";
+  next_statistics_button.type = "button";
+  next_statistics_button.name = "next_statistics";
+  next_statistics_button.value = "Next";
+  next_statistics_button.addEventListener("click", () => { view_statistics('forward') }, false);
+  statistic_view_div.appendChild(next_statistics_button);
+
+  const ruler = document.createElement("hr");
+  statistic_view_div.appendChild(ruler);
+}
 
 /*HEADER SERVER--------------------------------------------------------------*/
 function create_server_header(target){

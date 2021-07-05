@@ -1,7 +1,7 @@
 const { log } = require('console');
 const fs = require('fs');
 const { resolve } = require('path');
-const { insert_post, update_post, delete_post, view_post, login_user, logout_user, view_contacts } = require('../modules/backoffice_module');
+const { insert_post, update_post, delete_post, view_post, login_user, logout_user, view_contacts, view_statistics } = require('../modules/backoffice_module');
 const sm = require('../modules/Session_Manager');
 
 function backoffice_controller(request, response) {
@@ -153,6 +153,16 @@ function backoffice_controller(request, response) {
         const multiple_value = true_url.searchParams.get('multiple');
         //insert new blog post in the database 
         view_contacts(page_value, multiple_value, (results_data)=>{
+          build_json(results_data);
+        });
+      }
+
+      //VIEW STATISTICS 
+      if (operation_name === 'view_statistics') { 
+        const page_value = true_url.searchParams.get('page');
+        const multiple_value = true_url.searchParams.get('multiple');
+        //insert new blog post in the database 
+        view_statistics(page_value, multiple_value, (results_data)=>{
           build_json(results_data);
         });
       }
