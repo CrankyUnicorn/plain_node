@@ -104,6 +104,16 @@ button{
   border: none;
 }
 
+code {
+  font-family: Consolas,"courier new" !important;
+  color: crimson;
+  background-color: white;
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-size: 105%;
+}
+
 /* aligment etc--------------------------------------------------------------*/
 
 .cun_right {
