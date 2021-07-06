@@ -794,18 +794,17 @@ code {
 }
 .cun_contact_input{
   display: block;
-  border: none;
   width: 100%;
+  border: var(--royal_blue) solid 1px;
   padding: 5px 10px;
-  background-color:var(--medium_grey_royal_blue);
-  color: var(--almost_white);
+  background-color: var(--almost_white);
+  color: var(--royal_blue);
 }
 
 .cun_contact_input::placeholder{
-  color: var(--royal_blue);
+  color: var(--medium_grey_royal_blue);
 }
 .cun_contact_input:focus{
-  border: none;
   outline: none;
 }
 .cun_submit_button_div{
