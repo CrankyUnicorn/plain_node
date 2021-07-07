@@ -247,11 +247,11 @@ function create_view_posts(target){
       post_view_row.appendChild(post_view_cell[i*3+i]);
       
       post_view_cell[i*3+i] = document.createElement("td");
-      post_view_cell[i*3+i].textContent = view_post_contents[i][2];
+      post_view_cell[i*3+i].textContent = view_post_contents[i][2].substring(0,50);
       post_view_row.appendChild(post_view_cell[i*3+i]);
       
       post_view_cell[i*3+i] = document.createElement("td");
-      post_view_cell[i*3+i].textContent = view_post_contents[i][3];
+      post_view_cell[i*3+i].textContent = view_post_contents[i][3].substring(0,75);
       post_view_row.appendChild(post_view_cell[i*3+i]);
       
       //EDIT
@@ -929,7 +929,7 @@ function create_footer(target){
   const footer_title  = document.createElement("h4");
   footer_title.classList = "";
   footer_title.style = "";
-  footer_title.textContent = "CrankyUnicorn 2021";
+  footer_title.textContent = "Pedro Costa 2021";
   footer_title.id = "footer_title";
   footer.appendChild(footer_title);
 }

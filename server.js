@@ -2,7 +2,6 @@
 //const path = require('path');
 const http = require('http');
 const file_access = require('./modules/File_Access');
-const index_controller = require('./controllers/index_controller');
 const { backoffice_controller } = require('./controllers/backoffice_controller');
 const { frontpage_controller } = require('./controllers/frontpage_controller');
 //const { db_request_controller } = require('./controllers/db_request_controller');
@@ -28,10 +27,6 @@ http.createServer(function (request, response) {
   if (filePath == './') {
     filePath = './views/html/index.html';
     console.log('file access: ', file_access_instant.get_file(response, filePath));
-
-    //SERVER EXAMPLE
-  } else if (filePath == './test') {
-    index_controller(request, response);
 
     //BACKOFFICE
   } else if (filePath == './backoffice') {

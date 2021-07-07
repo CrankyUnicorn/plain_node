@@ -807,11 +807,29 @@
         const section_description_div = document.createElement("div");
         section.appendChild(section_description_div);
 
+        function script_find_eval(content_html_reponse){
+          const end_text_index = content_html_reponse.indexOf('<!--end_text-->');
+          const start_script_index = content_html_reponse.indexOf('//script');
+          const end_script_index = content_html_reponse.indexOf('//end_script');
+          var text = '';
+          text = content_html_reponse.substring(0, end_text_index);
+          if(!text){
+            text = content_html_reponse;
+          }          
+          const script =content_html_reponse.substring(start_script_index, end_script_index);
+          //console.log("text: ",text);
+          //console.log("script: ",script);
+          if(script){
+            eval(script);
+          }
+          return text;
+        }
+
         const section_description = document.createElement("p");
         section_description.className = "";
         section_description.style = "";
         section_description.id = `section_description`;
-        section_description.innerHTML = article_sections[0][3];
+        section_description.innerHTML = script_find_eval(article_sections[0][3]);
         section_description_div.appendChild(section_description);
 
         const section_link_div = document.createElement("div");
