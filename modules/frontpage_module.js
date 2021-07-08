@@ -65,6 +65,9 @@ function header_contents(callback) {
       sql = `SELECT id FROM article_section ORDER BY id DESC`;
     }else{
       sql = `SELECT * FROM article_section JOIN (SELECT id as id_user, name as user_name FROM user) as t2 ON t2.id_user = article_section.user_id WHERE id=${value} ORDER BY id DESC LIMIT 1`;
+
+      const visit_sql = `INSERT INTO section_statistic_visit (section_id) VALUES ('${value}')`;
+      query_database(visit_sql, function () {});
     }
 
     //could also have several parametersfunction(err, rows, fields)
