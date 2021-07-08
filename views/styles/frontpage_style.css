@@ -108,7 +108,7 @@ code {
   font-family: Consolas,"courier new" !important;
   color: crimson;
   background-color: white;
-  padding: 5px;
+  padding: 5px 0;
   border: 1px solid white;
   border-radius: 5px;
   font-size: 105%;
@@ -780,7 +780,7 @@ code {
 
 .cun_contact_div_form{
   margin: auto;
-  margin-top:40px;
+  margin-top:0;
   
 }
 .cun_contact_form textarea{

@@ -27,7 +27,9 @@
       send_xmlhttprequest('frontpage','get','navbar_anchor=all', (response)=>{
         //console.log(JSON.parse(response));
         navbar_anchors = JSON.parse(response);
+        //recreates the top_nav menu since there may be new information relevant to ir
         create_frontpage_top_nav();
+        //allow the menu to be turn visible after criation/recriation
         show_menu();
       })
 
@@ -200,7 +202,10 @@
 
     }else{
       for (let i = 0; i < header_contents.length; i++) {
-        if (page_name === header_contents[i][1].toLowerCase()) {
+        let target_parameter = header_contents[i][5].substring(header_contents[i][5].indexOf('\?')+1);
+        
+        if (url_params.toString() === target_parameter) {
+          //console.log(''.concat(url_params,' \| ', target_parameter));
           header_content_array = header_contents[i];
           break;
         }
@@ -477,7 +482,9 @@
 
     var index = -1;
     for (let i = 0; i < header_contents.length; i++) {
-      if (page_name === header_contents[i][1].toLowerCase()) {
+      let target_parameter = header_contents[i][5].substring(header_contents[i][5].indexOf('\?')+1);
+        
+      if (url_params.toString() === target_parameter) {
         index = i;
         break;
       }
@@ -546,7 +553,9 @@
 
     var index = -1;
     for (let i = 0; i < header_contents.length; i++) {
-      if (page_name === header_contents[i][1].toLowerCase()) {
+      let target_parameter = header_contents[i][5].substring(header_contents[i][5].indexOf('\?')+1);
+        
+      if (url_params.toString() === target_parameter) {
         index = i;
         break;
       }

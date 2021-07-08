@@ -32,7 +32,7 @@ function navbar_anchors(callback) {
 
 //gets header contents from db
 function header_contents(callback) {
-  const sql = `SELECT * FROM header_content`;
+  const sql = `SELECT t2.anchor_href, t3.id, t3.image_src, t3.title, t3.subtitle, t3.content FROM navbar_header t1 JOIN navbar_anchor t2 JOIN header_content t3 ON t1.navbar_id = t2.id AND t1.header_id = t3.id`;
   
   //could also have several parametersfunction(err, rows, fields)
   query_database(sql, function (results) {
@@ -42,7 +42,7 @@ function header_contents(callback) {
 
       for (var i = 0; i < results.length; i++) {
           
-        results_array.push([results[i].id, results[i].title, results[i].subtitle, results[i].content, results[i].image_src]);
+        results_array.push([results[i].id, results[i].title, results[i].subtitle, results[i].content, results[i].image_src, results[i].anchor_href] );
           
       }
         //console.log(results_array);
