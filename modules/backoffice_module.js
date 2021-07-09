@@ -187,7 +187,7 @@ function login_user(email, password, callback) {
       //console.log(results[0].email);
       //console.log(results[0].password);
       sm.setUser(results[0].email, results[0].password)
-      console.info( "<KEY_REQUEST>: ", sm.getUserKey( results[0].email, results[0].password ) );
+      //console.info( "<KEY_REQUEST>: ", sm.getUserKey( results[0].email, results[0].password ) );
       callback( sm.getUserKey(results[0].email, results[0].password) );
       
     } else {

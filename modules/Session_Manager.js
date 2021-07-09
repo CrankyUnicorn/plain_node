@@ -48,7 +48,7 @@ class Session_Manager {
     this.sessions.forEach((session)=>{
       if(session.email == email){
         found_key = session.session_key;
-        console.log("<FOUND SESSION KEY BY EMAIL>:", found_key);
+        //console.log("<FOUND SESSION KEY BY EMAIL>:", found_key);
       }
     })
     return found_key;
