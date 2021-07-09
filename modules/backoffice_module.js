@@ -178,6 +178,7 @@ function view_statistics(page, multiple, callback) {
   });
 }
 
+//USER LOGIN AND LOGOUT - AUTHENTICATION AND SHARED KEY----------------------*/
 function login_user(email, password, callback) {
   const sql = `SELECT * FROM user WHERE email = '${email}' AND password = '${password}'`
   query_database(sql, function (results) {
@@ -185,9 +186,9 @@ function login_user(email, password, callback) {
 
       //console.log(results[0].email);
       //console.log(results[0].password);
-      sm.setUser(0,{email: results[0].email, password: results[0].password})
-
-      callback();
+      sm.setUser(results[0].email, results[0].password)
+      console.info( "<KEY_REQUEST>: ", sm.getUserKey( results[0].email, results[0].password ) );
+      callback( sm.getUserKey(results[0].email, results[0].password) );
       
     } else {
       console.log('err: backoffice_module');
@@ -196,8 +197,8 @@ function login_user(email, password, callback) {
 }
 
 
-function logout_user() {
-  sm.deleteUser(0)
+function logout_user(session_key) {
+  sm.deleteUser(session_key)
 
 }
 

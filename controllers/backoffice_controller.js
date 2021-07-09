@@ -26,12 +26,14 @@ function backoffice_controller(request, response) {
   console.log('request query: ', true_url.searchParams);
   
   console.info("coockies received: ", parseCookies(request))
-  
-  //sets cookie for session and timeout of around a day in 86409000ms
-  response.setHeader('Set-Cookie', ['devlog_backoffice_session=a8cd942e3fb648e4dc69b; expires='+new Date(new Date().getTime()+3600000).toUTCString()]);
-  
-  response.writeHead(200, { 'Content-Type': 'text/html' });
+  var session_key = parseCookies(request).devlog_backoffice_session_key;
+  console.info("init_session_key: ", session_key);
 
+  
+  
+ 
+  
+        
 
   /*FUNCTIONS----------------------------------------------------------------*/
   function get_file(file_path) {
@@ -73,7 +75,8 @@ function backoffice_controller(request, response) {
 
 
   function get_backoffice_files(type) {
-
+    response.writeHead(200, { 'Content-Type': 'text/html' });
+    
     promisses_array = new Array();
     results = new Array();
 
@@ -208,11 +211,14 @@ function backoffice_controller(request, response) {
         });
       }
 
+    //SESSION ROUTING
     } else if (true_url.searchParams.get('logout')) { //if user wants to logout 
-      logout_user();
+      response.setHeader('Set-Cookie', [`devlog_backoffice_session_key=`]);
+        
+      logout_user(session_key);
       get_backoffice_files('login');
 
-    } else if (sm.getUser(0)) { //if session already open
+    } else if (sm.getUser(session_key)) { //if session already open
       get_backoffice_files('session');
       //console.log("backoffice_controller.sm.getUser_IN");
 
@@ -220,7 +226,11 @@ function backoffice_controller(request, response) {
       let email = true_url.searchParams.get('email');
       let password = true_url.searchParams.get('password');
 
-      login_user(email, password,()=>{
+      login_user(email, password,(key)=>{
+        //sets cookie for session and timeout of around a day in 86409000ms
+        console.info("<KEY>: ", key);
+        response.setHeader('Set-Cookie', [`devlog_backoffice_session_key=${key}; expires=`+new Date(new Date().getTime()+3600000).toUTCString()]);
+        
         get_backoffice_files('welcome');
       });
       
