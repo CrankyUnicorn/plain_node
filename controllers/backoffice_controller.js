@@ -1,18 +1,35 @@
 const { log } = require('console');
 const fs = require('fs');
 const { resolve } = require('path');
-const { insert_post, update_post, delete_post, view_post, login_user, logout_user, view_contacts, view_statistics } = require('../modules/backoffice_module');
+const { insert_post, update_post, delete_post, delete_message, check_message, view_post, login_user, logout_user, view_contacts, view_statistics } = require('../modules/backoffice_module');
 const sm = require('../modules/Session_Manager');
 
 function backoffice_controller(request, response) {
+  
+  function parseCookies (request) {
+    var list = {},
+        rc = request.headers.cookie;
+
+    rc && rc.split(';').forEach(function( cookie ) {
+        var parts = cookie.split('=');
+        list[parts.shift().trim()] = decodeURI(parts.join('='));
+    });
+
+    return list;
+  }
+
 
   true_url = new URL(request.url, 'http://' + request.headers.host + '/');
   //console.log('request url: ', request.url);
   //console.log('request full url: ', true_url);
   //console.log('request pathname: ', true_url.pathname);
   console.log('request query: ', true_url.searchParams);
-
-
+  
+  console.info("coockies received: ", parseCookies(request))
+  
+  //sets cookie for session and timeout of around a day in 86409000ms
+  response.setHeader('Set-Cookie', ['devlog_backoffice_session=a8cd942e3fb648e4dc69b; expires='+new Date(new Date().getTime()+3600000).toUTCString()]);
+  
   response.writeHead(200, { 'Content-Type': 'text/html' });
 
 
@@ -117,13 +134,37 @@ function backoffice_controller(request, response) {
       }
     }
 
-    //DELETE
+    //DELETE POST
     if (true_url.searchParams.get('operation')) {
       const operation_name = true_url.searchParams.get('operation');
       if (operation_name === 'delete_post') {
         const post_id = true_url.searchParams.get('id');
         
         delete_post(post_id, ()=>{
+          get_backoffice_files('session');
+        });
+      }
+    }
+
+    //DELETE MESSAGE
+    if (true_url.searchParams.get('operation')) {
+      const operation_name = true_url.searchParams.get('operation');
+      if (operation_name === 'delete_message') {
+        const post_id = true_url.searchParams.get('id');
+        
+        delete_message(post_id, ()=>{
+          get_backoffice_files('session');
+        });
+      }
+    }
+
+    //CHECK MESSAGE
+    if (true_url.searchParams.get('operation')) {
+      const operation_name = true_url.searchParams.get('operation');
+      if (operation_name === 'check_message') {
+        const post_id = true_url.searchParams.get('id');
+        
+        check_message(post_id, ()=>{
           get_backoffice_files('session');
         });
       }

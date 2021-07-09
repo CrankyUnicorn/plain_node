@@ -7,7 +7,7 @@ var view_statistic_parent_target = '';
 function create_main_div(target){
   const main_div  = document.createElement("div");
   main_div.classList= "cun_codeblock cun_orange_glow";
-  main_div.style= "";
+  main_div.style= "min-height: 60vh; display: flex; flex-direction: column; flex-flow: wrap; align-content:space-between;";
   main_div.id= "main_div";
   target.appendChild(main_div);
 }
@@ -18,6 +18,7 @@ function create_login_page_content() {
   const main_div = document.getElementById("main_div");
 
   const title = document.createElement("h1");
+  title.style = "margin: 0 0 50px 0;";
   title.textContent = "Backoffice Login";
   main_div.appendChild(title);
 
@@ -56,6 +57,11 @@ function create_login_page_content() {
   login.value = "Login";
   login.addEventListener("click", () => { send_xmlhttprequest('backoffice', 'GET', ''.concat('login=login', '&email=',email_input.value, '&password=', password_input.value), () => {window.location.reload(); }) }, false);
   form.appendChild(login);
+
+  const login_bottom = document.createElement("div");
+  login_bottom.style = "width:100%;";
+  login_bottom.id = "login_bottom";
+  main_div.appendChild(login_bottom); 
 }
 
 
@@ -76,7 +82,7 @@ function create_navbar() {
   main_div.appendChild(title);
 
   const navbar_div = document.createElement("div");
-  navbar_div.style = "margin-top:40px";
+  navbar_div.style = "width:100% ;margin-top:40px";
   main_div.appendChild(navbar_div);
 
   const topic_title = document.createElement("h3");
@@ -135,35 +141,6 @@ function create_view_posts(target){
     });
   }
 
-
-  //INSERT POST
-  function insert_post( title, subtitle, content){
-
-      const op = ''.concat('operation=new_post','&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
-      send_xmlhttprequest('backoffice','POST', op, (response)=>{
-        console.log(''.concat("inserted: ",response));
-        window.location.reload();
-        //view_post('none');
-      });
-    
-  }
-
-
-  //EDIT POST
-  function edit_post(id, title, subtitle, content){
-
-      //if ok is press then is true then delete
-      if(confirm("Are you sure you want to edit this post?")){
-        
-        const op = ''.concat('operation=edit_post','&','id=',id,'&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
-        send_xmlhttprequest('backoffice','POST', op, (response)=>{
-          console.log(''.concat("edited: ",response));
-          window.location.reload();
-          //view_post('none');
-        });
-      }
-  }
-
   //DELETE POSTS
   function delete_post(id){
     
@@ -171,7 +148,7 @@ function create_view_posts(target){
     if(confirm("Are you sure you want to delete this post?")){
       const op = ''.concat('operation=delete_post','&','id=',id);
       send_xmlhttprequest('backoffice','POST', op, (response)=>{
-        console.log(''.concat("deleted: ",response));
+        console.log(''.concat("deleted_post: ",response));
         window.location.reload();
         //view_post();
       });
@@ -194,14 +171,15 @@ function create_view_posts(target){
     
     post_view_div = document.createElement("div");
     post_view_div.classList = "";
-    post_view_div.style = "margin-top:10px";
+    post_view_div.style = "width:100%; margin-top:10px";
     post_view_div.id = "post_view_div";
     main_div_element.appendChild(post_view_div);
   }
 
   //div title
-  const title = document.createElement("h4");
+  const title = document.createElement("h3");
   title.textContent = "Blog Posts List";
+  title.style = "";
   post_view_div.appendChild(title);
 
   //navbar buttons
@@ -210,7 +188,7 @@ function create_view_posts(target){
   posts_section.type = "button";
   posts_section.name = "post_section";
   posts_section.value = "New Post";
-  posts_section.addEventListener("click", () => { create_new_post_panel() }, false);
+  posts_section.addEventListener("click", () => { create_new_panel( create_new_post ) }, false);
   post_view_div.appendChild(posts_section);
  
   //
@@ -259,7 +237,7 @@ function create_view_posts(target){
       post_view_cell[i*3+i].classList = "cun_td_button";
       post_view_cell[i*3+i].style = "cursor: pointer;";
       post_view_cell[i*3+i].textContent = view_post_contents_opertation[0];
-      post_view_cell[i*3+i].addEventListener("click", () => { create_edit_post_panel(view_post_contents[i][0]) }, false);
+      post_view_cell[i*3+i].addEventListener("click", () => { create_new_panel( create_edit_post,view_post_contents[i][0]) }, false);
       post_view_row.appendChild(post_view_cell[i*3+i]);
       
       //DELETE
@@ -267,7 +245,7 @@ function create_view_posts(target){
       post_view_cell[i*3+i].classList = "cun_td_button";
       post_view_cell[i*3+i].style = "cursor: pointer;";
       post_view_cell[i*3+i].textContent = view_post_contents_opertation[1];
-      post_view_cell[i*3+i].addEventListener("click", () => { delete_post(view_post_contents[i][0]) }, false);
+      post_view_cell[i*3+i].addEventListener("click", () => { create_new_panel( delete_post , view_post_contents[i][0]) }, false);
       post_view_row.appendChild(post_view_cell[i*3+i]);
     }
   }
@@ -302,9 +280,70 @@ function create_view_posts(target){
   post_view_div.appendChild(ruler);
 }
 
+/*CREATING PANEL GENERIC-----------------------------------------------------*/
+function create_new_panel(fuction_call, arguments){
+  const main_div = document.getElementById("main_div");
+  const new_panel_element = document.getElementById("new_panel");
+
+  if (new_panel_element) {
+    new_panel_element.remove();
+  }
+
+  const back_div = document.createElement("div");
+  back_div.style = "position:fixed; left:0; right:0; top:0; bottom:0; background: #6666;";
+  back_div.id = "back_div";
+  back_div.addEventListener("click", () => {
+    back_div.remove();
+  }, false);
+  main_div.appendChild(back_div);
+
+  const new_panel_contianer = document.createElement("div");
+  new_panel_contianer.style = "position:fixed; top:50%; left:50%;";
+  new_panel_contianer.id = "edit_form_container";
+  new_panel_contianer.addEventListener("click", (event) => {
+    event.stopPropagation();
+  }, false);
+  back_div.appendChild(new_panel_contianer);
+
+  const new_panel = document.createElement("div");
+  new_panel.style = "position:absolute; left:-25vw; top:-25vh; width:50vw; min-height:50vh; background-color: var(--ultragrey); border-radius:10px; padding: 20px;";
+  new_panel.id = "new_panel";
+  new_panel_contianer.appendChild(new_panel);
+
+  //set content into the element with id 'new_panel'
+  if(!arguments){
+    fuction_call();
+  }else{
+    fuction_call(arguments);
+  }
+  
+  const cancel = document.createElement("input");
+  cancel.style = "display:inline";
+  cancel.type = "button";
+  cancel.name = "cancel";
+  cancel.value = "Cancel";
+  cancel.addEventListener("click", () => {
+    back_div.remove();
+  }, false);
+  new_panel.appendChild(cancel);
+}
+
 /*POST CREATING--------------------------------------------------------------*/
-function create_new_post(target){
-  const main_div_element = document.getElementById(target);
+function create_new_post(){
+  
+  //INSERT POST
+  function insert_post( title, subtitle, content){
+
+    const op = ''.concat('operation=new_post','&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
+    send_xmlhttprequest('backoffice','POST', op, (response)=>{
+      console.log(''.concat("inserted: ",response));
+      window.location.reload();
+      //view_post('none');
+    });
+  
+  }
+
+  const main_div_element = document.getElementById('new_panel');
 
   const post_div = document.createElement("div");
   post_div.classList = "";
@@ -314,11 +353,13 @@ function create_new_post(target){
   
   //div title
   const title = document.createElement("h4");
+  title.style = "margin-bottom:15px;";
   title.textContent = "Create New Post";
   post_div.appendChild(title);
   
   //table
   const table = document.createElement("table");
+  table.style = "width:100%;border-collapse: collapse;";
   post_div.appendChild(table);
   
   //title
@@ -330,11 +371,11 @@ function create_new_post(target){
 
   const title_label = document.createElement("label");
   title_label.innerHTML = "Title &nbsp;"
-  title_label.style = "display:block; margin: 0 10px;"
+  title_label.style = "display:block;"
   table_cell_1.appendChild(title_label);
 
   const title_input = document.createElement("input");
-  title_input.style = "display:block;";
+  title_input.style = "display:block; margin:0; width:100%;";
   title_input.type = "text";
   title_input.name = "title_input";
   title_input.value = "";
@@ -350,11 +391,11 @@ function create_new_post(target){
   
   const subtitle_label = document.createElement("label");
   subtitle_label.innerHTML = "Subtitle &nbsp;"
-  subtitle_label.style = "display:block; margin: 0 10px;"
+  subtitle_label.style = "display:block;"
   table_cell_2.appendChild(subtitle_label);
 
   const subtitle_input = document.createElement("input");
-  subtitle_input.style = "display:block;";
+  subtitle_input.style = "display:block; margin:0; width:100%;";
   subtitle_input.type = "text";
   subtitle_input.name = "subtitle_input";
   subtitle_input.value = "";
@@ -370,11 +411,11 @@ function create_new_post(target){
 
   const content_label = document.createElement("label");
   content_label.innerHTML = "Content &nbsp;"
-  content_label.style = "display:block; margin: 0 10px;"
+  content_label.style = "display:block;"
   table_cell_3.appendChild(content_label);
 
-  const content_input = document.createElement("input");
-  content_input.style = "display:block;";
+  const content_input = document.createElement("textarea");
+  content_input.style = "display:block; margin:0; width:100%;  resize: vertical;";
   content_input.type = "text";
   content_input.name = "content_input";
   content_input.value = "";
@@ -382,6 +423,7 @@ function create_new_post(target){
   content_label.appendChild(content_input);
 
   const insert_post_button = document.createElement("input");
+  insert_post_button.style = "margin-top:20px;";
   insert_post_button.type = "button";
   insert_post_button.name = "insert_post";
   insert_post_button.value = "Post";
@@ -390,51 +432,23 @@ function create_new_post(target){
   
 }
 
-/*POST CREATING PANEL--------------------------------------------------------*/
-function create_new_post_panel(){
-  const main_div = document.getElementById("main_div");
-  const new_post_form_element = document.getElementById("new_post_form");
-
-  if (new_post_form_element) {
-    new_post_form_element.remove();
-  }
-
-  const back_div = document.createElement("div");
-  back_div.style = "position:fixed; left:0; right:0; top:0; bottom:0; background: #3336;";
-  back_div.id = "back_div";
-  back_div.addEventListener("click", () => {
-    back_div.remove();
-  }, false);
-  main_div.appendChild(back_div);
-
-  const new_post_form_contianer = document.createElement("div");
-  new_post_form_contianer.style = "position:fixed; top:50%; left:50%;";
-  new_post_form_contianer.id = "edit_form_container";
-  new_post_form_contianer.addEventListener("click", (event) => {
-    event.stopPropagation();
-  }, false);
-  back_div.appendChild(new_post_form_contianer);
-
-  const new_post_form = document.createElement("div");
-  new_post_form.style = "position:absolute; left:-25vw; top:-25vh; width:50vw; height:50vh; background: grey; border: 5px solid #000; padding: 20px;";
-  new_post_form.id = "new_post_form";
-  new_post_form_contianer.appendChild(new_post_form);
-
-  create_new_post('new_post_form');
-  
-  const cancel = document.createElement("input");
-  cancel.style = "display:inline";
-  cancel.type = "button";
-  cancel.name = "cancel";
-  cancel.value = "Cancel";
-  cancel.addEventListener("click", () => {
-    back_div.remove();
-  }, false);
-  new_post_form.appendChild(cancel);
-}
-
 /*POST EDITING---------------------------------------------------------------*/
-function create_edit_post(target, id){
+function create_edit_post(id){
+  //EDIT POST
+  function edit_post(id, title, subtitle, content){
+
+    //if ok is press then is true then delete
+    if(confirm("Are you sure you want to edit this post?")){
+      
+      const op = ''.concat('operation=edit_post','&','id=',id,'&','title=',title,'&','subtitle=',subtitle,'&','content=',content);
+      send_xmlhttprequest('backoffice','POST', op, (response)=>{
+        console.log(''.concat("edited: ",response));
+        window.location.reload();
+        //view_post('none');
+      });
+    }
+}
+  
   var selected_index = -1;
   for (let i = 0; i < view_post_contents.length; i++) {
     if(i != 0 && view_post_contents[i][0] == id){
@@ -443,7 +457,8 @@ function create_edit_post(target, id){
     }
   }
   
-  const main_div_element = document.getElementById(target);
+  
+  const main_div_element = document.getElementById('new_panel');
 
   const post_div = document.createElement("div");
   post_div.classList = "";
@@ -453,11 +468,13 @@ function create_edit_post(target, id){
   
   //div title
   const title = document.createElement("h4");
+  title.style = "margin-bottom:15px;";
   title.textContent = "Create New Post";
   post_div.appendChild(title);
   
   //table
   const table = document.createElement("table");
+  table.style = "width:100%; border-collapse: collapse;";
   post_div.appendChild(table);
   
   //title
@@ -469,11 +486,11 @@ function create_edit_post(target, id){
 
   const title_label = document.createElement("label");
   title_label.innerHTML = "Title &nbsp;"
-  title_label.style = "display:block; margin: 0 10px;"
+  title_label.style = "display:block;"
   table_cell_1.appendChild(title_label);
 
   const title_input = document.createElement("input");
-  title_input.style = "display:block;";
+  title_input.style = "display:block; margin:0; width:100%;";
   title_input.type = "text";
   title_input.name = "title_input";
   title_input.value = view_post_contents[selected_index][1];
@@ -489,11 +506,11 @@ function create_edit_post(target, id){
   
   const subtitle_label = document.createElement("label");
   subtitle_label.innerHTML = "Subtitle &nbsp;"
-  subtitle_label.style = "display:block; margin: 0 10px;"
+  subtitle_label.style = "display:block;"
   table_cell_2.appendChild(subtitle_label);
 
   const subtitle_input = document.createElement("input");
-  subtitle_input.style = "display:block;";
+  subtitle_input.style = "display:block; margin:0; width:100%;";
   subtitle_input.type = "text";
   subtitle_input.name = "subtitle_input";
   subtitle_input.value = view_post_contents[selected_index][2];
@@ -509,11 +526,11 @@ function create_edit_post(target, id){
 
   const content_label = document.createElement("label");
   content_label.innerHTML = "Content &nbsp;"
-  content_label.style = "display:block; margin: 0 10px;"
+  content_label.style = "display:block;"
   table_cell_3.appendChild(content_label);
 
-  const content_input = document.createElement("input");
-  content_input.style = "display:block;";
+  const content_input = document.createElement("textarea");
+  content_input.style = "display:block; margin:0; width:100%;  resize: vertical;";
   content_input.type = "text";
   content_input.name = "content_input";
   content_input.value = view_post_contents[selected_index][3];
@@ -521,55 +538,13 @@ function create_edit_post(target, id){
   content_label.appendChild(content_input);
 
   const insert_post_button = document.createElement("input");
+  insert_post_button.style = "margin-top:20px;";
   insert_post_button.type = "button";
   insert_post_button.name = "insert_post";
   insert_post_button.value = "Edit";
   insert_post_button.addEventListener("click", () => { edit_post(id, title_input.value, subtitle_input.value, content_input.value) }, false);
   main_div_element.appendChild(insert_post_button);
   
-}
-
-/*POST EDITING PANEL_--------------------------------------------------------*/
-function create_edit_post_panel(id){
-  const main_div = document.getElementById("main_div");
-  const edit_form_element = document.getElementById("edit_form");
-
-  if (edit_form_element) {
-    edit_form_element.remove();
-  }
-
-  const back_div = document.createElement("div");
-  back_div.style = "position:fixed; left:0; right:0; top:0; bottom:0; background: #3336;";
-  back_div.id = "back_div";
-  back_div.addEventListener("click", () => {
-    back_div.remove();
-  }, false);
-  main_div.appendChild(back_div);
-
-  const edit_form_contianer = document.createElement("div");
-  edit_form_contianer.style = "position:fixed; top:50%; left:50%;";
-  edit_form_contianer.id = "edit_form_container";
-  edit_form_contianer.addEventListener("click", (event) => {
-    event.stopPropagation();
-  }, false);
-  back_div.appendChild(edit_form_contianer);
-
-  const edit_form = document.createElement("div");
-  edit_form.style = "position:absolute; left:-25vw; top:-25vh; width:50vw; height:50vh; background: grey; border: 5px solid #000; padding: 20px;";
-  edit_form.id = "edit_form";
-  edit_form_contianer.appendChild(edit_form);
-
-  create_edit_post('edit_form',id);
-  
-  const cancel = document.createElement("input");
-  cancel.style = "display:inline";
-  cancel.type = "button";
-  cancel.name = "cancel";
-  cancel.value = "Cancel";
-  cancel.addEventListener("click", () => {
-    edit_form.remove();
-  }, false);
-  edit_form.appendChild(cancel);
 }
 
 /*CONTACT MESSAGES-----------------------------------------------------------*/
@@ -608,6 +583,20 @@ function create_view_contacts(target) {
     });
   }
 
+   //DELETE MESSAGE
+   function delete_message(id){
+    
+    //if ok is press then is true then delete
+    if(confirm("Are you sure you want to delete this message?")){
+      const op = ''.concat('operation=delete_message','&','id=',id);
+      send_xmlhttprequest('backoffice','POST', op, (response)=>{
+        console.log(''.concat("deleted_message: ",response));
+        window.location.reload();
+        //view_post();
+      });
+    }
+  }
+
   view_contact_parent_target = target;
   let main_div_element = document.getElementById(view_contact_parent_target);
   
@@ -623,24 +612,16 @@ function create_view_contacts(target) {
     
     contact_view_div = document.createElement("div");
     contact_view_div.classList = "";
-    contact_view_div.style = "margin-top:10px";
+    contact_view_div.style = "width:100%; margin-top:10px";
     contact_view_div.id = "contact_view_div";
     main_div_element.appendChild(contact_view_div);
   }
 
   //div title
-  const title = document.createElement("h4");
+  const title = document.createElement("h3");
   title.textContent = "Contact Message List";
+  title.style = "margin-bottom:10px";
   contact_view_div.appendChild(title);
-
-  //navbar buttons
-  const contact_section = document.createElement("input");
-  contact_section.style = "margin: 10px 0 15px 0;";
-  contact_section.type = "button";
-  contact_section.name = "contact_section";
-  contact_section.value = "New Message";
-  contact_section.addEventListener("click", () => { create_new_contact_panel() }, false);
-  contact_view_div.appendChild(contact_section);
  
   //
   const contact_view_table = document.createElement("table");
@@ -687,12 +668,16 @@ function create_view_contacts(target) {
       contact_view_cell[i*4+i].textContent = view_contact_contents[i][4];
       contact_view_row.appendChild(contact_view_cell[i*4+i]);
       
-      //EDIT
+      //CHECK
       contact_view_cell[i*4+i] = document.createElement("td");
       contact_view_cell[i*4+i].classList = "cun_td_button";
       contact_view_cell[i*4+i].style = "cursor: pointer;";
-      contact_view_cell[i*4+i].textContent = view_contact_contents_opertation[0];
-      contact_view_cell[i*4+i].addEventListener("click", () => { check_contact_panel(view_contact_contents[i][0]) }, false);
+      if (view_contact_contents[i][5].toString() === '0') {
+        contact_view_cell[i*4+i].textContent = "check";
+      }else{
+        contact_view_cell[i*4+i].textContent = "checked";
+      }
+      contact_view_cell[i*4+i].addEventListener("click", () => { create_new_panel( check_contact_message, view_contact_contents[i][0]) }, false);
       contact_view_row.appendChild(contact_view_cell[i*4+i]);
       
       //DELETE
@@ -700,7 +685,7 @@ function create_view_contacts(target) {
       contact_view_cell[i*4+i].classList = "cun_td_button";
       contact_view_cell[i*4+i].style = "cursor: pointer;";
       contact_view_cell[i*4+i].textContent = view_contact_contents_opertation[1];
-      contact_view_cell[i*4+i].addEventListener("click", () => { delete_contact(view_contact_contents[i][0]) }, false);
+      contact_view_cell[i*4+i].addEventListener("click", () => { delete_message(view_contact_contents[i][0]) }, false);
       contact_view_row.appendChild(contact_view_cell[i*4+i]);
     }
   }
@@ -733,6 +718,124 @@ function create_view_contacts(target) {
 
   const ruler = document.createElement("hr");
   contact_view_div.appendChild(ruler);
+}
+
+/*MESSAGE CHECKING------------------------------------------------------------*/
+function check_contact_message(id){
+  
+  //CHECK MESSAGE
+  function check_message(id){
+  
+    //if ok is press then is true then delete
+    if(confirm("Are you sure you want to check this message as read?")){
+      const op = ''.concat('operation=check_message','&','id=',id);
+      send_xmlhttprequest('backoffice','POST', op, (response)=>{
+        console.log(''.concat("check_message: ",response));
+        window.location.reload();
+        //view_post();
+      });
+    }
+  }
+
+  var selected_index = -1;
+  for (let i = 0; i < view_contact_contents.length; i++) {
+    if(i != 0 && view_contact_contents[i][0] == id){
+      selected_index = i;
+      break;
+    }
+  }
+  
+  const main_div_element = document.getElementById('new_panel');
+
+  const post_div = document.createElement("div");
+  post_div.classList = "";
+  post_div.style = "margin-top:20px";
+  post_div.id = "post_div";
+  main_div_element.appendChild(post_div);
+  
+  //div title
+  const title = document.createElement("h4");
+  title.style = "margin-bottom:15px;";
+  title.textContent = "Check Message";
+  post_div.appendChild(title);
+  
+  //table
+  const table = document.createElement("table");
+  table.style = "width:100%; border-collapse: collapse;";
+  post_div.appendChild(table);
+  
+  //title
+  const table_row_1 = document.createElement("tr");
+  table.appendChild(table_row_1);
+
+  const table_cell_1 = document.createElement("td");
+  table_row_1.appendChild(table_cell_1);
+
+  const name_label = document.createElement("label");
+  name_label.innerHTML = "Title &nbsp;"
+  name_label.style = "display:block;"
+  table_cell_1.appendChild(name_label);
+
+  const name_input = document.createElement("input");
+  name_input.style = "display:block; margin:0; width:100%;";
+  name_input.type = "text";
+  name_input.name = "name_input";
+  console.info(view_contact_contents)
+  name_input.value = view_contact_contents[selected_index][1];
+  name_input.placeholder = "name";
+  name_input.disabled = true;
+  name_label.appendChild(name_input);
+  
+  //subtitle
+  const table_row_2 = document.createElement("tr");
+  table.appendChild(table_row_2);
+
+  const table_cell_2 = document.createElement("td");
+  table_row_2.appendChild(table_cell_2);
+  
+  const email_label = document.createElement("label");
+  email_label.innerHTML = "Subtitle &nbsp;"
+  email_label.style = "display:block;"
+  table_cell_2.appendChild(email_label);
+
+  const email_input = document.createElement("input");
+  email_input.style = "display:block; margin:0; width:100%;";
+  email_input.type = "text";
+  email_input.name = "email_input";
+  email_input.value = view_contact_contents[selected_index][2];
+  email_input.placeholder = "email";
+  email_input.disabled = true;
+  email_label.appendChild(email_input);
+
+  //content
+  const table_row_3 = document.createElement("tr");
+  table.appendChild(table_row_3);
+
+  const table_cell_3 = document.createElement("td");
+  table_row_3.appendChild(table_cell_3);
+
+  const message_label = document.createElement("label");
+  message_label.innerHTML = "Content &nbsp;"
+  message_label.style = "display:block;"
+  table_cell_3.appendChild(message_label);
+
+  const message_input = document.createElement("textarea");
+  message_input.style = "display:block; margin:0; width:100%; resize:vertical;";
+  message_input.type = "text";
+  message_input.name = "content_input";
+  message_input.value = view_contact_contents[selected_index][3];
+  message_input.placeholder = "message";
+  message_input.disabled = true;
+  message_label.appendChild(message_input);
+
+  const insert_post_button = document.createElement("input");
+  insert_post_button.style = "margin-top:20px;";
+  insert_post_button.type = "button";
+  insert_post_button.name = "insert_post";
+  insert_post_button.value = "Check";
+  insert_post_button.addEventListener("click", () => { check_message(id) }, false);
+  main_div_element.appendChild(insert_post_button);
+  
 }
 
 /*STATISTICS-----------------------------------------------------------------*/
@@ -786,24 +889,17 @@ function create_view_statistics(target) {
     
     statistic_view_div = document.createElement("div");
     statistic_view_div.classList = "";
-    statistic_view_div.style = "margin-top:10px";
+    statistic_view_div.style = "width:100%; margin-top:10px";
     statistic_view_div.id = "statistic_view_div";
     main_div_element.appendChild(statistic_view_div);
   }
 
   //div title
-  const title = document.createElement("h4");
+  const title = document.createElement("h3");
+  title.style = "margin-bottom:10px";
   title.textContent = "Statistics List";
   statistic_view_div.appendChild(title);
 
-  //navbar buttons
-  const statistic_section = document.createElement("input");
-  statistic_section.style = "margin: 10px 0 15px 0;";
-  statistic_section.type = "button";
-  statistic_section.name = "statistic_section";
-  statistic_section.value = "New Statisctic";
-  statistic_section.addEventListener("click", () => { create_new_statistic_panel() }, false);
-  statistic_view_div.appendChild(statistic_section);
  
   //
   const statistic_view_table = document.createElement("table");
@@ -815,7 +911,7 @@ function create_view_statistics(target) {
   const statistic_view_header = document.createElement("tr");
   statistic_view_table.appendChild(statistic_view_header);
   
-  const titles = ['Post','Visits','Last Visit'];
+  const titles = ['Title','Subtitle','Visits','Last Visit'];
   var statistic_view_header_title = new Array();
 
   for (let i = 0; i < titles.length; i++) {
@@ -834,39 +930,22 @@ function create_view_statistics(target) {
       statistic_view_row = document.createElement("tr");
       statistic_view_table.appendChild(statistic_view_row);
 
-      statistic_view_cell[i*3+i] = document.createElement("td");
-      statistic_view_cell[i*3+i].textContent = view_statistics_contents[i][0];
-      statistic_view_row.appendChild(statistic_view_cell[i*3+i]);
+      statistic_view_cell[i*4+i] = document.createElement("td");
+      statistic_view_cell[i*4+i].textContent = view_statistics_contents[i][0];
+      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
       
-      statistic_view_cell[i*3+i] = document.createElement("td");
-      statistic_view_cell[i*3+i].textContent = view_statistics_contents[i][1];
-      statistic_view_row.appendChild(statistic_view_cell[i*3+i]);
+      statistic_view_cell[i*4+i] = document.createElement("td");
+      statistic_view_cell[i*4+i].textContent = view_statistics_contents[i][1];
+      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
       
-      statistic_view_cell[i*3+i] = document.createElement("td");
-      statistic_view_cell[i*3+i].textContent = view_statistics_contents[i][2];
-      statistic_view_row.appendChild(statistic_view_cell[i*3+i]);
+      statistic_view_cell[i*4+i] = document.createElement("td");
+      statistic_view_cell[i*4+i].textContent = view_statistics_contents[i][2];
+      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
 
-      /*
       statistic_view_cell[i*4+i] = document.createElement("td");
-      statistic_view_cell[i*4+i].textContent = view_statistics_contents[i][4];
+      statistic_view_cell[i*4+i].textContent = view_statistics_contents[i][3];
       statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
-      
-      //EDIT
-      statistic_view_cell[i*4+i] = document.createElement("td");
-      statistic_view_cell[i*4+i].classList = "cun_td_button";
-      statistic_view_cell[i*4+i].style = "cursor: pointer;";
-      statistic_view_cell[i*4+i].textContent = view_statistic_contents_opertation[0];
-      statistic_view_cell[i*4+i].addEventListener("click", () => { check_statistic_panel(view_statistic_contents[i][0]) }, false);
-      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
-      
-      //DELETE
-      statistic_view_cell[i*4+i] = document.createElement("td");
-      statistic_view_cell[i*4+i].classList = "cun_td_button";
-      statistic_view_cell[i*4+i].style = "cursor: pointer;";
-      statistic_view_cell[i*4+i].textContent = view_statistic_contents_opertation[1];
-      statistic_view_cell[i*4+i].addEventListener("click", () => { delete_statistic(view_statistic_contents[i][0]) }, false);
-      statistic_view_row.appendChild(statistic_view_cell[i*4+i]);
-      */
+
     }
   }
   
@@ -901,18 +980,15 @@ function create_view_statistics(target) {
 }
 
 /*HEADER SERVER--------------------------------------------------------------*/
-function create_server_header(target){
-  const server_header_content = `<h2>This is an response page create by an Node app in the server.</h2>
-    <h3>What follows is the script used to create this page.</h3>
-    <br>
-    <p>This Script relies heavily on the use of Async functions. Callback functions are mandatory to relay the data back once each function is finished. Due to this necessity the occurrence of nested Callback functions is an unfortunate byproduct. There are better ways to compose the same script with the use of Promisses and Async Await methods but even this have their setback. Promisses and Async Await rely heavily on abstraction and so they create a level of obfuscation that can confuse the newcomers.</p>
-    <br>
+function create_link(target){
+  const login_bottom_element = document.getElementById(target);
+  const server_header_content = `</br><hr></br>
     <p>GitHub project page: <a href="https://github.com/CrankyUnicorn/plain_node">https://github.com/CrankyUnicorn/plain_node</a></p>
     <br>`;
     const server_header_element  = document.createElement("div");
 
     server_header_element.innerHTML += server_header_content;
-    target.appendChild(server_header_element);
+    login_bottom_element.appendChild(server_header_element);
 }
 
 /*FOOTER---------------------------------------------------------------------*/

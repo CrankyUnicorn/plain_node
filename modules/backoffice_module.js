@@ -49,6 +49,35 @@ function delete_post(id, callback) {
   });
 }
 
+//DELETE MESSAGE
+function delete_message(id, callback) {
+  const sql = `DELETE FROM contact_message WHERE id = '${id}' LIMIT 1`;
+  query_database(sql, function (results) {
+    if (Object.keys(results).length != 0) {
+
+      //console.log("success: delete_message");
+      callback();
+      
+    } else {
+      console.log('err: backoffice_module_delete_message');
+    }
+  });
+}
+
+//CHECK MESSAGE
+function check_message(id, callback) {
+  const sql = `UPDATE contact_message SET checked = 1 WHERE id = '${id} ' LIMIT 1`;
+  query_database(sql, function (results) {
+    if (Object.keys(results).length != 0) {
+
+      //console.log("success: delete_message");
+      callback();
+      
+    } else {
+      console.log('err: backoffice_module_delete_message');
+    }
+  });
+}
 
 //VIEW POST
 function view_post(page,multiple,callback) {
@@ -104,7 +133,7 @@ function view_contacts(page, multiple, callback) {
         results_data.push([`page ${page} from ${total_pages}`, page, multiple, total_pages]);
         
         for (let i = 0; i < results.length; i++) {
-          results_data.push([results[i].id, results[i].name, results[i].email, results[i].message, results[i].date_reg]);
+          results_data.push([results[i].id, results[i].name, results[i].email, results[i].message, results[i].date_reg, results[i].checked]);
           
         }
         //console.log("success: view_post");
@@ -128,7 +157,7 @@ function view_statistics(page, multiple, callback) {
   query_database(sql, function (total_results) {
     const total_pages = Math.ceil(parseFloat(total_results[0].total / multiple));
 
-    sql = `SELECT t1.title, t2.visits, t2.last_visit FROM article_section as t1 JOIN (SELECT section_id, COUNT(*) as visits, MAX(date_reg) as last_visit FROM section_statistic_visit GROUP BY section_id) as t2 ON t1.id = t2.section_id ORDER BY id DESC LIMIT ${start_position},${end_position}`;
+    sql = `SELECT t1.title,t1.subtitle, t2.visits, t2.last_visit FROM article_section as t1 JOIN (SELECT section_id, COUNT(*) as visits, MAX(date_reg) as last_visit FROM section_statistic_visit GROUP BY section_id) as t2 ON t1.id = t2.section_id ORDER BY id DESC LIMIT ${start_position},${end_position}`;
     query_database(sql, function (results) {
       if (Object.keys(results).length != 0) {
         var results_data = new Array();
@@ -136,7 +165,7 @@ function view_statistics(page, multiple, callback) {
         results_data.push([`page ${page} from ${total_pages}`, page, multiple, total_pages]);
         
         for (let i = 0; i < results.length; i++) {
-          results_data.push([results[i].title, results[i].visits, results[i].last_visit]);
+          results_data.push([results[i].title,results[i].subtitle, results[i].visits, results[i].last_visit]);
           
         }
         //console.log("success: view_post");
@@ -172,4 +201,4 @@ function logout_user() {
 
 }
 
-module.exports = { insert_post, update_post, delete_post, view_post, login_user, logout_user, view_contacts, view_statistics}
+module.exports = { insert_post, update_post, delete_post, delete_message, check_message, view_post, login_user, logout_user, view_contacts, view_statistics}
